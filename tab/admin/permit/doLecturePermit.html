@@ -1,0 +1,89 @@
+<html>
+	<body>
+		<!-- 当タブの内容を作成するためのスクリプトを記述する -->
+		<script>
+			//カレントのウィンドウのDOMを取得する
+			var $currentWindow = $(CURRENT_WINDOW);
+			//カレントのウィンドウのコンテンツ領域を取得する
+			var $currentContent = $(CURRENT_WINDOW_MAIN)
+			
+			var create_tag = new createLittleContents();	//コンテンツ作成のためcreateTagを用意する
+
+			//タブのDOMにcreateTagへの参照を保存する
+			$(DO_LECTUREPERMIT_TAB)[0].create_tag = create_tag;
+			
+			// ユーザーページのパーツのテンプレートのJSONを取得する。
+			create_tag.getJsonFile('source/commonUser.json');
+			// 管理者ページ共通のパーツのJSONを取得する。
+			create_tag.getJsonFile('source/adminCommon.json');
+			//共通のjsonを取得する
+			create_tag.getJsonFile('source/commonJson.json');
+
+			// ユーザーページのパーツのテンプレートのDOMを取得する。
+			create_tag.getDomFile('template/commonUser.html');
+			// 管理者ページ共通のパーツのJSONを取得する。
+			create_tag.getDomFile('template/adminCommon.html');
+			// 共通パーツのDOMを取得する
+			create_tag.getDomFile('template/common.html');
+
+			//ユーザ追加のボタンを追加する
+			commonFuncs.putCommonButton('#doLecturePermit', 'addUserRecordButton fRight', 'add', true, true, true, {}, false);
+			//受講承認待ちデータの削除のボタンを追加する
+			commonFuncs.putCommonButton('#doLecturePermit', 'deletePermitRecordButton fRight', 'delete', true, true, true, {}, false);
+			//受講承認のボタンを追加する
+			commonFuncs.putCommonButton('#doLecturePermit', 'doLecturePermitButton fRight', 'permit', true, true, true, {}, false);
+			//テーブルの外側領域を作る
+			create_tag.outputTag('doLecturePermitTableInfoTableOutSideArea','tableOutsideArea', '#doLecturePermit');		// タイトル領域を作る
+			
+			//今日の日付を取得し、データ検索の対象の日時としてJSONにセットする
+			create_tag.json.doLecturePermitInfoTable.date.value = commonFuncs.getTodayDate();
+			// 受講承認テーブル用のJSON配列を取得する
+			create_tag.getJsonFile('php/GetJSONArray.php', create_tag.json['doLecturePermitInfoTable'], 'doLecturePermitInfoTable');
+			//データがあればテーブルを追加する
+			if(create_tag.json.doLecturePermitInfoTable[TABLE_DATA_KEY].length != 0) {
+				//受講承認タブのリストテーブル
+				create_tag.outputTagTable('doLecturePermitInfoTable', 'doLecturePermitInfoTable', '.doLecturePermitTableInfoTableOutSideArea');
+				//受講承認のテーブルを置換する
+				commonFuncs.dbDataTableReplaceExecute(DOT + DO_LECTURE_PERMIT_INFO_TABLE, create_tag.json[DO_LECTURE_PERMIT_INFO_TABLE][TABLE_DATA_KEY], DO_LECTURE_PERMIT_INFO_TABLE_REPLACE_FUNC);
+			} else {
+				//ダミーのデータを用意する
+				create_tag.json.doLecturePermitInfoTable[TABLE_DATA_KEY][0] = DUMMY_LECTUREPERMIT_DATA;
+				//受講承認タブのリストテーブル
+				create_tag.outputTagTable('doLecturePermitInfoTable', 'doLecturePermitInfoTable', '.doLecturePermitTableInfoTableOutSideArea');
+				//ダミーデータを削除する
+				create_tag.json.doLecturePermitInfoTable[TABLE_DATA_KEY] = [];
+				//ダミーの行を削除する
+				$('.doLecturePermitInfoTable tr:last').remove();
+			}
+
+			
+			//承認ボタンクリックでデータを更新する
+			loopUpdatePermitLesson();
+			//削除ボタンを押すと選択したレコードを削除する
+			executeDeleteRecord($('#doLecturePermit .deletePermitRecordButton'), '指定したレコードを削除しますか?', '.doLecturePermitInfoTable .selectRecord', "if($(CURRENT_DIALOG_SELECTOR)[0].instance.getPushedButtonState() == YES) {deleteRecords('.doLecturePermitInfoTable', '.selectRecord', null, null, $(DO_LECTUREPERMIT_TAB)[0].create_tag.json.doLecturePermitInfoTable.tableData, '.No');}");
+
+			var $activePanel = $('#permitTab .tabPanel.active', $currentContent);	//現タブパネルを取得する
+
+			//使用ポイントのテキストボックスの設定を書く
+			var getPointSettings = {
+					type : 'number'	//数値用テキストボックス
+					,min : 0			//最低値
+					,value : 0			//デフォルト値
+					,name : 'use_point'	//使用ポイント
+			};
+			//使用ポイントのテキストボックスをセットする
+			commonFuncs.putTextboxInTd(getPointSettings, 'td.use_point');
+
+			//会員一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する
+			toggleClassClickElement('tr', 'selectRecord', '.doLecturePermitInfoTable');
+			//全選択ボタンを追加する
+			commonFuncs.addSelectAllBox('#doLecturePermit .addUserRecordButton', '全選択', false, '.doLecturePermitInfoTable', 'selectRecord', false);
+			
+			//追加ボタンを押したらユーザ一覧画面へ遷移するようにする
+			moveToUserList('doLecturePermit', '#doLecturePermit .addUserRecordButton');
+			
+			</script>
+	</body>
+</html>
+
+					

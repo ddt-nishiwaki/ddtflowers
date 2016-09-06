@@ -1,0 +1,93 @@
+<html>
+	<body>
+		<!-- 当タブの内容を作成するためのスクリプトを記述する -->
+		<script>
+			//カレントのウィンドウのDOMを取得する
+			var $currentWindow = $(CURRENT_WINDOW);
+			//カレントのウィンドウのコンテンツ領域を取得する
+			var $currentContent = $(CURRENT_WINDOW_MAIN)
+			
+			var create_tag = new createLittleContents();	//コンテンツ作成のためcreateTagを用意する
+			$('#userList')[0].create_tag = create_tag;	//createTagをDOMと結びつける
+
+			// ユーザーページのパーツのテンプレートのJSONを取得する。
+			create_tag.getJsonFile('source/commonUser.json');
+			// 管理者ページ共通のパーツのJSONを取得する。
+			create_tag.getJsonFile('source/adminCommon.json');
+			//共通のjsonを取得する
+			create_tag.getJsonFile('source/commonJson.json');
+
+			// ユーザーページのパーツのテンプレートのDOMを取得する。
+			create_tag.getDomFile('template/commonUser.html');
+			// 管理者ページ共通のパーツのJSONを取得する。
+			create_tag.getDomFile('template/adminCommon.html');
+			// 共通パーツのDOMを取得する
+			create_tag.getDomFile('template/common.html');
+
+			// ユーザ検索テキストボックスの領域を作る
+			create_tag.outputTag('searchUserList', 'searchUserList', '#userList');
+			// 検索ボタンを作る
+			commonFuncs.putCommonButton('#userList .searchUserList', 'searchUserButton searchIconButtons', 'search', true, false, true, {onclick : 'userListSearch("#userList");'});
+			// 絞込ダイアログを出すボタンを作る
+			commonFuncs.putCommonButton('#userList .searchUserList', 'showUserSearchListDialogButton searchIconButtons', 'filter', true, false, true);
+
+			//ユーザ一覧ページングの一番外側となる領域を作る
+			create_tag.outputTag('userListPagingArea', 'divArea', '#userList');
+			//ページングのテーブルを作るためにテーブルの外側となるdivを作る
+			create_tag.outputTag('userListTableOutside', 'divArea', '.userListPagingArea');
+			// ナンバリング領域を作る
+			create_tag.outputTag('numberingOuter','numberingOuter','.userListPagingArea');
+			
+			//別画面から直接渡ってきた場合、元の画面名を取得する
+			var beforePanel = $('#adminTab')[0].instance.beforePanel;
+			//他画面から飛んできていたら
+			if (commonFuncs.checkEmpty(beforePanel)) {
+				//受講承認画面から来ていたら
+				if(beforePanel.indexOf('doLecturePermit') != -1) {
+					//受講承認用のクエリでユーザ一覧を取得する
+					create_tag.json.userListInfoTable.db_getQuery = create_tag.json.userListInfoTable.queryForDoLecturePermit;
+				}
+			}
+			
+			//会員一覧のデータを取り出す
+			create_tag.getJsonFile('php/GetJSONArray.php', create_tag.json['userListInfoTable'], 'userListInfoTable');
+			//ページング機能付きでユーザ情報一覧テーブルを作る
+			create_tag.outputNumberingTag('userListInfoTable', 1, 4, 1, 15, '.userListTableOutside', 'afterReloadUserListInfoTable', "$('#userList')[0].");
+			//会員一覧タブのボタン群れ
+			create_tag.outputTag('userListButtons', 'userListButtons', '#userList');
+
+			//他画面から飛んできていなければ
+			if (!commonFuncs.checkEmpty(beforePanel)) {
+				// 送信ボタンを作る
+				commonFuncs.putCommonButton('#userList .userListButtons', 'createMail', 'mail', true, true, true);
+				// お知らせボタンを作る
+				commonFuncs.putCommonButton('#userList .userListButtons', 'announceButton', 'notice', true, true, true);
+			//普通に読み込まれていたら
+			} else {
+				// キャンセルボタンを作る
+				commonFuncs.putCommonButton('#userList .userListButtons', 'cancelUser fRight', 'cancel', true, true, true, {"onclick": "returnFromUserList(this);","data-buttontype": "1"});
+				// 追加ボタンを作る
+				commonFuncs.putCommonButton('#userList .userListButtons', 'selectUser fRight', 'select', true, true, true, {"onclick": "returnFromUserList(this);", "data-buttontype": "0"});
+			}
+			
+			//会員一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する
+			toggleClassClickElement('tr', 'selectRecord', '.userListTableOutside');
+			
+			//検索ボタンを押すと検索ダイアログを開く
+			setPopupSearchDialog('#userList .showUserSearchListDialogButton');
+			//検索フォームフォーカス時エンターキー押下で検索を行う様にする
+			commonFuncs.enterKeyCallFunction('.adminUserSearch', '#adminTab .searchUserList', 'userListSearch("#userList");');
+			
+			//会員データダブルクリックで対象ユーザページへログインする
+			doubleClickToLogin('.userListTableOutside');
+			//通常メールボタンをクリックしたときに通常メール作成のためのダイアログを開く
+			adminMessageCreate('.createMail', 'mail');
+			//お知らせボタンをクリックしたときにお知らせのためのダイアログを開く
+			adminMessageCreate('.announceButton', 'announce');
+			
+			var $activePanel = $('.tabPanel.active', $currentContent);	//現タブパネルを取得する
+			</script>
+	</body>
+</html>
+
+					
