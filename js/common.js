@@ -202,9 +202,11 @@ this.messageDialogDefaultOption = {
 		}
 		//閉じるボタン。
 		,buttons : [
-		            {text : STR_CLOSE_JP
-		            //クリック時コールバック
-		            ,click : function(dialog, ui){
+		            {
+		            	// 2016/09/07 mod k.urabe 閉じるボタンの名称をキャンセルボタンに統一
+		            	text : STR_CANCEL_JP
+		            	//クリック時コールバック
+		            	,click : function(dialog, ui){
 		            		//ダイアログを閉じる
 		            		$(SELECTOR_CURRENT_MESSAGE_DOIALOG).dialog(CLOSE);
 		            	}

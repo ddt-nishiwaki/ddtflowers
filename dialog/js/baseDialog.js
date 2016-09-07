@@ -407,13 +407,15 @@ function baseDialog(dialog){
 					},
 					{
 						//閉じるボタン
-						text:STR_CLOSE_JP,
+						// 2016/09/07 mod k.urabe 閉じるボタンの名称をキャンセルボタンに統一
+						text:STR_CANCEL_JP,
 						//閉じるボタンのコールバック関数をセットする
                   		 click:
                   			 //コールバック関数
                   			 function(){
                   			 //更新ボタンの処理を行う
-                  			 this.dialogBuilder.callbackCloseButton();
+                  			 // 2016/09/07 mod k.urabe 閉じるボタンの名称をキャンセルボタンに統一したことによる呼び出し関数の変更
+                  			 this.dialogBuilder.callbackCancelButton();
                   		 },
                   		 icons : {primary : "ui-icon-close"}
 					}
@@ -511,13 +513,15 @@ function baseDialog(dialog){
 	                    //閉じるボタン
 	                    {
 	                    	//ボタンテキスト
-	                    	text:STR_CLOSE_JP,
+	                    	// 2016/09/07 mod k.urabe 閉じるボタンの名称をキャンセルボタンに統一
+	                    	text:STR_CANCEL_JP,
 	                    	//ダイアログを閉じるボタンのイベントコールバック関数
 	                    	click:
 	                    		//コールバック関数
 	                    		function(){
 	                    		//閉じるボタンの処理を行う
-	                    		this.dialogBuilder.callbackCloseButton();
+	                    		// 2016/09/07 mod k.urabe 閉じるボタンの名称をキャンセルボタンに統一したことによる呼び出し関数の変更
+	                    		this.dialogBuilder.callbackCancelButton();
 	                 		 },
 	                  		 icons : {primary : "ui-icon-close"}
 	                    }
