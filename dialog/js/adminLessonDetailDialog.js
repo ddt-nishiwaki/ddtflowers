@@ -144,6 +144,8 @@ function adminLessonDetailDialog(dialog){
 		
 		//親ダイアログから渡されたデータを次のダイアログに渡すため取得する
 		var argumentObj = $.extend(true, {}, this.dialogClass.getArgumentObject());
+		// 2016/09/07 add k.urabe 親から引き継いだダイアログタイトルを「授業受講者一覧」に書き換える。
+		argumentObj.config.title = TITLE_STUDENTS_LIST;
 		//受講者一覧ダイアログを作る
 		var userListDialog = new dialogEx('dialog/adminLessonUserListDialog.html', argumentObj);
 		//受講者一覧ダイアログを表示する
