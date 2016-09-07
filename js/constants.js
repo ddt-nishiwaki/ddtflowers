@@ -1134,6 +1134,8 @@ SELECTOR_DATE_TEXTBOX = 'input[type="date"]';
 TITLE_CREATE_LESSON = '授業作成';
 // 授業編集ダイアログのタイトル
 TITLE_EDIT_LESSON = '授業編集';
+// 2016/09/07 add k.urabe 授業受講者一覧ダイアログのタイトル定数を追加
+TITLE_STUDENTS_LIST = '授業受講者一覧';
 
 // 検索ボタンの画像ソースパス
 SRC_SEARCH_BUTTON = 'image/icon_search.png';
