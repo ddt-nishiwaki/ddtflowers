@@ -11,8 +11,9 @@ PHP_SESSID = 'PHPSESSID'; // PHPのセッションIDのキー
 SEND_TO_SERVER_MESSAGE = 'サーバへデータの送信を行いました。';
 MESSAGE_SUCCESS_SAVE_ARTICLE = '記事の投稿が完了しました。';
 // 有効な画像拡張子
+//2016/09/07 r.shibata 有効な拡張子よりtifを削除
 VALID_IMAGE_IDENTIFIERS = [ '.jpg', '.jpeg', '.JPG', '.JPEG', '.png', '.PNG',
-		'.tif', '.tiff', '.TIF', '.TIFF', '.pict', '.PICT', '.bmp', '.BMP' ];
+		 '.pict', '.PICT', '.bmp', '.BMP' ];
 // 画像選択で無効な拡張子のファイルを選択した場合の警告
 INVALID_IMAGE_FILE_WARNING = '無効なファイルです。以下の拡張子の画像ファイルを選択してください。\n'
 		+ VALID_IMAGE_IDENTIFIERS.join('').replace(/\./g, ' ');
