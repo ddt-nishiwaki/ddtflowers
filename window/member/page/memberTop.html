@@ -72,7 +72,8 @@
 								// 日ごと授業のテンプレートを読み込む
 								create_tag.getDomFile('template/eachDayLesson.html');
 								// カレンダーを作り、クリックでダイアログ作成を作る
-			 					var memCalendar = new memberCalendar('.lessonCalendar', 90, memberInfo, create_tag);
+								// 2016.09.08 mod k.urabe カレンダーの選択可能な最大日付を定数で渡すように変更
+			 					var memCalendar = new memberCalendar('.lessonCalendar', CALENDAR_MAX_DATE, memberInfo, create_tag);
 								memCalendar.create();	//カレンダーを実際に作成する
 								//授業のある日付をハイライトする
 								memCalendar.changeExistLessonDate();

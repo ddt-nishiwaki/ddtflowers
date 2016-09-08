@@ -1112,6 +1112,8 @@ SELECTOR_MAILMAGA_NUMBERING = '.mailMagaPagingArea .numbering .select';
 SELECTOR_MAILMAGA_EDIT_AREA = '.mailMagaAndAnnounceArea';
 // カレンダー表示のディレイ
 CALENDAR_SHOW_DELAY = 200;
+// 2016.09.08 add k.urabe カレンダーの選択可能な最大日付(nullは無制限)
+CALENDAR_MAX_DATE = null;
 // 基本の日付フォーマット
 DATEFORMAT_YYYY_MM_DD = "yyyy-MM-dd";
 // ?マーク

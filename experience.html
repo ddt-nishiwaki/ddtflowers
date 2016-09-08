@@ -49,7 +49,8 @@
 				fixXCoordinateOnScroll('header');
 				
 				//datepickerによるカレンダーのクラスを作成する。
-				var eRCalendar = new reservedCalendar('.calendar', 90);
+				// 2016.09.08 mod k.urabe カレンダーの選択可能な最大日付を定数で渡すように変更
+				var eRCalendar = new reservedCalendar('.calendar', CALENDAR_MAX_DATE);
 				eRCalendar.create();	//カレンダーを実際に作成する
 			</script>
 		</div>
