@@ -227,6 +227,8 @@ function adminLessonDetailDialog(dialog){
 				$(parentDialogBuilder.dialog).empty();
 				//親ダイアログの中身を作り直す
 				parentDialogBuilder.dispContents();
+				// 2016.09.08 add k.urabe 処理成功後、ダイアログを閉じる処理を追加
+				$(this.dialog).dialog(CLOSE);
 				break;
 		}
 	}
