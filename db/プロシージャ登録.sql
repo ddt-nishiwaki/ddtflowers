@@ -3444,25 +3444,26 @@ CREATE PROCEDURE check_userworkstatus(
 )
 BEGIN
 # ログインユーザの授業予約状況チェック用クエリ
+# 2016.09.08 mod k.urabe クエリが動作しなかっため、修正（selectするカラム名を解決出来ていなかった）
 SELECT DISTINCT 
-	lesson_date
-	,user_work_status 
+    ttd.lesson_date
+    ,uc.user_work_status 
 FROM 
-	`user_classwork` 
+    user_classwork AS uc
 INNER JOIN 
-	classwork 
+    classwork AS cw
 ON 
-	user_classwork.classwork_key = classwork.id 
+    uc.classwork_key = cw.id 
 INNER JOIN 
-	time_table_day 
+    time_table_day AS ttd
 ON 
-	classwork.time_table_day_key = time_table_day.id 
+    cw.time_table_day_key = ttd.id 
 WHERE 
-	lesson_date >= in_from_date 
+    ttd.lesson_date >= in_from_date 
 AND 
-	lesson_date <= in_to_date 
+    ttd.lesson_date <= in_to_date 
 AND 
-	user_key = in_user_key;
+    uc.user_key = in_user_key;
 END$$
 
 # 授業の最大人数、最小人数変更
