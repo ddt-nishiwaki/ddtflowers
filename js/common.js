@@ -1632,6 +1632,9 @@ this.messageDialogDefaultOption = {
 	 * 返却値 :デフォルトのargumentObjを返す
 	 * 作成者:T.Masuda
 	 * 作成日:2015.08.29
+	 * 変更日　:2016.09.09
+	 * 変更者　:k.urabe
+	 * 内容　	:定数を使用していない部分を修正。
 	 */
 	this.getDefaultArgumentObject = function(){
 		//dialogExと同様のデフォルトのargumentObjを返す
@@ -1650,11 +1653,13 @@ this.messageDialogDefaultOption = {
 				open://基本的にopen時はdispContentsが実行されるようにする
 					function(){
 					//dispContentsをコールしてダイアログの内容を作る
-					commonFuncs.setCallbackToEventObject(this, 'dialogBuilder', 'dispContents');
+					// 2016.09.09 mod k.urabe 引数に定義済みの定数を使用するように修正
+					commonFuncs.setCallbackToEventObject(this, DIALOG_INSTANCE, DIALOG_DISP_MESTHOD);
 				},
 				close:function(){	//ダイアログが閉じるときのイベント
 					//ダイアログを完全に破棄する
-					commonFuncs.setCallbackToEventObject(this, 'instance', 'destroy');
+					// 2016.09.09 mod k.urabe 引数に定義済みの定数を使用するように修正
+					commonFuncs.setCallbackToEventObject(this, INSTANCE, DESTROY);
 				}
 			},
 			//インプット用データオブジェクト
@@ -1955,6 +1960,9 @@ this.messageDialogDefaultOption = {
 	 * 返却値  :Object :残席状況、予約可否状況の配列をまとめたオブジェクト
 	 * 作成者:T.Masuda
 	 * 作成日:2015.10.04
+	 * 変更日　:2016.09.09
+	 * 変更者　:k.urabe
+	 * 内容　	:受講できないテーマが予約不可にならないバグを修正しました。
 	 */
 	this.getRestAndReserveData = function(tableData, timeTableStudents) {
 		var cost;			//料金
@@ -1972,7 +1980,8 @@ this.messageDialogDefaultOption = {
 
 			//予約不可状態であれば
 			//※管理者画面の予約一覧テーブル用データにはuser_classwork_costはないため、この場合は判定をスキップさせる
-			if(commonFuncs.checkEmpty() && !tableData[i][COLUMN_DEFAULT_USER_CLASSWORK_COST]) {
+			// 2016.09.09 mod k.urabe 受講できないテーマを判定する以下のif文が必ずfalseになるのを修正しました。
+			if(!tableData[i][COLUMN_DEFAULT_USER_CLASSWORK_COST]) {
 				//料金を空白にする
 				cost = EMPTY_STRING;
 				//残席を罰にする
