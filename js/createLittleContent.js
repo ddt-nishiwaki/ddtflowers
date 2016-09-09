@@ -1706,8 +1706,13 @@ function createLittleContents(){
 	 * 返却値  :なし
 	 * 作成者:T.Yamamoto
 	 * 作成日:2015.07.09
+	 * 変更者:R.Shibata
+	 * 変更日:2016.09.09
+	 * 内容　:複数回実行された時、イベントが重複して登録されてしまう現象に対応しました。
 	 */
 	this.accordionSetting = function(clickSelector, accordionDomSelector) {
+		//登録されたイベントを削除する。削除後登録することで一つしか登録されないようにする。
+		$(STR_BODY).off(CLICK, clickSelector);
 		//第一引数のセレクター要素がクリックされたときにアコーディオンを表示するためのイベントが発生する
 		$(STR_BODY).on(CLICK, clickSelector, function(){
 			//第二引数のセレクター要素が非表示状態なら表示状態に、表示状態なら非表示状態にする
