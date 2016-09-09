@@ -3,6 +3,9 @@
  * 概要  :小規模の処理の関数を定義する
  * 作成者:T.M
  * 作成日:2015.
+ * 変更者:k.urabe
+ * 変更日:2016.09.09
+ * 内容:授業詳細ダイアログのオープン時にハイライト処理が失敗する障害に対応
  * パス :/js/createLittleContent.js
  */
 
@@ -3103,6 +3106,8 @@ calendarOptions['admin'] = {		//カレンダーを作る。
 		var thisElem = this;
 		//一旦日付のハイライトが消えるので付け直す
 		setTimeout(function(){thisElem.instance.changeExistLessonDate();}, 100);
+		// 2016.09.09 add k.urabe 当該月の日付配列の初期化処理を追加
+		this.instance.monthDates = [];
 	},
 	//日付有効の設定を行う。配列を返し、添字が0の要素がtrueであれば日付が有効、falseなら無効になる
 	beforeShowDay:function(date){
