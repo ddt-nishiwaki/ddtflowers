@@ -1102,12 +1102,16 @@ function sendMailMaga() {
  * 返却値  :なし
  * 作成者:T.Yamamoto
  * 作成日:2015.09.12
+ * 修正者:R.Shibata
+ * 修正日:2016.09.07
+ * 内容  :テキストボックスの値がクリアされていなかった点を修正しました
  */
 function resetMailMageSendContent() {
 //削除ボタンがクリックされたとき、テキストボックスの中身も空白にする
 	$(STR_BODY).on(CLICK, ".messageButtonArea .deleteButton", function(){
 		//メッセージ内容テキストエリアの中身を空にする
-		$('.mailMagaAndAnnounceArea textarea').text('');
+		$('.mailMagaAndAnnounceArea .messageTitleTextbox').val('');//タイトルエリアの値を削除する
+		$('.mailMagaAndAnnounceArea .messageTextarea').val('');//内容エリアの値を削除する
 	});
 }
 
