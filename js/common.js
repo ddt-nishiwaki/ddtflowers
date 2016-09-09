@@ -1980,8 +1980,8 @@ this.messageDialogDefaultOption = {
 
 			//予約不可状態であれば
 			//※管理者画面の予約一覧テーブル用データにはuser_classwork_costはないため、この場合は判定をスキップさせる
-			// 2016.09.09 mod k.urabe 受講できないテーマを判定する以下のif文が必ずfalseになるのを修正しました。
-			if(!tableData[i][COLUMN_DEFAULT_USER_CLASSWORK_COST]) {
+			// 2016.09.09 mod k.urabe 受講できないテーマを判定する以下のif文が必ずfalseになるのを修正しました。かつ、正しく管理者画面の授業詳細ダイアログを判定できるように条件変更
+			if(commonFuncs.checkEmpty(tableData[i][COLUMN_NAME_STOP_ORDER_DATE]) && !tableData[i][COLUMN_DEFAULT_USER_CLASSWORK_COST]) {
 				//料金を空白にする
 				cost = EMPTY_STRING;
 				//残席を罰にする
