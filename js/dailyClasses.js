@@ -23,11 +23,12 @@ var userClassworkStatuses = {
 	,12:"中止"
 };
 
+//2016.09.09 r.shibata 次のように変更 1~2:△ 3~5:◯ 6以上:◎
 var restMarks = {
 	0:"✕"
 	,1:"△"
-	,4:"◯"
-	,7:"◎"
+	,3:"◯"
+	,6:"◎"
 };
 
 var noLongerBookable = "予約締切";
