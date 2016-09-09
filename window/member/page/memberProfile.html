@@ -99,7 +99,7 @@
 	
 					// パスワード変更(パスワード変更画面へ行く)ボタンを作る
 					commonFuncs.putCommonButton('.memberInfo', 'passLinkArea fRight', 'password_change', true, true, true, {onclick : '$(CURRENT_WINDOW)[0].instance.callPage("window/member/page/memberPassword.html");'}, false);
-					// 更新ボタンを作る
+					// 更新ボタンを作る 2016.09.09 r.shibata フォームの入力規則及び更新処理が行われていなかった点を修正（typeにsubmitを指定した)
 					commonFuncs.putCommonButton('.memberInfo', 'updateButton fRight', 'update', true, true, true, {TYPE:SUBMIT}, false);
 										
 					// 生年月日のテキストボックスにフォーカスするとカレンダーを表示する
