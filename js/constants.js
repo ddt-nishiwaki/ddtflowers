@@ -838,12 +838,13 @@ TIME_TAG = 'TIME';
 CURRENT_ARTICLE_CODE_FRONT = 'create_tag.createOneTableArticle(';
 CURRENT_ARTICLE_CODE_REAR = ', "blogTable", SETTING_CURRENT_ARTICLE_CODE)';
 // ブログの記事指定表示コードの設定オブジェクト
+// 2016.09.09 r.shibata callBackの引数に'.blogTable'を指定
 SETTING_CURRENT_ARTICLE_CODE = {
 	startPage : 1,
 	displayPageMax : 1,
 	pageNum : 1,
 	targetArea : ".blogArticles",
-	callBack : "create_tag.createMyBlogImages()",
+	callBack : "create_tag.createMyBlogImages('.blogTable')",
 	createTagSelector : void (0)
 };
 
