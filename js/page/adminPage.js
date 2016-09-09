@@ -1110,11 +1110,11 @@ function resetMailMageSendContent() {
 //削除ボタンがクリックされたとき、テキストボックスの中身も空白にする
 	$(STR_BODY).on(CLICK, ".messageButtonArea .deleteButton", function(){
 		//メッセージ内容テキストエリアの中身を空にする
-		$('.mailMagaAndAnnounceArea .messageTitleTextbox').val('');//タイトルエリアの値を削除する
-		$('.mailMagaAndAnnounceArea .messageTextarea').val('');//内容エリアの値を削除する
+		$(SELECTOR_MAILMAGA_EDIT_AREA + SPACE + SELECTOR_MAILMAGA_EDIT_AREA_TITLE).val('');//タイトルエリアの値を削除する
+		$(SELECTOR_MAILMAGA_EDIT_AREA + SPACE + SELECTOR_MAILMAGA_EDIT_AREA_TEXT).val('');//内容エリアの値を削除する
 	});
 }
-
+ 
 
 /* 
  * 関数名:permitSellCommodity
