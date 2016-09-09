@@ -84,7 +84,7 @@ CHANGE = 'change'; // イベント名がchangeのときにchangeイベントを�
 MARGIN_TOP = 'margin-top'; // 上margin
 PX_5 = '5px'; // 5PX
 PX_115 = '115px'; // 115PX
-BLOG_SHOW_PAGES = 3; // ブログ表示記事数。blog.phpでも使う
+BLOG_SHOW_PAGES = 30; // ブログ表示記事数。blog.phpでも使う
 EMPTY_STRING = ''; // 空文字
 SPACE = ' '; // 半角スペース
 

@@ -74,7 +74,7 @@
 					create_tag.json.myBlogTable.user_key.value = create_tag.json.accountHeader.user_key.value;
 					
 					//ユーザ自身のブログ記事のデータを取得して表示する				
-					create_tag.loadTableData('myBlogTable', 1, 4, 1, 2, '.blogArticles', 'create_tag.createMyBlogImages(\'.myBlogTable\');create_tag.setBlogEditButtons');
+					create_tag.loadTableData('myBlogTable', 1, 4, 1, BLOG_SHOW_PAGES, '.blogArticles', 'create_tag.createMyBlogImages(\'.myBlogTable\');create_tag.setBlogEditButtons');
 					//記事がなかった場合、メッセージを出す
 					commonFuncs.checkNoArticle('.myBlogTable', MESSAGE_NO_ARTICLE);
 					

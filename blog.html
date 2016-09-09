@@ -63,7 +63,7 @@
 					//ログイン状態をチェックした上でDBにアクセスする
 					create_tag.doGuestLoginProcedure(function() {
 						//記事を作成して表示する
-						create_tag.loadTableData('blogTable', 1, 4, 1, 2, '.blogArticles', 'create_tag.createMyBlogImages(\'.blogTable\')');
+						create_tag.loadTableData('blogTable', 1, 4, 1, BLOG_SHOW_PAGES, '.blogArticles', 'create_tag.createMyBlogImages(\'.blogTable\')');
 					});
 					
 					//datepickerによるカレンダーのクラスを作成する。

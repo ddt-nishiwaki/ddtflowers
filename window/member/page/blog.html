@@ -79,7 +79,7 @@
 					//ログイン状態をチェックした上でDBにアクセスする
 					create_tag.doGuestLoginProcedure(function() {
 						//ブログ記事のデータを読み込んで表示する
-						create_tag.loadTableData('blogTable', 1, 4, 1, 2, '.blogArticles', 'create_tag.createMyBlogImages(\'.blogTable\')');
+						create_tag.loadTableData('blogTable', 1, 4, 1, BLOG_SHOW_PAGES, '.blogArticles', 'create_tag.createMyBlogImages(\'.blogTable\')');
 						//記事の画像を拡大できるようにする。
 						create_tag.useZoomImage('blogImage');
 					});

@@ -2153,7 +2153,7 @@ function createLittleContents(){
 		 this.json[deleteQueryKey].db_setQuery = deleteQuery;
 
 		//ブログの記事を作り直す
-		this.loadTableData('myBlogTable', 1, 4, 1, 2, '.blogArticles', 'create_tag.createMyBlogImages(\'.myBlogTable\');create_tag.setBlogEditButtons');
+		this.loadTableData('myBlogTable', 1, 4, 1, BLOG_SHOW_PAGES, '.blogArticles', 'create_tag.createMyBlogImages(\'.myBlogTable\');create_tag.setBlogEditButtons');
 		//記事の画像を拡大できるようにする。
 //		creator.useZoomImage('blogImage');
 				
@@ -2938,7 +2938,7 @@ calendarOptions['blog'] = {
 		onSelect: function(dateText, inst){
 			this.instance.create_tag.dateText = dateText;
 			//絞り込まれたブログ記事を書き出す
-			this.instance.create_tag.outputNumberingTag('blogTable', 1, 4, 1, 2, '.blogArticles', 'create_tag.createMyBlogImages(\'.blogTable\')')
+			this.instance.create_tag.outputNumberingTag('blogTable', 1, 4, 1, BLOG_SHOW_PAGES, '.blogArticles', 'create_tag.createMyBlogImages(\'.blogTable\')')
 		},
 		//日付有効の設定を行う。配列を返し、添字が0の要素がtrueであれば日付が有効、falseなら無効になる
 		beforeShowDay:function(date){
@@ -2962,7 +2962,7 @@ calendarOptions['myBlog'] = $.extend(true, {}, calendarOptions['blog'], {
 			//日付をcreateTagに渡して日付絞り込みを有効にする
 			this.instance.create_tag.dateText = dateText;
 			//絞り込まれたブログ記事を書き出す
-			this.instance.create_tag.outputNumberingTag('myBlogTable', 1, 4, 1, 2, '.blogArticles', 'create_tag.createMyBlogImages(\'.myBlogTable\');create_tag.setBlogEditButtons');	
+			this.instance.create_tag.outputNumberingTag('myBlogTable', 1, 4, 1, BLOG_SHOW_PAGES, '.blogArticles', 'create_tag.createMyBlogImages(\'.myBlogTable\');create_tag.setBlogEditButtons');	
 		}
 	});
 
