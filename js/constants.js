@@ -623,6 +623,8 @@ CLASS_ATTENTION = 'attention';
 
 // 管理者、会員一覧で選択されたユーザにつくセレクタ-名
 SEL_SELECT_USER = '.selectRecord';
+// 管理者、会員一覧で選択されたユーザにつくセレクタ-の名称 2016.09.11 r.shibata 追加
+SELECT_RECORD = 'selectRecord';
 // 一人もユーザが選択されていない状態でメールダイアログまたはお知らせダイアログを開くボタンを押した時の処理
 TEXT_ERROR_SELECT_USER = '1人以上選択してください';
 // ユーザ名のセレクタ
@@ -902,6 +904,8 @@ MESSAGE_RESULT_SELLCOMMODITYLECTUREPERMIT = '以下の生徒の商品購入承�
 NOTICE_RECORD_UPDATE_MESSAGE_AND_NUMBER = '件のレコードを更新しました。';
 // 受講承認一覧テーブルの領域
 SELECTOR_LECTUREPERMITLIST_OUTSIDE = '.lecturePermitListInfoTableOutsideArea';
+// 受講承認一覧テーブルの領域 2016.09.11 r.shibata 追加
+SELECTOR_LECTUREPERMITLIST_INFOTABLE = '.lecturePermitListInfoTable';
 // 受講承認異常終了用のメッセージ
 ALERT_LECTUREPERMIT_PROCESS_ERROR = '更新処理中にエラーが発生したため更新処理を途中で終了しました。\n';
 // 商品購入承認以上終了用のメッセージ

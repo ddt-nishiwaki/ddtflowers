@@ -54,6 +54,9 @@
 			
 			var $activePanel = $('.tabPanel.active', $currentContent);	//現タブパネルを取得する
 			
+			//リストクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する 2016.09.11 r.shibata 追加
+			toggleClassClickElement(STR_TR, SELECT_RECORD, SELECTOR_LECTUREPERMITLIST_INFOTABLE);
+			
 			</script>
 	</body>
 	<script src="js/lecturePermitList.js" ></script>
