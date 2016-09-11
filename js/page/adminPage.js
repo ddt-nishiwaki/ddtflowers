@@ -1272,7 +1272,8 @@ function afterReloadSellCommodityPermitListInfoTable() {
 	}
 	
 	//置換済みテキストボックスに数値入力のみできるようにする
-	$('.lecturePermitListInfoTable .replaceTextbox').attr({
+	//2016.09.11 r.shibata 指定されているセレクタ不正を修正
+	$(SELECTOR_SELLCOMMODITYPERMITLIST_TAB + SPACE + SELECTOR_REPLACETEXTBOX).attr({
         onkeydown:"return controllInputChar(event);"	//数値のみ入力できるように関数を登録
 	});
 }

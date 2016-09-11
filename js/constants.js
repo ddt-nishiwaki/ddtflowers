@@ -950,6 +950,8 @@ SELECTOR_NOT_FIRST = ':not(:first)';
 // 商品購入一覧タブのセレクタ
 SELECTOR_SELLCOMMODITYPERMITLIST_TAB = '#sellCommodityPermitList';
 SELECTOR_SELLCOMMODITYLIST_OUTSIDE = '.sellCommodityPermitListInfoTableOutsideArea';
+// 数値入力エリアのセレクタ 2016.09.11 r.shibata 追加
+SELECTOR_REPLACETEXTBOX = '.replaceTextbox';
 // 受講承認タブ内の選択済みレコードのセレクタ
 LECTUREPERMIT_SELECTED_RECORD = '.doLecturePermitInfoTable .selectRecord';
 // 管理者タブのセレクタ
