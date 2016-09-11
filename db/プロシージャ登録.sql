@@ -2435,12 +2435,21 @@ CREATE PROCEDURE getLecturePermitInfoList
 BEGIN
 #出力対象の列を指定する
 SELECT
+    #2016.09.11 r.shibata 項目不足による項目追加 授業日付、授業開始時間、授業終了時間 所持pt
     #受講情報テーブルのID
     user_classwork.id AS id
     #ユーザ名
     ,user_name
+    #授業日付
+    ,time_table_day.lesson_date AS lesson_date
+    #授業開始時間
+    ,start_time 
+    #授業終了時間
+    ,end_time 
     #授業名
     ,lesson_name
+    #所持ポイント
+    ,user_inf.get_point AS get_point
     #受講料
     ,user_classwork.user_classwork_cost AS cost
     #使用ポイント
@@ -2517,6 +2526,15 @@ INNER JOIN
 ON
     #授業副情報テーブルID
     lesson_sub.id = user_classwork.level_key
+#2016.09.11 r.shibata 項目不足による項目追加の授業開始時間、授業終了時間を取得するためにtimetable_infとの結合を追加
+#結合対象の列の値がnullのデータを排除して結合する 
+INNER JOIN
+    #授業時間帯詳細情報テーブル
+    timetable_inf 
+#以下に指定した列を基に結合を行う
+ON
+    #授業時間帯詳細情報テーブル
+    timetable_inf.id = time_table_day.timetable_key 
 #ソートを行う
 ORDER BY
     #授業日付が新しい順番に並べる

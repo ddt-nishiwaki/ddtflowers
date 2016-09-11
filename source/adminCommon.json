@@ -454,8 +454,25 @@
 					"columnName": "名前",
 					"className": "user_name"
 				},
+				"lesson_date": {
+					"columnName": "授業日付",
+					"className": "lesson_date"
+				},
+				"start_time": {
+					"columnName": "授業開始時間",
+					"className": "start_time"
+				},
+				"end_time": {
+					"columnName": "授業終了時間",
+					"className": "end_time"
+				},
 				"lesson_name": {
-					"columnName": "内容"
+					"columnName": "内容",
+					"className": "lesson_name"
+				},
+				"get_point": {
+					"columnName": "所持ポイント",
+					"className": "get_point"
 				},
 				"cost": {
 					"columnName": "入金(円)",
@@ -484,9 +501,6 @@
 					"style": "display:none;"
 				},
 				"commodity_key": {
-					"style": "display:none;"
-				},
-				"get_point": {
 					"style": "display:none;"
 				}
 			}
