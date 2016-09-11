@@ -794,7 +794,7 @@
 	},
 	"mailMagaTable": {
 		"class": "mailMagaTable commonTable scrollXAuto",
-		"db_getQuery": "SELECT id,school_key,send_datetime,magazine_type,magazine_title,magazine_content FROM mail_magazine ORDER BY send_datetime DESC ",
+		"db_getQuery": "SELECT id,school_key,send_datetime,magazine_type,magazine_title,magazine_content FROM mail_magazine ORDER BY send_datetime DESC , id DESC",
 		"config": {
 			"columns": {
 				"id": {
