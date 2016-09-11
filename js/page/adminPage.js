@@ -1498,7 +1498,7 @@ function creaetLecturePermitRecord(record) {
 			+ TD_FROM_REAR + record.lesson_name
 			//使用ポイントを入力するテキストボックス
 			+ '</td><td class="use_point"><input type="number" min="0" name="use_point" onkeydown="return controllInputChar(event);" value="0"></td>'
-			+ '<td style="" colspan="">' + record.user_classwork_cost
+			+ '<td style="" colspan="" class="user_classwork_cost"><input type="number" min="0" name="user_classwork_cost" onkeydown="return controllInputChar(event);" value="' + record.user_classwork_cost + '">'
 			+ TD_FROM_REAR_DISPLAY_NONE+ record.school_key + '</td></tr></table>');
 	
 	//作成したDOMを返す
