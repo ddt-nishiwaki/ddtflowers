@@ -535,6 +535,9 @@
 					"columnName": "使用pt",
 					"className": "replaceTextboxUsePointCell replaceTextboxTypeNumber use_point"
 				},
+				"get_point": {
+					"columnName": "所持ポイント"
+				},
 				"stage_no": {
 					"style": "display:none;"
 				},
@@ -554,9 +557,6 @@
 					"style": "display:none;"
 				},
 				"commodity_key": {
-					"style": "display:none;"
-				},
-				"get_point": {
 					"style": "display:none;"
 				}
 			}
