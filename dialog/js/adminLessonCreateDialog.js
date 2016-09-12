@@ -10,6 +10,9 @@
  * 引数	 :Element dialog:ダイアログのDOM
  * 作成者　:T.Yamamoto
  * 場所　　:dialog/js/adminLessonCreateDialog.js
+ * 変更者 : k.urabe
+ * 変更日 : 2016.09.12
+ * 内容 : 授業作成時のチェックに最大人数の上限（100名以下）を追加
  */
 function adminLessonCreateDialog(dialog){
 	baseDialog.call(this, dialog);	//親クラスのコンストラクタをコールする
@@ -36,7 +39,9 @@ function adminLessonCreateDialog(dialog){
 				},
 				max_students : {
 					required : true,
-					digits : true
+					digits : true,
+					// 2016.09.12 add k.urabe 最大人数のチェックを100名以下で追加
+					max : 100
 				}, 
 				classroom : {
 					required : true,
