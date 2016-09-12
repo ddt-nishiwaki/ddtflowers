@@ -1003,6 +1003,8 @@ COUNDNT_INSERT_SELLCOMMODITY_PERMIT_MESSAGE = '以下の生徒の商品購入履
 MESSAGE_CHOOSE_TARGET = '処理対象を選択してください。';
 // tbody内trタグ
 SELECTOR_TBODY_TR = 'tbody tr';
+// 2016.09.12 add k.urabe 時間帯一覧画面の行選択に対応するためのセレクタを追加
+SELECTOR_TBODY_TR_TIME_TABLE = SELECTOR_TBODY_TR + SPACE + DOT + 'time_table';
 // 編集の文字。主にボタン用
 TEXT_EDIT = '編集';
 // 削除の文字。主にボタン用

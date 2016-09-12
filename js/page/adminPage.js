@@ -45,8 +45,14 @@ function clickEvent(clickSelector, clickFunc) {
 function toggleClassClickElement (clickSelector, className, parentElem) {
 	//会員一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する
 	$(parentElem).on(CLICK, clickSelector, function(){
-		//userSelectクラスを追加したり消したりする。このクラスがあればユーザが選択されているとみなしてボタン処理を行うことができる
-		$(this).toggleClass(className);
+		// 2016.09.12 add k.urabe 時間帯一覧における行選択処理の場合の条件分岐を追加
+		if(clickSelector != SELECTOR_TBODY_TR_TIME_TABLE) {
+			//userSelectクラスを追加したり消したりする。このクラスがあればユーザが選択されているとみなしてボタン処理を行うことができる
+			$(this).toggleClass(className);
+		} else {
+			// 2016.09.12 add k.urabe 時間帯一覧画面のセレクタであった場合、親のTR要素を対象とする
+			$(this).parent().toggleClass(className);
+		}
 	});
 }
 

@@ -35,6 +35,9 @@ function timetableList() {
 	 * 返却値:なし
 	 * 作成日　:2016.0505
 	 * 作成者　:T.Masuda
+	 * 変更日 : 2016.09.12
+	 * 変更者 : k.urabe
+	 * 内容 : 当該ダイアログ更新後に、再度リスト選択の処理を設定
 	 */
 	this.callbackUpdate = function(){
 		//選択されている行を取得する
@@ -56,6 +59,9 @@ function timetableList() {
 			
 			//リロードしたテーブルの置換を行う
 			this.replaceTable();
+
+			// 2016.09.12 add k.urabe 更新後に再度、クリックされた時にuserSelectクラスをがなければ追加しあるなら消去する処理を設定
+			toggleClassClickElement(SELECTOR_TBODY_TR_TIME_TABLE, 'selectRecord', SELECTOR_TIME_TABLE_LIST_TABLE);
 		//選択なしであれば
 		} else {
 			//警告を出す

@@ -40,7 +40,8 @@
 			timetableListFuncs.replaceTable();
 			
 			//会員一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する
-			toggleClassClickElement(SELECTOR_TBODY_TR, 'selectRecord', SELECTOR_TIME_TABLE_LIST_TABLE);
+			// 2016.09.12 mod k.urabe 人数系カラムをクリックする度に選択・非選択となることを防ぐためにセレクタを変更
+			toggleClassClickElement(SELECTOR_TBODY_TR_TIME_TABLE, 'selectRecord', SELECTOR_TIME_TABLE_LIST_TABLE);
 			
 			//更新ボタンを作る。コールバックもここで登録しておく
 			commonFuncs.putCommonButton('#timeTableList', 'updateButton', 'update', true, true, true, {onclick : 'timetableListFuncs.callbackUpdate();'});
