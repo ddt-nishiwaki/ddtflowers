@@ -3371,9 +3371,13 @@ CREATE PROCEDURE p_delete_classwork (
     ,OUT result INT
 )
 BEGIN
-    
+
 DECLARE old_count int;
 DECLARE new_count int;
+# 2016.09.12 add k.urabe 削除対象授業のtime_table_day_keyの値を保管するための変数を追加
+DECLARE timetabledaykey_save int;
+# 2016.09.12 add k.urabe 授業削除後に、当該時間帯の授業の件数を記録するための変数を追加
+DECLARE timetabledaykey_count int;
 
 SELECT 
     COUNT(id)
@@ -3381,6 +3385,16 @@ FROM
     classwork
 INTO
     old_count;
+
+# 2016.09.12 add k.urabe 削除前に当該授業に紐付くtime_table_day_keyを変数へ格納
+SELECT
+    time_table_day_key
+FROM
+    classwork
+WHERE
+    id = in_id
+INTO
+    timetabledaykey_save;
 
 START TRANSACTION;
 
@@ -3398,6 +3412,26 @@ FROM
     classwork
 INTO
     new_count;
+
+# 2016.09.12 add k.urabe 授業削除後、当該授業に紐付いていたtime_table_day_keyに紐付く授業数を検索
+SELECT
+    COUNT(time_table_day_key)
+FROM
+    classwork
+WHERE
+    time_table_day_key = timetabledaykey_save
+INTO
+    timetabledaykey_count;
+
+# 2016.09.12 add k.urabe 授業に紐付いていたtime_table_day_keyに紐付く授業数が存在しないならば、当該時間帯の授業がないと判定
+IF timetabledaykey_count = 0 THEN
+    # 2016.09.12 add k.urabe 当該時間帯をtime_table_dayテーブルから削除
+    DELETE
+    FROM
+        time_table_day
+    WHERE
+        id = timetabledaykey_save;
+END IF;
 
 IF old_count > new_count THEN
     SELECT 1 INTO result;
