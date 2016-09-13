@@ -3076,36 +3076,40 @@ this.messageDialogDefaultOption = {
 	 * 返却値  :String : クラス名
 	 * 作成者:T.Masuda
 	 * 作成日:2016.05.01
+	 * 変更者:k.urabe
+	 * 変更日:2016.09.13
+	 * 内容:ハードコーディングされていた部分を定数に置き換え
 	 */	
 	this.getLessonStatusClassByPriority = function(userWorkStatus) {
 		
 		var retClassName = EMPTY_STRING;	//返却用の変数を用意する
 		
 		//ユーザ授業状況をチェックする
+		// 2016.09.13 mod k.urabe caseの判定に使われる数値は、定数定義済みであったため、使用する形に修正
 		switch (parseInt(userWorkStatus)) {
 			//予約済み
-			case 0: retClassName = 'dateHasLesson';
+			case HAS_RESERVED_0　: retClassName = DATE_HAS_LESSON;
 			        break;
 			//予約済み
-			case 1: retClassName = 'dateHasLesson' ;
+			case HAS_RESERVED_1　: retClassName = DATE_HAS_LESSON;
 	                break;
 			//受付
-			case 2: retClassName = 'dateHasLesson' ;
+			case RECEIPT　: retClassName = DATE_HAS_LESSON;
 	                break;
 			//受講済み
-			case 3: retClassName =  'dateHasLesson';
+			case HAS_LECTURES　: retClassName =  DATE_HAS_LESSON;
 	                break;
 			//キャンセル(本人)
-			case 10: retClassName = 'dateCancelLesson';
+			case CANCEL_CUSTOMER　: retClassName = DATE_CANCEL_LESSON;
 	                break;
 			//キャンセル(管理者)
-			case 11: retClassName = 'dateCancelLesson';
+			case CANCEL_ADMIN　: retClassName = DATE_CANCEL_LESSON;
 	                break;
 			//中止
-			case 12: retClassName = 'dateStopLesson';
+			case STOP_LESSON　: retClassName = DATE_STOP_LESSON;
 	                break;
 	        //どれでもない(手をつけてない授業しかない)
-	        default: retClassName = 'dateHasClass';
+	        default: retClassName = DATE_HAS_CLASS;
 	                break;
 		};
 		
