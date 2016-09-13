@@ -67,8 +67,8 @@ class procedureSet extends procedureBase{
 		}
 		//最後に行う処理
 		$this->dbh = null;
-		//2016.09.12 r.shibata 結果の有無に対して返却する値を変更する
-		if(isset($rs[0])){
+		//2016.09.13 r.shibata 結果の有無に対して返却する値を変更する 作用行数が存在する場合はそちらを優先する
+		if(isset($rs[0]) && !$this->processedRecords){
 			//クライアントへ返すメッセージを結果セットより作成する。 2016.09.12 r.shibata 追加
 			$returnMessage = '{"message":"' . $rs[0]['result'] . '"}';
 		}else{
