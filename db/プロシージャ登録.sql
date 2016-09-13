@@ -2783,6 +2783,9 @@ SELECT
     MAX(update_datetime)
 FROM
     commodity_sell
+# 2016.09.13 同一ユーザーの商品レコード更新日付を見るように条件追加
+WHERE 
+    id = in_commodity_sell_key
 INTO
     latest_timestamp;
 
@@ -2802,6 +2805,9 @@ SELECT
     MAX(update_datetime)
 FROM
     commodity_sell
+# 2016.09.13 同一ユーザーの商品レコード更新日付を見るように条件追加
+WHERE 
+    id = in_commodity_sell_key
 INTO
     updated_timestamp;
 
@@ -2814,6 +2820,9 @@ IF latest_timestamp < updated_timestamp THEN
             MAX(update_datetime)
         FROM
             user_inf
+        # 2016.09.13 同一ユーザーのレコード更新日付を見るように条件追加
+        WHERE 
+            id = in_user_key
         INTO
             latest_timestamp_user;
             
@@ -2829,6 +2838,9 @@ IF latest_timestamp < updated_timestamp THEN
             MAX(update_datetime)
         FROM
             user_inf
+        # 2016.09.13 同一ユーザーのレコード更新日付を見るように条件追加
+        WHERE 
+            id = in_user_key
         INTO
             updated_timestamp_user;
         
@@ -2844,6 +2856,8 @@ ELSE
     SELECT 0 INTO result;
     ROLLBACK;
 END IF;
+# 2016.09.13 r.shibata 行の更新成否を判定するための値を取得するSQL文を追加(ストアド内部のresult)
+SELECT result AS result;
 
 END$$
 
