@@ -598,6 +598,15 @@ CANCEL_CUSTOMER = 10;
 CANCEL_ADMIN = 11;
 STOP_LESSON = 12;
 
+// 2016.09.13 add k.urabe カレンダーのハイライト処理に使用する授業がある日を表す定数を追加
+DEFAULT_LESSON = 99;
+
+// 2016.09.13 add k.urabe カレンダーのハイライト処理に使用する色を判定するクラス名(4種)
+DATE_HAS_LESSON = 'dateHasLesson';
+DATE_CANCEL_LESSON = 'dateCancelLesson';
+DATE_STOP_LESSON = 'dateStopLesson';
+DATE_HAS_CLASS = 'dateHasClass';
+
 // 残席のマーク
 MARK_DOUBLE_CIRCLE = 7;
 MARK_CIRCLE = 4;

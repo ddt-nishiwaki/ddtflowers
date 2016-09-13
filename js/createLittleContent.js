@@ -3383,6 +3383,9 @@ function calendar(selector) {
 	 * 概要  :授業がある日付をハイライトする
 	 * 作成日:2016.04.19
 	 * 作成者:T.Masuda
+	 * 変更日:2016.09.13
+	 * 変更者:k.urabe
+	 * 内容:管理者の授業詳細にて、当該日の授業がすべて削除された場合のハイライト処理に対応
 	 */
 	this.changeExistLessonDate = function(){
 		
@@ -3394,6 +3397,15 @@ function calendar(selector) {
 		this.create_tag.getJsonFile(URL_GET_JSON_ARRAY_PHP, this.create_tag.json.searchClassworkExist, 'searchClassworkExist');
 		//存在する授業日付の数を取得する
 		var datesLength = this.create_tag.json.searchClassworkExist.tableData.length;
+
+		// 2016.09.13 add k.urabe オブジェクトがadminCalendarであればカレンダーのハイライトを一度すべて削除する処理を追加
+		if(this instanceof adminCalendar) {
+			// 現在表示されているカレンダーの日付を走査する
+			$(STR_TD, this.dom).each(function() {
+				// ハイライトするクラス名を削除する
+				$(this).removeClass(DATE_HAS_CLASS);
+			});
+		}
 
 		//授業があれば
 		if (datesLength) {
@@ -3409,7 +3421,7 @@ function calendar(selector) {
 			this.create_tag.getJsonFile(URL_GET_JSON_ARRAY_PHP, this.create_tag.json.checkClassworkStatus, 'checkClassworkStatus');
 			//授業データを取り出す
 			var lessonDetail = this.create_tag.json.checkClassworkStatus.tableData;
-			
+
 			//日付を走査する
 			for (var i = 0; i < datesLength; i++) {
 				
@@ -3418,7 +3430,7 @@ function calendar(selector) {
 				//日を切り出す
 				var dateStr = dateStrAll.substr(8, 2);
 				//日付要素を走査する
-				$('td', this.dom).each(function(){
+				$(STR_TD, this.dom).each(function(){
 					//カレンダーから日付を取得する
 					var calendarDate = $(this).children('a').text();
 					//日付が1桁なら0を詰める
@@ -3426,7 +3438,7 @@ function calendar(selector) {
 					//その日に授業があれば
 					if(calendarDate == dateStr) {
 						//予約状況を取得する
-						var userWorkStatus = 99;
+						var userWorkStatus = DEFAULT_LESSON;
 						//授業詳細をチェックする
 						for (var j = 0; j < lessonDetail.length; j++) {
 							//日付が一致したら
