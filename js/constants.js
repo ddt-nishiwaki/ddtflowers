@@ -617,6 +617,8 @@ TEXT_LESSON_STUDENTS_BUTTON = '受講者一覧';
 
 // 新規作成ボタン
 LESSSON_NEW_BUTTON_TEXT = '新規作成';
+// 全選択テキスト 2016.09.13 r.shibata 追加
+TEXT_ALL_SELECT = '全選択'
 
 // 授業確認内容ダイアログ、キャンセル料率と加算ポイントの親となるセレクタ名
 CLASS_ATTENTION = 'attention';
@@ -1115,6 +1117,8 @@ MESSAGE_CHOOSE_A_MELMAGA = '既存のメルマガの内容を元に新規作成�
 SELECTOR_MAILMAGA_TAB = '#mailMagaAndAnnounce';
 // メルマガテーブルのレコード
 MAILMAGA_TABLE_RECORDS = '.mailMagaTable tbody tr';
+// メルマガ画面のサーチエリアを示すセレクタ 2016.09.13 r.shibata 追加
+SELECOR_MAILMAGA_SEARCH_AREA = '.mailMagaSearchArea'
 // メルマガテーブルに対する選択済みナンバリング
 SELECTOR_MAILMAGA_NUMBERING = '.mailMagaPagingArea .numbering .select';
 // メルマガ編集フォームのセレクタ

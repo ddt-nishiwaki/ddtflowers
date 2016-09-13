@@ -68,6 +68,8 @@
 			resetMailMageSendContent();
 			//メルマガ検索領域の内容テキストボックスでエンターキーを押すと検索のイベントを開始する
 			commonFuncs.enterKeyButtonClick('.mailMagaContentSearchTextbox', '.mailMagaSearchButton');			
+			//全選択ボタンを追加する 2016.09.13 r.shibata 追加
+			commonFuncs.addSelectAllBox(SELECOR_MAILMAGA_SEARCH_AREA, TEXT_ALL_SELECT, false, DOT + KEY_MAIL_MAGA_TABLE, SELECT_RECORD, false);
 			
 			var $activePanel = $('.tabPanel.active', $currentContent);	//現タブパネルを取得する
 			</script>
