@@ -2968,6 +2968,9 @@ SELECT
     MAX(update_datetime)
 FROM
     user_classwork
+# 2016.09.12 同一ユーザーのレコード更新日付を見るように条件追加
+WHERE 
+	id = in_user_classwork_key
 INTO
     latest_timestamp;
 
@@ -2989,6 +2992,9 @@ SELECT
     MAX(update_datetime) AS latest
 FROM
     user_classwork
+# 2016.09.12 同一ユーザーのレコード更新日付を見るように条件追加
+WHERE 
+	id = in_user_classwork_key
 INTO
     updated_timestamp;
 
@@ -3001,6 +3007,9 @@ IF latest_timestamp < updated_timestamp THEN
         MAX(update_datetime)
     FROM
         user_inf
+    # 2016.09.12 同一ユーザーのレコード更新日付を見るように条件追加
+    WHERE 
+        id = in_user_key
     INTO
         latest_timestamp_user;
     IF diff_point = 0 THEN
@@ -3019,6 +3028,9 @@ IF latest_timestamp < updated_timestamp THEN
                 MAX(update_datetime) AS latest
             FROM
                 user_inf
+            # 2016.09.12 同一ユーザーのレコード更新日付を見るように条件追加
+            WHERE 
+                id = in_user_key
             INTO
                 updated_timestamp_user;
             IF latest_timestamp_user < updated_timestamp_user THEN
@@ -3041,6 +3053,9 @@ IF latest_timestamp < updated_timestamp THEN
             MAX(update_datetime)
         FROM
             user_inf
+        # 2016.09.12 同一ユーザーのレコード更新日付を見るように条件追加
+        WHERE 
+            id = in_user_key
         INTO
             updated_timestamp_user;
         IF latest_timestamp_user < updated_timestamp_user THEN
@@ -3055,6 +3070,8 @@ ELSE
     SELECT 0 INTO result;
     ROLLBACK;
 END IF;
+# 2016.09.12 r.shibata 行の更新成否を判定するための値を取得するSQL文を追加(ストアド内部のresult)
+SELECT result AS result;
 
 END$$
 
