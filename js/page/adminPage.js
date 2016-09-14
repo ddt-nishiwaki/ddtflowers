@@ -764,12 +764,18 @@ function jumpToMemberPage(clickTarget, targetParent, user) {
  * 返却値  :なし
  * 作成者:T.Masuda
  * 作成日:2015.11.01
+ * 変更者:R.Shibata
+ * 変更日:2016.09.14
+ * 内容  :ユーザ一覧画面より遷移する処理をクリックで統一した事による対応、チェックボックスクリック時は動作させない条件を追加
  */
 function loginMemberPageFromAdminPage(eventBase, clickTarget, getTarget){
 	//対象の要素のクリックイベントコールバックを登録する
 	$(eventBase).on(CLICK, clickTarget, function(e){
 		var id = $(getTarget, this).text();	//対象からテキスト(ID)を取得する
-		loginInsteadOfMember(id);			//取得したIDで会員画面へのログインを行う
+		//クリック(タップ)された所がチェックボックスエリア以外の場合 2016.09.14 r.shibata 追加
+		if(event.target.className != CHECK_AREA){
+			loginInsteadOfMember(id);			//取得したIDで会員画面へのログインを行う
+		}
 	});
 }
 
@@ -898,12 +904,44 @@ function afterReloadMailMagaTable() {
  * 返却値  :なし
  * 作成者:T.Yamamoto
  * 作成日:2015.08.06
+ * 変更者:R.Shibata
+ * 変更日:2016.09.14
+ * 内容  :ユーザ一覧のチェックボックスエリアを追加した事による対応
  */
 function afterReloadUserListInfoTable() {
 	//会員一覧テーブルのクリック対象レコードに対してクラス属性を付けて識別をしやすくする
 	commonFuncs.setTableRecordClass('userListInfoTable', 'targetUser');
 	//ユーザ一覧の入会状況列をDB上の値から意味ある文字列に置き換える
 	commonFuncs.replaceColumnValue('.userListInfoTable .user_status', commonFuncs.userStatusList);
+	//ユーザ一覧テーブルのチェックボックスエリアに対してチェックボックスを実際に配置する。 2016.09.14 r.shibata 追加
+	addToCheckBoxArea(CHECK_AREA, true);
+}
+
+/* 
+ * 関数名:addToCheckBoxArea
+ * 概要  :一覧に存在するチェックボックスエリアに対して、チェックボックスを追加する
+ * 引数  :addArea : チェックボックスを配置するエリアのクラス名称(セレクタ名称)
+ *       :isRecordSelect : チェックボックス選択時にそのレコードその物を選択するかどうか 
+ * 返却値:なし
+ * 作成者:R.Shibata
+ * 作成日:2016.09.14
+ */
+function addToCheckBoxArea(addArea, isRecordSelect){
+	//inputTagを作成する
+	var $input = $(TAG_INPUT);
+	//inputTagに対しての設定を行う
+	$input.attr(TYPE, CHECKBOX);//inputTypeをチェックボックスにする
+	$input.attr(CLASS, addArea);//クラス名を設定する
+	//追加するエリアに対して作成したinputTagを追加する
+	$(DOT + addArea).filter(SELECTOR_NOT_FIRST).append($input);
+	//チェック時レコードの選択状態を切り替えるかどうか
+	if(isRecordSelect) {
+		//一覧(テーブルレコード)の追加エリアに対して、changeイベントを追加する
+		$(STR_TR).on(CHANGE, DOT + addArea , function(){
+			//クリックされた親のテーブルレコードに対し、選択された事を示すクラスをセットまたは解除する
+			$(this).parent(STR_TR).toggleClass(SELECT_RECORD);
+		});	
+	}
 }
 
 /* 
