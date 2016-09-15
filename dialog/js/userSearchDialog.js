@@ -29,12 +29,6 @@ function userSearchDialog(dialog){
 			//エラー文を表示する。
 			alert(createErrorText(errors, errorJpNames));
 
-			// 処理が成功したフラグが生存しているか確認
-			if($(DOT + SUCCESS).length)　{
-				// 生存していれば削除
-				$(SEARCH_USER_BUTTON).removeClass(SUCCESS);
-			}
-
 		},
 		rules :{
 			telephone : {
@@ -179,6 +173,9 @@ function userSearchDialog(dialog){
 						$copyTarget.append($(this).parent());
 					}
 				});
+
+				// 2016.09.15 add k.urabe 入力値チェックが成功しているか判定するために付与したクラス名を削除
+				$(SEARCH_USER_BUTTON).removeClass(SUCCESS);
 
 				//検索ボタン押下と共にダイアログを破棄する
 				thisElem.dialogClass.destroy();
