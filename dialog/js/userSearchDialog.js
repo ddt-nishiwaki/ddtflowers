@@ -14,6 +14,41 @@
 function userSearchDialog(dialog){
 	baseDialog.call(this, dialog);	//親クラスのコンストラクタをコールする
 
+	// 2016.09.15 add k.urabe ユーザ検索ダイアログ用validation設定オブジェクトを追加
+	this.validation = {
+		//チェックが通った時の処理
+		submitHandler : function(form, event){
+
+			// 処理が成功したフラグをボタンのクラス名に追加
+			$(SEARCH_USER_BUTTON).addClass(SUCCESS);
+
+			return false;	//デフォルトのsubmitをキャンセルする
+		},
+		invalidHandler:function(form,error){	//チェックで弾かれたときのイベントを設定する。
+			var errors = $(error.errorList);	//今回のチェックで追加されたエラーを取得する。
+			//エラー文を表示する。
+			alert(createErrorText(errors, errorJpNames));
+
+			// 処理が成功したフラグが生存しているか確認
+			if($(DOT + SUCCESS).length)　{
+				// 生存していれば削除
+				$(SEARCH_USER_BUTTON).removeClass(SUCCESS);
+			}
+
+		},
+		rules :{
+			telephone : {
+				telnum : true
+			},
+			mail_address : {
+				emailjp : true
+			}, 
+			id : {
+				digits : true
+			}
+		}
+	}
+
 	/* 関数名:getJson
 	 * 概要　:JSONを取得する(オーバーライドして内容を定義してください)
 	 * 引数　:なし
@@ -49,12 +84,16 @@ function userSearchDialog(dialog){
 	 * 設計者　:H.Kaneko
 	 * 作成日　:2015.0814
 	 * 作成者　:T.Masuda
+	 * 変更日 :2016.09.15
+	 * 変更者 :k.urabe
+	 * 内容 :ボタンの追加先をformタグ内になるように修正
 	 */
 	this.dispContentsMain = function(){
 		//検索フォームを作る
 		this[VAR_CREATE_TAG].outputTag(KEY_USER_SEARCH_FORM, KEY_USER_SEARCH_FORM, CURRENT_DIALOG);
 		//検索ボタンをセットする
-		commonFuncs.putCommonButton(CURRENT_DIALOG, 'searchUserButton fRight', 'search', true, false, true);
+		// 2016.09.15 mod k.urabe 追加先をformタグ内になるように指定
+		commonFuncs.putCommonButton(DOT + KEY_USER_SEARCH_FORM + SELECTOR_LAST, 'searchUserButton fRight', 'search', true, false, true);
 	}
 	
 	/* 関数名:setConfig
@@ -64,6 +103,9 @@ function userSearchDialog(dialog){
 	 * 設計者　:H.Kaneko
 	 * 作成者　:T.Masuda
 	 * 作成日　:2015.0822
+	 * 変更者 :k.urabe
+	 * 変更日 :2016.09.15
+	 * 内容 :フォームに対する入力チェックの登録を追加
 	 */
 	this.setConfig = function(){
 		//ユーザ一覧タブ内の検索フォームの値をダイアログにコピーする
@@ -74,6 +116,8 @@ function userSearchDialog(dialog){
 		commonFuncs.enterKeyButtonClick('.adminUserSearch', '.searchUserButton:last');
 		//ダイアログの位置を修正する
 		this.setDialogPosition(POSITION_CENTER_TOP);
+		// 2016.09.15 add k.urabe 作成した入力チェックを登録する処理を追加
+		$(DOT + KEY_USER_SEARCH_FORM + SELECTOR_LAST).validate(this.validation);
 	}
 
 	/* 関数名:setCallback
@@ -104,32 +148,45 @@ function userSearchDialog(dialog){
 	 * 返却値:なし
 	 * 作成日　:2016.0410
 	 * 作成者　:T.Masuda
+	 * 変更日 :2016.09.15
+	 * 変更者 :k.urabe
+	 * 内容 :jqueryによるsubmit処理を追加。
 	 */
 	this.addClickSearchButtonEventCallback = function(target, targetPage, copyTarget){
 		//クリックイベントコールバック内で当クラスインスタンスを使うため変数に格納しておく
 		var thisElem = this;
 		//検索ボタンをクリックしたときにテーブルの内容を更新する
 		$(target).on(CLICK, function() {
-			//ユーザ検索を行う
-			userListSearch(targetPage);
-			
-			//コピー先領域を取得する
-			$copyTarget = $(copyTarget);
-			//テキストボックスのコピー先の既存のテキストボックスを一掃する
-			$copyTarget.children(SELECTOR_LABEL_TAG).remove();
-			
-			//入力済みのテキストボックスをユーザ一覧タブ内の検索フォームにコピーする
-			$(SELECTOR_INPUT, thisElem.dialog).filter(SELECTOR_NOT_BUTTON_TYPE).each(function(i){
-				//テキストボックスに値が入っていたら
-				if (commonFuncs.checkEmpty($(this).val())){
-					//指定した先にテキストボックスとラベルをコピーする
-					$copyTarget.append($(this).parent());
-				}
-			});
 
-			//検索ボタン押下と共にダイアログを破棄する
-			thisElem.dialogClass.destroy();
+			// 2016.09.15 add k.urabe 対象フォームに対してsubmitを実行する処理を追加
+			$(DOT + KEY_USER_SEARCH_FORM + SELECTOR_LAST).submit()
+			
+			// 2016.09.15 add k.urabe 入力値チェックが成功しているか判定する処理を追加
+			if($(DOT + SUCCESS).length) {
+				//ユーザ検索を行う
+				userListSearch(targetPage);
+			
+				//コピー先領域を取得する
+				$copyTarget = $(copyTarget);
+				//テキストボックスのコピー先の既存のテキストボックスを一掃する
+				$copyTarget.children(SELECTOR_LABEL_TAG).remove();
+			
+				//入力済みのテキストボックスをユーザ一覧タブ内の検索フォームにコピーする
+				$(SELECTOR_INPUT, thisElem.dialog).filter(SELECTOR_NOT_BUTTON_TYPE).each(function(i){
+					//テキストボックスに値が入っていたら
+					if (commonFuncs.checkEmpty($(this).val())){
+						//指定した先にテキストボックスとラベルをコピーする
+						$copyTarget.append($(this).parent());
+					}
+				});
+
+				//検索ボタン押下と共にダイアログを破棄する
+				thisElem.dialogClass.destroy();
+
+			}
+
 		});
+
 	}	
 	
 	/* 関数名:copyTextboxValues

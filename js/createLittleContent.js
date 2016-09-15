@@ -3836,7 +3836,9 @@ var errorJpNames = {
 					construct : '作品',
 					schedule : '時限',
 					dayOfWeek : '曜日',
-					week : '週'
+					week : '週',
+					// 2016.09.15 add k.urabe ユーザ検索フォームのid検索用の要素を追加
+					id : 'ID'
 				}
 
 
