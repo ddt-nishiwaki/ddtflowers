@@ -38,6 +38,9 @@ function timetableList() {
 	 * 変更日 : 2016.09.12
 	 * 変更者 : k.urabe
 	 * 内容 : 当該ダイアログ更新後に、再度リスト選択の処理を設定
+	 * 変更日 : 2016.09.15
+	 * 変更者 : k.urabe
+	 * 内容 : テーブル再配置後にボタンとの位置関係を修正する処理を追加
 	 */
 	this.callbackUpdate = function(){
 		//選択されている行を取得する
@@ -56,12 +59,14 @@ function timetableList() {
 			$(SELECTOR_TIME_TABLE_LIST_TABLE).remove();	//既存のテーブルを消す
 			//テーブルをリロードする
 			create_tag.outputTagTable(KEY_TIME_TABLE_LIST_TABLE, LESSON_TABLE, $(TIME_TABLE_LIST_TAB + SPACE + '.timeTableListOuter'));
+			// 2016.09.15 add k.urabe テーブル再配置後にボタンとの位置関係を修正する処理を追加
+			$(SELECTOR_TIME_TABLE_LIST_TABLE).prependTo(SELECTOR_TIME_TABLE_LIST_OUTER);
 			
 			//リロードしたテーブルの置換を行う
 			this.replaceTable();
 
 			// 2016.09.12 add k.urabe 更新後に再度、クリックされた時にuserSelectクラスをがなければ追加しあるなら消去する処理を設定
-			toggleClassClickElement(SELECTOR_TBODY_TR_TIME_TABLE, 'selectRecord', SELECTOR_TIME_TABLE_LIST_TABLE);
+			toggleClassClickElement(SELECTOR_TBODY_TR_TIME_TABLE, SELECT_RECORD, SELECTOR_TIME_TABLE_LIST_TABLE);
 		//選択なしであれば
 		} else {
 			//警告を出す

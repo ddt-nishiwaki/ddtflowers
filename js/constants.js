@@ -1224,6 +1224,10 @@ TIME_TABLE_LIST_TAB				= '#timeTableList';
 KEY_TIME_TABLE_LIST_TABLE		= 'timetableListTable';
 // 授業時間帯一覧テーブルのセレクタ
 SELECTOR_TIME_TABLE_LIST_TABLE	= '.timetableListTable';
+// 2016.09.15 add k.urabe 時間帯一覧タブのフォームのキー
+KEY_TIME_TABLE_LIST_OUTER = 'timeTableListOuter';
+// 2016.09.15 add k.urabe 時間帯一覧タブのフォームのセレクタ
+SELECTOR_TIME_TABLE_LIST_OUTER = '.timeTableListOuter';
 
 // 授業一覧タブのセレクタ
 SELECTOR_LESSON_LIST_TAB = '#lessonList';

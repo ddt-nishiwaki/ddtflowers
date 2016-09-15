@@ -3838,7 +3838,10 @@ var errorJpNames = {
 					dayOfWeek : '曜日',
 					week : '週',
 					// 2016.09.15 add k.urabe ユーザ検索フォームのid検索用の要素を追加
-					id : 'ID'
+					id : 'ID',
+					// 2016.09.15 add k.urabe 時間帯一覧タブの最小・最大人数用の要素を追加
+					min_num : '最小人数',
+					max_num : '最大人数'
 				}
 
 
@@ -3921,6 +3924,28 @@ var profileValidation = $.extend({}, true, showAlert, {
 		},
 		telephone2 : {
 			telnum : true
+		}
+	}
+})
+
+// 2016.09.15 add k.urabe 時間帯一覧タブのvalidation設定を追加
+var timeTableListValidation = $.extend({}, true, showAlert, {
+	//成功時のコールバック
+	submitHandler : function(form, event){
+
+		timetableListFuncs.callbackUpdate();
+		
+		return false;	//元々のsubmitイベントコールバックをキャンセルする
+	}, rules :{
+		min_num:{
+			required : true,
+			digits : true,
+			checkMinTime : true
+		},
+		max_num : {
+			required : true,
+			digits : true,
+			max : 100
 		}
 	}
 })

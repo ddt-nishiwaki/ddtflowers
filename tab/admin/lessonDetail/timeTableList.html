@@ -32,19 +32,25 @@
 			this[VAR_CREATE_TAG].getDomFile(ADMIN_LESSON_LIST_DIALOG_HTML);
 
 			//授業一覧テーブルの外側の領域を作る
-			this[VAR_CREATE_TAG].outputTag('timeTableListOuter', 'timeTableListOuter', TIME_TABLE_LIST_TAB);
+			// 2016.09.15 mod k.urabe 既存の定数を使用するように変更
+			this[VAR_CREATE_TAG].outputTag(KEY_TIME_TABLE_LIST_OUTER, KEY_TIME_TABLE_LIST_OUTER, TIME_TABLE_LIST_TAB);
 			//授業のデータ一覧テーブルを作る
-			this[VAR_CREATE_TAG].outputTagTable(KEY_TIME_TABLE_LIST_TABLE, LESSON_TABLE, $(TIME_TABLE_LIST_TAB + SPACE + '.timeTableListOuter'));
+			// 2016.09.15 mod k.urabe 既存の定数を使用するように変更
+			this[VAR_CREATE_TAG].outputTagTable(KEY_TIME_TABLE_LIST_TABLE, LESSON_TABLE, $(TIME_TABLE_LIST_TAB + SPACE + SELECTOR_TIME_TABLE_LIST_OUTER));
 			
 			//テーブル内の置換を行い、編集項目項目をテキストボックスに置き換える
 			timetableListFuncs.replaceTable();
 			
 			//会員一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する
 			// 2016.09.12 mod k.urabe 人数系カラムをクリックする度に選択・非選択となることを防ぐためにセレクタを変更
-			toggleClassClickElement(SELECTOR_TBODY_TR_TIME_TABLE, 'selectRecord', SELECTOR_TIME_TABLE_LIST_TABLE);
+			toggleClassClickElement(SELECTOR_TBODY_TR_TIME_TABLE, SELECT_RECORD, SELECTOR_TIME_TABLE_LIST_TABLE);
 			
 			//更新ボタンを作る。コールバックもここで登録しておく
-			commonFuncs.putCommonButton('#timeTableList', 'updateButton', 'update', true, true, true, {onclick : 'timetableListFuncs.callbackUpdate();'});
+			// 2016.09.15 mod k.urabe 作成するボタンのタイプをsubmitに変更。またボタンの追加先をform内に変更。
+			commonFuncs.putCommonButton(SELECTOR_TIME_TABLE_LIST_OUTER + SELECTOR_LAST, 'updateButton', 'update', true, true, true, {TYPE:SUBMIT});
+
+			// 2016.09.15 add k.urabe 時間帯一覧のformに対して入力値チェックを登録する処理を追加。
+			$(FORM).validate(timeTableListValidation);
 			
 			</script>
 	</body>
