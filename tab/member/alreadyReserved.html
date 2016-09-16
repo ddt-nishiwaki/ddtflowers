@@ -76,8 +76,15 @@
 	//予約中授業テーブル絞り込みボタン機能を実装する
 	create_tag.reloadTableTriggerEvent('#alreadyReserved .filterButton', CLICK, 'reservedLessonTable');
 
-	//テーマ選択セレクトメニューのクリックでの全表示をオンにする
-	commonFuncs.setTogglePosition('#alreadyReserved', '.selectThemebox', VALUE_ABSOLUTE, STR_AUTO);
+	// 端末がスマートフォンでなければ
+	if(!commonFuncs.checkSmartPhone(uaName)){
+		//テーマ選択セレクトメニューのクリックでの全表示をオンにする
+		commonFuncs.setTogglePosition(SELECTOR_ALREADY_RESERVED, SELECTOR_SELECT_THEMEBOX, VALUE_ABSOLUTE, STR_AUTO);
+		//テーマのテキストの設定を変更する
+		commonFuncs.changeThemeConfig(SELECTOR_SELECT_THEME, SELECTOR_SELECT_THEMEBOX, SELECTOR_THEME_TEXT);
+	}
+	//テーマ選択セレクトメニューの値が変更された時、テーマテキストの値を変更する
+	commonFuncs.setThemeTextFromSelectBox(SELECTOR_ALREADY_RESERVED, SELECTOR_SELECT_THEMEBOX, SELECTOR_THEME_SELECT_TEXT);
 	
 </script>
 </body>

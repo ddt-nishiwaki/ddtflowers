@@ -18,6 +18,9 @@ VALID_IMAGE_IDENTIFIERS = [ '.jpg', '.jpeg', '.JPG', '.JPEG', '.png', '.PNG',
 INVALID_IMAGE_FILE_WARNING = '無効なファイルです。以下の拡張子の画像ファイルを選択してください。\n'
 		+ VALID_IMAGE_IDENTIFIERS.join('').replace(/\./g, ' ');
 
+// userAgentより取得する名称の内、スマートフォンと判定する文字列群 2016.09.16 r.shibata 追加
+VALID_SMARTPHONE_USERAGENT = ['android', 'ipad', 'ipod', 'iphone']
+
 MSL_LIST_PHP = 'list.php'; // MSLのリスト
 MSL_DETAIL_PHP = 'detail.php'; // MSLの記事詳細
 INIT_JSON = 'source/init.json'; // 初期化の値のJSONファイル
@@ -281,6 +284,14 @@ UI_DIALOG_CLOSEBOX = '.ui-dialog-titlebar-close'; // jQuery UI
 													// Dialogのクローズボックスのセレクタ
 UI_DIALOG_BUTTON_PANEL = '.ui-dialog-buttonpane'; // jQuery UI
 													// Dialogのオプションで作るボタン領域のセレクタ
+// 2016.09.16 r.shibata追加 start ユーザトップ画面のテーマ選択関連のセレクタを追加
+SELECTOR_ALREADY_RESERVED = "#alreadyReserved"; // 予約中の授業を表示するエリアのセレクタ
+SELECTOR_FINISHED_LESSON = "#finishedLesson"; // 受講済みの授業を表示するエリアのセレクタ
+SELECTOR_SELECT_THEME = ".selectTheme"; // テーマを設定するエリアのセレクタ
+SELECTOR_SELECT_THEMEBOX = ".selectThemebox"; // テーマを選択するセレクトボックスのセレクタ
+SELECTOR_THEME_TEXT = ".themeText"; // テーマと表示するエリアのセレクタ
+SELECTOR_THEME_SELECT_TEXT = ".themeSelectText"; // 選択したテーマを表示するエリアのセレクタ
+// 2016.09.16 r.shibata追加 end
 
 // 選択されたボタンを表す値。
 UNSELECTED = -1; // ボタン未選択の値
@@ -962,6 +973,8 @@ SELECTOR_INPUT = 'input';
 // inputタグ
 HTML_INPUT = 'input';
 
+// 最初の要素というセレクタ。
+SELECTOR_FIRST = ':first';
 // 最初の要素ではないというセレクタ。主に見出し行を除外したテーブルのレコードを指定するのに使う
 SELECTOR_NOT_FIRST = ':not(:first)';
 // 商品購入一覧タブのセレクタ

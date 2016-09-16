@@ -1,4 +1,4 @@
-﻿/** ファイル名:common.js
+/** ファイル名:common.js
  * 概要　　　:汎用関数クラス定義のファイル
  * 作成日　:2015.0813
  * 作成者　:T.Masuda
@@ -3001,23 +3001,84 @@ this.messageDialogDefaultOption = {
 	 * 返却値  :
 	 * 作成者:T.Masuda
 	 * 作成日:2016.04.30
+	 * 変更者:R.Shibata
+	 * 変更日:2016.09.16
+	 * 内容  :PCとスマートフォンの差を吸収するため、フォーカスが外れたときはセレクトボックスの表示をしないようにする設定を追加
 	 */
 	this.setTogglePosition = function(parent, target, position, height){
+		// 親タグの内のターゲットタグがフォーカスされた時のイベントをバインドする
 		$(parent).on(EVENT_FOCUS, target, function(){
+			//バインドされた要素のcssを変更する
 			$(this).css({
-				height : height
-				,position : position
+				height : height // 高さを指定された高さに設定する
+				,position : position // 位置を指定された位置に設定する
 			})
 		});
-
+		// 親タグの内のターゲットタグからフォーカスが外れた時のイベントをバインドする
 		$(parent).on(EVENT_BLUR, target, function(){
+			//バインドされた要素のcssを変更する
 			$(this).css({
-				height : EMPTY_STRING
-				,position : EMPTY_STRING
+				height : EMPTY_STRING // 高さを初期設定に戻すr
+				,position : EMPTY_STRING // 位置を初期設定に戻す
+				,display : NONE // 画面表示をしないようにする
 			})
 		});
 	}
-	
+
+	/* 
+	 * 関数名:changeThemeConfig
+	 * 概要  :テーマ選択関連の初回設定を行う。ターゲットはボタンに置換される。PCとスマートフォンで設定を変更する目的で使用する
+	 * 引数  :parent:親要素のセレクタ
+	 *       :selectbox:テーマを選択するセレクトボックスのセレクタ
+	 *       :target:クリックイベントをバインドする対象のセレクタ
+	 * 返却値  :無し
+	 * 作成者:R.Shibata
+	 * 作成日:2016.09.16
+	 */
+	this.changeThemeConfig = function(parent, selectbox, target){
+		var cls = $(parent + SPACE + target).attr(CLASS);// 置換するため、ターゲットのクラス名を退避する
+		var txt = $(parent + SELECTOR_FIRST + SPACE + target ).text(); // 置換するため、ターゲットのテキストを退避する
+		$(parent + SPACE + target).replaceWith(HTML_BUTTON);// ターゲットをボタンに置き換える
+		$(parent + SPACE + BUTTON).addClass(cls);// 作成したボタンのクラスを設定する
+		$(parent + SPACE + BUTTON).text(txt);// 作成したボタンのテキストを設定する
+
+		// 親タグの内のターゲットタグがクリックされた時のイベントをバインドする
+		$(parent).on(CLICK, target, function(){
+			//指定されたセレクトボックスのcssを変更する
+			$(selectbox).css({
+				display : EMPTY_STRING // 画面表示を初期設定に戻す(画面表示させる)
+			})
+			$(selectbox).focus();// セレクトボックスにフォーカスを移動させる
+		});
+		// 指定されたセレクトボックスの初期設定を変更する
+		$(selectbox).css({
+			display : NONE // 初期状態は画面表示をしないように変更する
+		})
+		console.log($(target))
+	}
+
+	/* 
+	 * 関数名:setThemeTextFromSelectBox
+	 * 概要  :テーマを選択するセレクトボックスの値により、何が選択されたかをテキストに表示する
+	 * 引数  :parent:親要素のセレクタ
+	 *       :selectbox:選択されたテーマを取得するセレクトボックスのセレクタ
+	 *       :target:値を表示させる対象のセレクタ
+	 * 返却値  :無し
+	 * 作成者:R.Shibata
+	 * 作成日:2016.09.16
+	 */
+	this.setThemeTextFromSelectBox = function(parent, selectbox, target){
+		// 親タグの内のターゲットタグの値が変更された時のイベントをバインドする
+		$(parent).on(CHANGE, selectbox, function(){
+			var selector = parent + SPACE + selectbox; // セレクタを加工し変数へセットする
+			// セレクタに対する値を取得し、値があれば
+			if ($(selector).val() != null){
+				$(target).text($(selector).val().join());// 値をカンマで結合し、テキストへ表示させる
+			}else{// 値が無い場合
+				$(target).text(EMPTY_STRING);// ブランクをセットする
+			}
+		});
+	}
 
 	/* 
 	 * 関数名:getDateString
@@ -3273,6 +3334,23 @@ this.messageDialogDefaultOption = {
 			//代わりのメッセージを挿入する
 			$(targetTable).append($(HTML_PARAGRAPH).text(message).addClass('noArticle'));
 		}
+	}
+	
+	/* 
+	 * 関数名:checkSmartPhone
+	 * 概要  :uaNameを元に、その名称がスマートフォンの物かチェックする。uaNameはサイト表示時に取得済み。
+	 * 引数  :uaName : userAgentを条件に取得した端末名称
+	 * 返却値 :bool : スマートフォンであるかどうか(trueでスマートフォン,falseでそれ以外)
+	 * 作成者:R.Shibata
+	 * 作成日:2016.09.16
+	 */	
+	this.checkSmartPhone = function (uaName){
+		var retboo = false; // 返却用の変数を用意する、初期値をFalseとする
+		//引数uaNameが指定文字列と一致すれば
+		if($.inArray(uaName, VALID_SMARTPHONE_USERAGENT) > -1){
+			retboo = true; //スマートフォンと判定する
+		}
+		return retboo; //チェック結果を返却する
 	}
 	
 	

@@ -81,11 +81,14 @@ label,
  * 変更者 :k.urabe
  * 変更日 :2016.09.13
  * 内容 :テーマのリストボックスが横に入るように領域の横幅を拡張
+ * 変更者 :r.shibata
+ * 変更日 :2016.09.16
+ * 内容 :長い文字列に対応するため横幅をさらに拡張(150px→300px)
  */
 .selectTheme {
 	height : auto;			/* 内容に合わせた高さにする */
 	display : inline-block;	/* 横に別の要素を並べることがあるのでinline-blockにする */
-	width: 150px;			/* 中の要素がabsoluteで判定がなくなってしまうことがあるため、固定幅にする */
+	width: 280px;			/* 中の要素がabsoluteで判定がなくなってしまうことがあるため、固定幅にする */
 	margin-bottom: 5px;		/* 下と間隔を取る */
 }
 
@@ -792,6 +795,7 @@ label,
  */
 #alreadyReserved .filterButton {
 	margin-left: 5px;		/* 左にmarginをセットする */
+	float: right;			/* 右寄せにする */
 }
 
 .searchInputArea .toLabel {
