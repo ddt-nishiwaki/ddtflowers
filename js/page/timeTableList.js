@@ -41,6 +41,9 @@ function timetableList() {
 	 * 変更日 : 2016.09.15
 	 * 変更者 : k.urabe
 	 * 内容 : テーブル再配置後にボタンとの位置関係を修正する処理を追加
+	 * 変更日 : 2016.09.18
+	 * 変更者 : k.urabe
+	 * 内容 : テーブル再配置後にボタンを再調整する処理を削除し、テーブルの追加先を変更
 	 */
 	this.callbackUpdate = function(){
 		//選択されている行を取得する
@@ -58,9 +61,7 @@ function timetableList() {
 			create_tag.getJsonFile(URL_GET_JSON_ARRAY_PHP, create_tag.json[KEY_TIME_TABLE_LIST_TABLE], KEY_TIME_TABLE_LIST_TABLE);
 			$(SELECTOR_TIME_TABLE_LIST_TABLE).remove();	//既存のテーブルを消す
 			//テーブルをリロードする
-			create_tag.outputTagTable(KEY_TIME_TABLE_LIST_TABLE, LESSON_TABLE, $(TIME_TABLE_LIST_TAB + SPACE + '.timeTableListOuter'));
-			// 2016.09.15 add k.urabe テーブル再配置後にボタンとの位置関係を修正する処理を追加
-			$(SELECTOR_TIME_TABLE_LIST_TABLE).prependTo(SELECTOR_TIME_TABLE_LIST_OUTER);
+			create_tag.outputTagTable(KEY_TIME_TABLE_LIST_TABLE, LESSON_TABLE, $(SELECTOR_SET_TIME_TABLE_LIST));		// 2016.09.18 mod k.urabe テーブル再配置指定場所を変更
 			
 			//リロードしたテーブルの置換を行う
 			this.replaceTable();

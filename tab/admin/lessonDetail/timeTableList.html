@@ -34,9 +34,10 @@
 			//授業一覧テーブルの外側の領域を作る
 			// 2016.09.15 mod k.urabe 既存の定数を使用するように変更
 			this[VAR_CREATE_TAG].outputTag(KEY_TIME_TABLE_LIST_OUTER, KEY_TIME_TABLE_LIST_OUTER, TIME_TABLE_LIST_TAB);
+			//授業一覧テーブルの内側の領域を作る
+			this[VAR_CREATE_TAG].outputTag(KEY_TIME_TABLE_LIST_INNER, KEY_TIME_TABLE_LIST_INNER, SELECTOR_SET_TIME_TABLE_LIST_INNER);	// 2016.09.18 add k.urabe 時間帯テーブルを囲む内側の領域を追加
 			//授業のデータ一覧テーブルを作る
-			// 2016.09.15 mod k.urabe 既存の定数を使用するように変更
-			this[VAR_CREATE_TAG].outputTagTable(KEY_TIME_TABLE_LIST_TABLE, LESSON_TABLE, $(TIME_TABLE_LIST_TAB + SPACE + SELECTOR_TIME_TABLE_LIST_OUTER));
+			this[VAR_CREATE_TAG].outputTagTable(KEY_TIME_TABLE_LIST_TABLE, LESSON_TABLE, $(SELECTOR_SET_TIME_TABLE_LIST));				// 2016.09.18 mod k.urabe 時間帯テーブルの追加先を、新たに追加した内側の領域に変更
 			
 			//テーブル内の置換を行い、編集項目項目をテキストボックスに置き換える
 			timetableListFuncs.replaceTable();

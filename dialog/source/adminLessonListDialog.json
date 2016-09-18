@@ -101,6 +101,8 @@
     },
     "timeTableListOuter" : {
     },
+    "timeTableListInner" : {
+    },
     "timetableListTable":{
     	"class" : "timetableListTable commonTable",
         "db_getQuery":" CALL `p_select_timetable_day`('lessonDate', @result); SELECT @result AS `result`;",
