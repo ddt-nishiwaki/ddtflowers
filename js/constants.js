@@ -1253,11 +1253,6 @@ SELECTOR_SET_TIME_TABLE_LIST = SELECTOR_SET_TIME_TABLE_LIST_INNER + SPACE + SELE
 // 授業一覧タブのセレクタ
 SELECTOR_LESSON_LIST_TAB = '#lessonList';
 
-// 2016.09.15 add k.urabe ユーザ絞り込みダイアログのボタンのセレクタ
-SEARCH_USER_BUTTON = '.searchUserButton';
-// 2016.09.15 add k.urabe ユーザ絞り込みダイアログ入力チェック成功時の追加クラス名
-SUCCESS = 'success';
-
 // メッセージダイアログ用のHTML
 HTML_MESSAGE_DIALOG = '<div class="messageDialog"></div>';
 // tdタグのhtml
