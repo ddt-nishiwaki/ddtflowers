@@ -77,14 +77,18 @@
 	create_tag.reloadTableTriggerEvent('#alreadyReserved .filterButton', CLICK, 'reservedLessonTable');
 
 	// 端末がスマートフォンでなければ
-	if(!commonFuncs.checkSmartPhone(uaName)){
+	if(!create_tag.isTouchDevice(uaName)){
+		//テーマ選択画面のテーマ表示をボタンに変更する
+		create_tag.changeTypeToButton(SELECTOR_SELECT_THEME,SELECTOR_THEME_TEXT)
+		//テーマ選択画面のセレクトボックスを非表示にする
+		create_tag.setCssDisplayNone(SELECTOR_SELECT_THEMEBOX)
 		//テーマ選択セレクトメニューのクリックでの全表示をオンにする
-		commonFuncs.setTogglePosition(SELECTOR_ALREADY_RESERVED, SELECTOR_SELECT_THEMEBOX, VALUE_ABSOLUTE, STR_AUTO);
+		create_tag.setTogglePosition(SELECTOR_ALREADY_RESERVED, SELECTOR_SELECT_THEMEBOX, VALUE_ABSOLUTE, STR_AUTO);
 		//テーマのテキストの設定を変更する
-		commonFuncs.changeThemeConfig(SELECTOR_SELECT_THEME, SELECTOR_SELECT_THEMEBOX, SELECTOR_THEME_TEXT);
+		create_tag.setThemeClickEvent(SELECTOR_SELECT_THEME, SELECTOR_SELECT_THEMEBOX, SELECTOR_THEME_TEXT);
 	}
 	//テーマ選択セレクトメニューの値が変更された時、テーマテキストの値を変更する
-	commonFuncs.setThemeTextFromSelectBox(SELECTOR_ALREADY_RESERVED, SELECTOR_SELECT_THEMEBOX, SELECTOR_THEME_SELECT_TEXT);
+	create_tag.setThemeTextFromSelectBox(SELECTOR_ALREADY_RESERVED, SELECTOR_SELECT_THEMEBOX, SELECTOR_THEME_SELECT_TEXT);
 	
 </script>
 </body>

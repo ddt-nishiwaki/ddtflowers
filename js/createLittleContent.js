@@ -2914,7 +2914,124 @@ function createLittleContents(){
 			//管理者ログイン用IDがcookieにセットされているかを判定して返す
 			return commonFuncs.checkEmpty(cookies.otherUserId);
 		}
-		
+	
+	/* 
+	 * 関数名:setTogglePosition
+	 * 概要  :フォーカス時に指定したposition、高さを設定して、フォーカスが外れたら設定を無効にするようにする
+	 *       主にmultipleのセレクトメニューでフォーカス時に内容を全て出すようにするようにするときに使う
+	 * 引数  :
+	 * 返却値  :
+	 * 作成者:T.Masuda
+	 * 作成日:2016.04.30
+	 * 変更者:R.Shibata
+	 * 変更日:2016.09.19
+	 * 内容  :PCとスマートフォンの差を吸収するため、フォーカスが外れたときはセレクトボックスの表示をしないようにする設定を追加
+	 *       :内容が一部画面の物だったのでcreateLittleContentへ移動
+	 */
+	this.setTogglePosition = function(parent, target, position, height){
+		// 親タグの内のターゲットタグがフォーカスされた時のイベントをバインドする
+		$(parent).on(EVENT_FOCUS, target, function(){
+			//バインドされた要素のcssを変更する
+			$(this).css({
+				height 		: height 	// 高さを指定された高さに設定する
+				,position 	: position 	// 位置を指定された位置に設定する
+			})
+		});
+		// 親タグの内のターゲットタグからフォーカスが外れた時のイベントをバインドする
+		$(parent).on(EVENT_BLUR, target, function(){
+			//バインドされた要素のcssを変更する
+			$(this).css({
+				height 		: EMPTY_STRING 	// 高さを初期設定に戻すr
+				,position 	: EMPTY_STRING 	// 位置を初期設定に戻す
+				,display 	: NONE 			// 画面表示をしないようにする
+			})
+		});
+	}
+
+	/* 
+	 * 関数名:changeTypeToButton
+	 * 概要  :ターゲットのタイプをボタンに変更する
+	 * 引数  :parent:親要素のセレクタ
+	 *       :target:ボタンに置換する対象のセレクタ
+	 * 返却値  :無し
+	 * 作成者:R.Shibata
+	 * 作成日:2016.09.19
+	 */
+	this.changeTypeToButton = function(parent, target){
+		var cls = $(parent + SPACE + target).attr(CLASS);				// 置換するため、ターゲットのクラス名を退避する
+		var txt = $(parent + SELECTOR_FIRST + SPACE + target ).text();	// 置換するため、ターゲットのテキストを退避する
+		// ターゲットをボタンに置き換える
+		$(parent + SPACE + target).replaceWith(HTML_BUTTON);
+		// 作成したボタンのクラスを設定する
+		$(parent + SPACE + BUTTON).addClass(cls);
+		// 作成したボタンのテキストを設定する
+		$(parent + SPACE + BUTTON).text(txt);
+
+	}
+
+	/* 
+	 * 関数名:setThemeClickEvent
+	 * 概要  :テーマ選択画面の要素に対するクリックイベントを追加する。
+	 * 引数  :parent:親要素のセレクタ
+	 *       :selectbox:テーマを選択するセレクトボックスのセレクタ
+	 *       :target:クリックイベントをバインドする対象のセレクタ
+	 * 返却値  :無し
+	 * 作成者:R.Shibata
+	 * 作成日:2016.09.19
+	 */
+	this.setThemeClickEvent = function(parent, selectbox, target){
+		// 親タグの内のターゲットタグがクリックされた時のイベントをバインドする
+		$(parent).on(CLICK, target, function(){
+			//指定されたセレクトボックスのcssを変更する
+			$(selectbox).css({
+				display : EMPTY_STRING // 画面表示を初期設定に戻す(画面表示させる)
+			})
+			// セレクトボックスにフォーカスを移動させる
+			$(selectbox).focus();
+		});
+	}
+
+	/* 
+	 * 関数名:setCssDisplayNone
+	 * 概要  :指定した要素の表示形式をnoneに設定する
+	 * 引数  :selector:表示形式を変更したい要素のセレクタ
+	 * 返却値  :無し
+	 * 作成者:R.Shibata
+	 * 作成日:2016.09.19
+	 */
+	this.setCssDisplayNone = function(selector){
+		// 指定されたセレクトボックスの初期設定を変更する
+		$(selector).css({
+			display : NONE // 初期状態は画面表示をしないように変更する
+		})
+	}
+
+	/* 
+	 * 関数名:setThemeTextFromSelectBox
+	 * 概要  :テーマを選択するセレクトボックスの値により、何が選択されたかをテキストに表示する
+	 * 引数  :parent:親要素のセレクタ
+	 *       :selectbox:選択されたテーマを取得するセレクトボックスのセレクタ
+	 *       :target:値を表示させる対象のセレクタ
+	 * 返却値  :無し
+	 * 作成者:R.Shibata
+	 * 作成日:2016.09.16
+	 */
+	this.setThemeTextFromSelectBox = function(parent, selectbox, target){
+		// 親タグの内のターゲットタグの値が変更された時のイベントをバインドする
+		$(parent).on(CHANGE, selectbox, function(){
+			var selector = parent + SPACE + selectbox; // セレクタを加工し変数へセットする
+			// セレクタに対する値を取得し、値があれば
+			if ($(selector).val() != null){
+				// 値をカンマで結合し、テキストへ表示させる
+				$(target).text($(selector).val().join());
+			// 値が無い場合
+			}else{
+				// ブランクをセットする
+				$(target).text(EMPTY_STRING);
+			}
+		});
+	}
+
 }	//createLittleContentsクラスの終わり
 
 createLittleContents.prototype = new createTag();
