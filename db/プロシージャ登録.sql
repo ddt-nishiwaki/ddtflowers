@@ -2959,134 +2959,97 @@ SELECT result AS result;
 
 END$$
 
-#受講承認-授業の更新
+#受講承認-授業の更新   プロシージャの内容見直し、UPDATEの更新成功可否をメッセージハンドラを使用する事で判定するよう変更 2016.09.20 r.shibata
+#当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
 DROP PROCEDURE IF EXISTS p_update_approval_lesson $$
+# 受講情報テーブルの更新を行うためのプロシージャを登録する
 CREATE PROCEDURE p_update_approval_lesson (
-    IN in_user_classwork_cost INT
-    ,IN in_use_point INT
-    ,IN in_get_point INT
-    ,IN in_pay_price INT
-    ,IN in_user_key INT
-    ,IN in_user_classwork_key INT
-    ,OUT result INT
+    IN in_user_classwork_cost INT  # 受講料
+    ,IN in_use_point INT           # 使用ポイント
+    ,IN in_get_point INT           # 取得ポイント
+    ,IN in_pay_price INT           # 支払額
+    ,IN in_user_key INT            # ユーザキー
+    ,IN in_user_classwork_key INT  # 受講情報テーブルユーザID
+    ,OUT result INT                # 出力リザルト
 )
+#ストアドプロシージャの記載を開始する
 BEGIN
-
-DECLARE latest_timestamp VARCHAR(25);
-DECLARE updated_timestamp VARCHAR(25);
-DECLARE latest_timestamp_user VARCHAR(25);
-DECLARE updated_timestamp_user VARCHAR(25);
-DECLARE diff_point int(11);
-
-SELECT 
-    MAX(update_datetime)
-FROM
-    user_classwork
-# 2016.09.12 同一ユーザーのレコード更新日付を見るように条件追加
-WHERE 
-	id = in_user_classwork_key
-INTO
-    latest_timestamp;
-
+DECLARE diff_point int(11); #所持ポイントと使用ポイントの差
+# エラーハンドラーの設定 エラーが発生したらロールバックして終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+# トランザクションを開始する
 START TRANSACTION;
-
+# テーブルを更新する
 UPDATE
+    # 受講情報テーブルを更新する
     user_classwork
+# 値をセットする
 SET
-    user_classwork_cost = in_user_classwork_cost
-    ,use_point = in_use_point
-    ,get_point = in_get_point
-    ,update_datetime = NOW()
-    ,user_work_status = 3
-    ,pay_price = in_pay_price
+    user_classwork_cost = in_user_classwork_cost # 受講料
+    ,use_point          = in_use_point           # 使用ポイント
+    ,get_point          = in_get_point           # 取得ポイント
+    ,update_datetime    = NOW()                  # 更新時刻
+    ,user_work_status   = 3                      # 受講状態
+    ,pay_price          = in_pay_price           # 支払額
+# 更新条件を指定する
 WHERE
+    # ユーザIDが一致するレコードを更新する
     id = in_user_classwork_key;
-
-SELECT 
-    MAX(update_datetime) AS latest
-FROM
-    user_classwork
-# 2016.09.12 同一ユーザーのレコード更新日付を見るように条件追加
-WHERE 
-	id = in_user_classwork_key
+# 値を取得する
+SELECT
+    # 取得ポイントと使用ポイントの差を取得する
+    in_get_point - in_use_point
+#項目にセットする
 INTO
-    updated_timestamp;
-
-IF latest_timestamp < updated_timestamp THEN
-    SELECT
-        in_get_point - in_use_point
-    INTO
-        diff_point;
-    SELECT
-        MAX(update_datetime)
-    FROM
-        user_inf
-    # 2016.09.12 同一ユーザーのレコード更新日付を見るように条件追加
-    WHERE 
-        id = in_user_key
-    INTO
-        latest_timestamp_user;
-    IF diff_point = 0 THEN
-        IF in_get_point = 0 THEN
-            SELECT 1 INTO result;
-            COMMIT;
-        ELSE
-            UPDATE
-                user_inf
-            SET
-                use_point = use_point + in_use_point
-                ,update_datetime = NOW()
-            WHERE
-                id = in_user_key;
-            SELECT
-                MAX(update_datetime) AS latest
-            FROM
-                user_inf
-            # 2016.09.12 同一ユーザーのレコード更新日付を見るように条件追加
-            WHERE 
-                id = in_user_key
-            INTO
-                updated_timestamp_user;
-            IF latest_timestamp_user < updated_timestamp_user THEN
-                COMMIT;
-            ELSE
-                SELECT 0 INTO result;
-                ROLLBACK;
-            END IF;
-        END IF;
-    ELSE
+    # ポイントの差をセットする
+    diff_point;
+# ポイントの差が0の場合
+IF diff_point = 0 THEN
+    # 取得ポイントが0以外の場合
+    IF in_get_point <> 0 THEN
+        #テーブルを更新する
         UPDATE
+            # ユーザ情報テーブルを更新する
             user_inf
+        # 値をセットする
         SET
-            use_point = use_point + in_use_point
-            ,get_point = get_point + diff_point
-            ,update_datetime = NOW()
+            use_point        = use_point + in_use_point # 使用ポイント
+            ,update_datetime = NOW()                    # 更新時刻
+        #更新条件を指定する
         WHERE
+            # ユーザIDが一致するレコードを更新対象とする
             id = in_user_key;
-        SELECT
-            MAX(update_datetime)
-        FROM
-            user_inf
-        # 2016.09.12 同一ユーザーのレコード更新日付を見るように条件追加
-        WHERE 
-            id = in_user_key
-        INTO
-            updated_timestamp_user;
-        IF latest_timestamp_user < updated_timestamp_user THEN
-            SELECT 1 INTO result;
-            COMMIT;
-        ELSE
-            SELECT 0 INTO result;
-            ROLLBACK;
-        END IF;
     END IF;
+# ポイントの差が0以外の場合
 ELSE
-    SELECT 0 INTO result;
-    ROLLBACK;
+    # テーブルを更新する
+    UPDATE
+        # ユーザ情報テーブルを更新する
+        user_inf
+    # 値をセットする
+    SET
+        use_point  = use_point + in_use_point # 使用ポイント
+        ,get_point = get_point + diff_point   # 所持ポイント
+        ,update_datetime = NOW()              # 更新時刻
+    # 更新条件を指定する
+    WHERE
+        # ユーザIDが一致するレコードを更新対象とする
+        id = in_user_key;
 END IF;
-# 2016.09.12 r.shibata 行の更新成否を判定するための値を取得するSQL文を追加(ストアド内部のresult)
-SELECT result AS result;
-
+# テーブルの更新を確定する
+COMMIT;
+# 値を取得する
+SELECT
+    update_datetime # 更新時刻
+# データ取得元のテーブルを指定する
+FROM
+    # 受講情報テーブル
+    user_classwork
+# 条件を指定する
+WHERE
+    # ユーザIDが一致するレコードを取得する
+    id = in_user_classwork_key;
+# プロシージャを終了する
 END$$
 
 #受講承認-商品の更新   プロシージャの内容見直し、UPDATEの更新成功可否をメッセージハンドラを使用する事で判定するよう変更 2016.09.20 r.shibata

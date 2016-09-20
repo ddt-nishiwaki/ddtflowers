@@ -145,10 +145,10 @@ class JSONDBManager extends dbConnect{
 				$stmt = $this->dbh->prepare($query);
 				// クエリを実行する
 				$stmt->execute();
-				//クエリを実行して更新処理を行う。処理を行ったレコード数を返してメンバに保存する
-				$this->processedRecords = $stmt->rowCount();
 				// 結果セットを返す
 				$retRS = $stmt->fetchALL(PDO::FETCH_ASSOC);  //結果セット
+				//処理を行ったレコード数を結果セットより取得してメンバに保存する 
+				$this->processedRecords = count($retRS); // 2016.09.20 r.shibata rowCountから取得していたものを修正(指示:金子)
 			}
 		}
 		// 結果セットを返す
