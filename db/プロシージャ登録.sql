@@ -3089,108 +3089,72 @@ SELECT result AS result;
 
 END$$
 
-#受講承認-商品の更新
+#受講承認-商品の更新   プロシージャの内容見直し、UPDATEの更新成功可否をメッセージハンドラを使用する事で判定するよう変更 2016.09.20 r.shibata
+#当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
 DROP PROCEDURE IF EXISTS p_update_approval_purchase $$
+# 商品売り上げ情報テーブルの更新を行うためのプロシージャを登録する
 CREATE PROCEDURE p_update_approval_purchase (
-    IN in_id INT
-    ,IN in_sell_number INT
-    ,IN in_pay_cash INT
-    ,IN in_use_point INT
-    ,IN in_commodity_key INT
-    ,IN in_purchase_status INT
-    ,IN in_user_key INT
-    ,OUT result INT
+    IN in_id INT                # レコードID
+    ,IN in_sell_number INT      # 販売個数
+    ,IN in_pay_cash INT         # 支払額
+    ,IN in_use_point INT        # 使用ポイント
+    ,IN in_commodity_key INT    # 商品マスタテーブルキー
+    ,IN in_purchase_status INT  # 購入状況
+    ,IN in_user_key INT         # ユーザマスタテーブルキー
+    ,OUT result INT             # 出力リザルト
 )
+#ストアドプロシージャの記載を開始する
 BEGIN
-
-DECLARE latest_timestamp DATETIME;
-DECLARE updated_timestamp DATETIME;
-DECLARE latest_timestamp_user DATETIME;
-DECLARE updated_timestamp_user DATETIME;
-
-SELECT 
-    MAX(update_datetime)
-FROM
-    commodity_sell
-# 2016.09.13 同一ユーザーの商品レコード更新日付を見るように条件追加
-WHERE 
-    id = in_id
-INTO
-    latest_timestamp;
-
+# エラーハンドラーの設定 エラーが発生したらロールバックして終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+# トランザクションを開始する
 START TRANSACTION;
-
+# テーブルを更新する
 UPDATE
+    # 商品売り上げ情報テーブルを更新する
     commodity_sell
+# 値をセットする
 SET
-    sell_number = in_sell_number
-    ,pay_cash = in_pay_cash
-    ,use_point = in_use_point
-    ,commodity_key = in_commodity_key
-    ,purchase_status = in_purchase_status
-    ,update_datetime = NOW()
+    sell_number      = in_sell_number       # 販売個数
+    ,pay_cash        = in_pay_cash          # 支払額
+    ,use_point       = in_use_point         # 使用ポイント
+    ,commodity_key   = in_commodity_key     # 商品マスタテーブルキー
+    ,purchase_status = in_purchase_status   # 購入状況
+    ,update_datetime = NOW()                # 更新時刻
+# 更新条件を指定する
 WHERE
+    # レコードIDが一致するレコードを更新対象とする
     id = in_id;
-
-SELECT 
-    MAX(update_datetime)
-FROM
-    commodity_sell
-# 2016.09.13 同一ユーザーの商品レコード更新日付を見るように条件追加
-WHERE 
-    id = in_id
-INTO
-    updated_timestamp;
-
-IF latest_timestamp < updated_timestamp THEN
-    IF in_purchase_status > 0 THEN
-        SELECT
-            MAX(update_datetime)
-        FROM
-            user_inf
-        # 2016.09.13 同一ユーザーのレコード更新日付を見るように条件追加
-        WHERE 
-            id = in_user_key
-        INTO
-            latest_timestamp_user;
-
-        UPDATE
-            user_inf
-        SET
-            use_point = use_point + in_use_point
-            ,get_point = get_point - in_use_point
-            ,update_datetime = NOW()
-        WHERE
-            id = in_user_key;
-
-        SELECT
-            MAX(update_datetime)
-        FROM
-            user_inf
-        # 2016.09.13 同一ユーザーのレコード更新日付を見るように条件追加
-        WHERE 
-            id = in_user_key
-        INTO
-            updated_timestamp_user;
-
-        IF latest_timestamp_user < updated_timestamp_user THEN
-            SELECT 1 INTO result;
-            COMMIT;
-        ELSE
-            SELECT 0 INTO result;
-            ROLLBACK;
-        END IF;
-    ELSE
-        SELECT 1 INTO result;
-        COMMIT;
-    END IF;
-ELSE
-    SELECT 0 INTO result;
-    ROLLBACK;
+# 購入状況が0より大きければ 
+IF 0 < in_purchase_status THEN
+    # テーブルを更新する
+    UPDATE
+        # ユーザ情報テーブルを更新する
+        user_inf
+    # 値をセットする
+    SET
+        use_point  = use_point + in_use_point # 使用ポイント
+        ,get_point = get_point - in_use_point # 所持ポイント
+        ,update_datetime = NOW()              # 更新時刻
+    # 更新条件を指定する
+    WHERE
+        # ユーザIDが一致するレコードを更新対象とする
+        id = in_user_key;
 END IF;
-# 2016.09.13 r.shibata 行の更新成否を判定するための値を取得するSQL文を追加(ストアド内部のresult)
-SELECT result AS result;
-
+# テーブルの更新を確定する
+COMMIT;
+# 値を取得する
+SELECT
+    update_datetime # 更新時刻
+# データ取得元のテーブルを指定する
+FROM
+    # 商品売り上げ情報テーブル
+    commodity_sell
+# 条件を指定する
+WHERE
+    # ユーザIDが一致するレコードを取得する
+    id = in_id;
+# プロシージャを終了する
 END$$
 
 DROP PROCEDURE IF EXISTS p_insert_approval_purchase $$

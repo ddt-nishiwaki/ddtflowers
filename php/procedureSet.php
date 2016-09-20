@@ -45,9 +45,6 @@ class procedureSet extends procedureBase{
 	 * 設計者:H.Kaneko
 	 * 作成者:T.Masuda
 	 * 作成日:2015.0728
-	 * 変更者:R.Shibata
-	 * 変更日:2016.0912
-	 * 変更内容:executeQuery関数が結果セットを返却したとき、更新レコード数が入ってるものとして扱うように追加
 	 */
 	function job($jsonString){
 		parent::job($jsonString);	//親クラスのjobを実行し、メンバにJSONの連想配列を格納する。
@@ -55,8 +52,8 @@ class procedureSet extends procedureBase{
 		//JSONをDBに反映させる。
 		//SQLによる例外の対処のためtryブロックで囲む
 		try {
-			//INSERT、またはUPDATE命令を実行し、結果を取得する。 2016.09.12 r.shibata 結果を取得するための変数を追加
-			$rs = $this->executeQuery($this->json, DB_SETQUERY);
+			//INSERT、またはUPDATE命令を実行する
+			$this->executeQuery($this->json, DB_SETQUERY);
 			//SQL例外のcatchブロック
 		} catch (PDOException $e) {
 			// エラーメッセージを表示する
@@ -67,14 +64,9 @@ class procedureSet extends procedureBase{
 		}
 		//最後に行う処理
 		$this->dbh = null;
-		//2016.09.13 r.shibata 結果の有無に対して返却する値を変更する 作用行数が存在する場合はそちらを優先する
-		if(isset($rs[0]) && !$this->processedRecords){
-			//クライアントへ返すメッセージを結果セットより作成する。 2016.09.12 r.shibata 追加
-			$returnMessage = '{"message":"' . $rs[0]['result'] . '"}';
-		}else{
-			//クライアントへ返すメッセージを作成する。
-			$returnMessage = '{"message":"' . $this->processedRecords . '"}';
-		}
+		
+		//クライアントへ返すメッセージを作成する。
+		$returnMessage = '{"message":"' . $this->processedRecords . '"}';
 		
 		// 作成したJson文字列を出力する
 		print($returnMessage);
