@@ -2759,106 +2759,68 @@ ON
 END $$
 #区切り文字をセミコロンに戻す
 
-#受講一覧-商品の更新
+#受講一覧-商品の更新   プロシージャの内容見直し、UPDATEの更新成功可否をメッセージハンドラを使用する事で判定するよう変更 2016.09.20 r.shibata
+#当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
 DROP PROCEDURE IF EXISTS p_update_approval_list_purchase $$
+# 商品売り上げ情報テーブルの更新を行うためのプロシージャを登録する
 CREATE PROCEDURE p_update_approval_list_purchase (
-    IN in_sell_number INT
-    ,IN in_pay_cash INT
-    ,IN in_use_point INT
-    ,IN in_commodity_sell_key INT
-    ,IN in_user_key INT
-    ,IN in_diff_point INT
-    ,IN in_commodity_key INT
-    ,OUT result INT
+    IN in_sell_number INT         # 販売個数
+    ,IN in_pay_cash INT           # 支払額
+    ,IN in_use_point INT          # 使用ポイント
+    ,IN in_commodity_sell_key INT # 商品売り上げテーブルキー
+    ,IN in_user_key INT           # ユーザマスタテーブルキー
+    ,IN in_diff_point INT         # ポイントの差
+    ,IN in_commodity_key INT      # 商品マスタテーブルキー
+    ,OUT result INT               # 出力リザルト
 )
+#ストアドプロシージャの記載を開始する
 BEGIN
-
-DECLARE latest_timestamp VARCHAR(25);
-DECLARE updated_timestamp VARCHAR(25);
-DECLARE latest_timestamp_user VARCHAR(25);
-DECLARE updated_timestamp_user VARCHAR(25);
-DECLARE diff_point int(11);
-
-SELECT 
-    MAX(update_datetime)
-FROM
-    commodity_sell
-# 2016.09.13 同一ユーザーの商品レコード更新日付を見るように条件追加
-WHERE 
-    id = in_commodity_sell_key
-INTO
-    latest_timestamp;
-
+# エラーハンドラーの設定 エラーが発生したらロールバックして終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+# トランザクションを開始する
 START TRANSACTION;
-
+# テーブルを更新する
 UPDATE
+    # 商品売り上げ情報テーブルを更新する
     commodity_sell
 SET
-    pay_cash = in_pay_cash
-    ,use_point = in_use_point
-    ,update_datetime = NOW()
-    ,commodity_key = in_commodity_key
+    pay_cash = in_pay_cash            # 支払額
+    ,use_point = in_use_point         # 使用ポイント
+    ,update_datetime = NOW()          # 更新時刻
+    ,commodity_key = in_commodity_key # 商品マスタテーブルキー
+# 更新条件を指定する
 WHERE
+    #IDが一致するレコードを更新する
     id = in_commodity_sell_key;
-
-SELECT 
-    MAX(update_datetime)
-FROM
-    commodity_sell
-# 2016.09.13 同一ユーザーの商品レコード更新日付を見るように条件追加
-WHERE 
-    id = in_commodity_sell_key
-INTO
-    updated_timestamp;
-
-IF latest_timestamp < updated_timestamp THEN
-    IF in_diff_point = 0 THEN
-        SELECT 1 INTO result;
-        COMMIT;
-    ELSE
-        SELECT
-            MAX(update_datetime)
-        FROM
-            user_inf
-        # 2016.09.13 同一ユーザーのレコード更新日付を見るように条件追加
-        WHERE 
-            id = in_user_key
-        INTO
-            latest_timestamp_user;
-            
-        UPDATE
-            user_inf
-        SET
-            get_point = get_point + in_diff_point
-            ,update_datetime = NOW()
-        WHERE
-            id = in_user_key;
-        
-        SELECT
-            MAX(update_datetime)
-        FROM
-            user_inf
-        # 2016.09.13 同一ユーザーのレコード更新日付を見るように条件追加
-        WHERE 
-            id = in_user_key
-        INTO
-            updated_timestamp_user;
-        
-        IF latest_timestamp_user < updated_timestamp_user THEN
-            SELECT 1 INTO result;
-            COMMIT;
-        ELSE
-            SELECT 0 INTO result;
-            ROLLBACK;
-        END IF;
-    END IF;
-ELSE 
-    SELECT 0 INTO result;
-    ROLLBACK;
+# ポイントの差が0以外の場合
+IF in_diff_point <> 0 THEN
+    #テーブルを更新する
+    UPDATE
+        # ユーザ情報テーブルを更新する
+        user_inf
+    # 値をセットする
+    SET
+        get_point        = get_point + in_diff_point # 所持ポイント
+        ,update_datetime = NOW()                     # 更新時刻
+    # 更新条件を指定する
+    WHERE
+        # ユーザIDが一致するレコードを更新対象とする
+        id = in_user_key;
 END IF;
-# 2016.09.13 r.shibata 行の更新成否を判定するための値を取得するSQL文を追加(ストアド内部のresult)
-SELECT result AS result;
-
+# テーブルの更新を確定する
+COMMIT;
+# 値を取得する
+SELECT
+    update_datetime # 更新時刻
+# データ取得元のテーブルを指定する
+FROM
+    # 商品売り上げ情報テーブル
+    commodity_sell
+# 条件を指定する
+WHERE
+    # ユーザIDが一致するレコードを取得する
+    id = in_id;
+# プロシージャを終了する
 END$$
 
 #受講一覧-授業の更新   プロシージャの内容見直し、UPDATEの更新成功可否をメッセージハンドラを使用する事で判定するよう変更 2016.09.20 r.shibata
