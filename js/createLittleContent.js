@@ -3494,6 +3494,64 @@ function calendar(selector) {
 	}
 
 	/*
+	 * 関数名:sortLessonDateArray
+	 * 引数  :Array lessonDateArray : 並び替え対象の授業日配列
+	 * 戻り値:なし
+	 * 概要  :授業日付の配列を昇順に並び替える
+	 * 作成日:2016.09.20
+	 * 作成者:k.urabe
+	 */
+	this.sortLessonDateArray = function(lessonDateArray){
+
+		// 授業日の配列を昇順にソート
+		lessonDateArray.sort(function(val1, val2){
+			// 配列内の前要素が小さいか判定
+			if(val1.lesson_date < val2.lesson_date) {
+				return -1;
+			}
+			// 配列要素の後要素が小さいか判定
+			if(val2.lesson_date < val1.lesson_date) {
+				return 1;
+			}
+			// 2つの日付が等しいためそのまま
+			return 0;
+		});
+		
+	}
+
+	/*
+	 * 関数名:getLessonDateArray
+	 * 引数  :object appendTo : 追加先のオブジェクト
+	        :String fromDate : 当該月の初日
+	        :String toDate : 当該月の最終日
+	        :String userKey : ユーザID
+	 * 戻り値:なし
+	 * 概要  :授業がある日付の配列を取得する
+	 * 作成日:2016.09.20
+	 * 作成者:k.urabe
+	 */
+	this.getLessonDateArray = function(appendTo, fromDate, toDate, userKey){
+
+		// 追加先のオブジェクトに当該月の初日を設定
+		this.create_tag.json[appendTo].fromDate.value = fromDate;
+		// 追加先のオブジェクトに当該月の最終日を設定
+		this.create_tag.json[appendTo].toDate.value = toDate;
+		// 追加先のオブジェクトに当該月の授業日配列を得るための空配列を準備
+		this.create_tag.json[appendTo].tableData = [];
+		// 呼び出し元からユーザIDを受け取っているか判定
+		if(userKey !== void(0)) {
+			// ユーザの予約授業日を取得するため、追加先のオブジェクトにユーザIDを設定
+			this.create_tag.json[appendTo].user_key.value = userKey;
+		}
+
+		// 授業日を配列で取得
+		this.create_tag.getJsonFile(URL_GET_JSON_ARRAY_PHP, this.create_tag.json[appendTo], appendTo);
+
+		// 取得した授業日配列を念のためソート
+		this.sortLessonDateArray(this.create_tag.json[appendTo].tableData);
+	}
+
+	/*
 	 * 関数名:changeExistLessonDate
 	 * 引数  :なし
 	 * 戻り値:なし
@@ -3505,78 +3563,80 @@ function calendar(selector) {
 	 * 内容:管理者の授業詳細にて、当該日の授業がすべて削除された場合のハイライト処理に対応
 	 */
 	this.changeExistLessonDate = function(){
-		
-		//クエリの検索期間の値をセットする。内容は月の初めと最後の日付
-		this.create_tag.json.searchClassworkExist.fromDate.value = this.monthDates[0];
-		this.create_tag.json.searchClassworkExist.toDate.value = this.monthDates[this.monthDates.length - 1];
-		this.create_tag.json.searchClassworkExist.tableData = [];
-		//授業を取得する
-		this.create_tag.getJsonFile(URL_GET_JSON_ARRAY_PHP, this.create_tag.json.searchClassworkExist, 'searchClassworkExist');
-		//存在する授業日付の数を取得する
-		var datesLength = this.create_tag.json.searchClassworkExist.tableData.length;
 
-		// 2016.09.13 add k.urabe オブジェクトがadminCalendarであればカレンダーのハイライトを一度すべて削除する処理を追加
-		if(this instanceof adminCalendar) {
-			// 現在表示されているカレンダーの日付を走査する
-			$(STR_TD, this.dom).each(function() {
-				// ハイライトするクラス名を削除する
-				$(this).removeClass(DATE_HAS_CLASS);
-			});
-		}
+		// 当該月の授業日配列を取得
+		this.getLessonDateArray('searchClassworkExist', this.monthDates[0], this.monthDates[this.monthDates.length - 1]);
+		// 存在する授業日付の数を取得する
+		var lessonLength = this.create_tag.json.searchClassworkExist.tableData.length;
 
-		//授業があれば
-		if (datesLength) {
-			
-			//クエリの検索期間の値をセットする。内容は月の初めと最後の日付
-			this.create_tag.json.checkClassworkStatus.fromDate.value = this.monthDates[0];
-			this.create_tag.json.checkClassworkStatus.toDate.value = this.monthDates[this.monthDates.length - 1];
-			//ユーザIDをセットする
-			this.create_tag.json.checkClassworkStatus.user_key.value = this.userId;
-			this.create_tag.json.checkClassworkStatus.tableData = [];
-			
-			//ログインユーザの授業を取得する
-			this.create_tag.getJsonFile(URL_GET_JSON_ARRAY_PHP, this.create_tag.json.checkClassworkStatus, 'checkClassworkStatus');
-			//授業データを取り出す
-			var lessonDetail = this.create_tag.json.checkClassworkStatus.tableData;
+		// 授業が存在する年月日を格納するための変数
+		var lessonDayAll = null;
+		// 授業が存在する日付を格納するための変数
+		var lessonDay = null;
+		// 授業日を走査するための変数
+		var lessonDayCount = 0;
+		// インスタンスを関数内で使用するため変数に参照を持たせる
+		var thisElem = this;
 
-			//日付を走査する
-			for (var i = 0; i < datesLength; i++) {
-				
-				//日付の文字列を取得する
-				var dateStrAll = this.create_tag.json.searchClassworkExist.tableData[i].lesson_date;
-				//日を切り出す
-				var dateStr = dateStrAll.substr(8, 2);
-				//日付要素を走査する
-				$(STR_TD, this.dom).each(function(){
-					//カレンダーから日付を取得する
-					var calendarDate = $(this).children('a').text();
-					//日付が1桁なら0を詰める
-					calendarDate = calendarDate.length > 1? calendarDate : '0' + calendarDate;
-					//その日に授業があれば
-					if(calendarDate == dateStr) {
-						//予約状況を取得する
-						var userWorkStatus = DEFAULT_LESSON;
-						//授業詳細をチェックする
-						for (var j = 0; j < lessonDetail.length; j++) {
-							//日付が一致したら
-							if (lessonDetail[j].lesson_date == dateStrAll) {
-								//予約状況の値を取り出す
-								var recUserWorkStatus = lessonDetail[j].user_work_status;
-								//取得した予約状況の値が前より小さいなら
-								if (recUserWorkStatus < userWorkStatus) {
-									//現在の予約状態の値を更新する
-									userWorkStatus = recUserWorkStatus;
-								}
+		//当該月の日付を走査する
+		$(STR_TD, this.dom).each(function() {
+			// 授業有無および予約状況に合わせたハイライトを判定するための変数に初期値として「授業がない状態」を設定
+			var userWorkStatus = NOT_LESSON;
+			//カレンダーから日付を取得する
+			var calendarDate = $(this).children('a').text();
+			//日付が1桁なら0を詰める
+			calendarDate = calendarDate.length > 1 ? calendarDate : '0' + calendarDate;
+
+			// 授業日を取得していない場合、かつ当該月の授業日が残っているか判定
+			if(!lessonDay && lessonDayCount < lessonLength && '01' <= calendarDate) {
+				// 会員カレンダーの場合、現在月は1日から取得が始まらない場合があるため、1日を越えて走査が始まった場合の対処
+				do {
+					// 未取得であれば、授業日を取得
+					lessonDayAll = thisElem.create_tag.json.searchClassworkExist.tableData[lessonDayCount].lesson_date;
+					// 取得した授業日から日だけを抽出
+					lessonDay = lessonDayAll.substr(8, 2);
+					// 授業日走査用の値をインクリメント
+					lessonDayCount++;
+				// 当月のカレンダー開始日が1日を越えていた場合、授業日の取得を同日もしくは未来日まで進める
+				} while(lessonDay < calendarDate);
+			}
+
+			// 走査中のカレンダー日付と取得している授業日が一致するか検証
+			if(calendarDate == lessonDay) {
+				// 授業がある日のステータスを設定
+				userWorkStatus = DEFAULT_LESSON;
+
+				// 会員の場合
+				if(thisElem instanceof memberCalendar) {
+					// 当該月のユーザIDが持つ予約授業日配列を取得
+					thisElem.getLessonDateArray('checkClassworkStatus', thisElem.monthDates[0], thisElem.monthDates[thisElem.monthDates.length - 1], thisElem.userId);
+					// 存在する予約授業日付を取得する
+					var lessonDetail = thisElem.create_tag.json.checkClassworkStatus.tableData;
+
+					// ユーザの予約授業配列を走査
+					for (var j = 0; j < lessonDetail.length; j++) {
+						// 授業日とユーザの予約授業日が一致するか検証
+						if (lessonDetail[j].lesson_date == lessonDayAll) {
+							// 予約状況の値を取り出す
+							var recUserWorkStatus = lessonDetail[j].user_work_status;
+							// 取得した予約状況の値が前より小さいなら
+							if (recUserWorkStatus < userWorkStatus) {
+								//現在の予約状態の値を更新する
+								userWorkStatus = recUserWorkStatus;
 							}
 						}
-						
-						//背景色を変更する
-						$(this).addClass(commonFuncs.getLessonStatusClassByPriority(userWorkStatus));
-						return;	//以降を走査する必要なしなのでここでbreakする
 					}
-				});
+				}
+
+				// 当該日のマッチングが完了したため、授業日にnullを再設定
+				lessonDay = null;
 			}
-		}
+
+			// 当該日のハイライト処理を行う
+			$(this).addClass(commonFuncs.getLessonStatusClassByPriority(userWorkStatus));
+
+		});
+
 	}
 	
 	/*
