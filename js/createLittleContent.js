@@ -2958,14 +2958,15 @@ function createLittleContents(){
 	 * 作成日:2016.09.19
 	 */
 	this.changeTypeToButton = function(parent, target){
+		var $btn = $(HTML_BUTTON); // 置き換えるためのボタンを作成する
 		var cls = $(parent + SPACE + target).attr(CLASS);				// 置換するため、ターゲットのクラス名を退避する
 		var txt = $(parent + SELECTOR_FIRST + SPACE + target ).text();	// 置換するため、ターゲットのテキストを退避する
-		// ターゲットをボタンに置き換える
-		$(parent + SPACE + target).replaceWith(HTML_BUTTON);
 		// 作成したボタンのクラスを設定する
-		$(parent + SPACE + BUTTON).addClass(cls);
+		$btn.addClass(cls)
 		// 作成したボタンのテキストを設定する
-		$(parent + SPACE + BUTTON).text(txt);
+		$btn.text(txt)
+		// ターゲットを作成したボタンに置き換える
+		$(parent + SPACE + target).replaceWith($btn);
 
 	}
 
