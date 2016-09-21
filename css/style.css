@@ -383,6 +383,16 @@ input[type="number"] {
 }
 
 /* 
+ * セレクタ:.dateNotLesson a
+ * 概要   :カレンダー内の授業がない日付
+ * 作成者 :k.urabe
+ * 作成日 :2016.09.20
+ */
+.dateNotLesson a{
+	background : silver!important;	/* 薄い灰色にする */
+}
+
+/* 
  * セレクタ:.dateHasClass a
  * 概要   :カレンダー内の授業のある日付
  * 作成者 :T.Masuda

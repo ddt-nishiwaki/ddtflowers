@@ -3082,8 +3082,11 @@ this.messageDialogDefaultOption = {
 			//中止
 			case STOP_LESSON　: retClassName = DATE_STOP_LESSON;
 	                break;
-	        //どれでもない(手をつけてない授業しかない)
-	        default: retClassName = DATE_HAS_CLASS;
+	        // 予約がない授業
+	        case DEFAULT_LESSON : retClassName = DATE_HAS_CLASS;
+	        		break;
+	        // 授業がない日
+	        default: retClassName = DATE_NOT_LESSON;
 	                break;
 		};
 		
