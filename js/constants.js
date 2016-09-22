@@ -392,6 +392,9 @@ ADMIN_LESSON_CREATE_DIALOG_JS = 'dialog/js/adminLessonCreateDialog.js';
 ADMIN_LESSON_CREATE_DIALOG_HTML = 'dialog/template/adminLessonCreateDialog.html';
 ADMIN_LESSON_CREATE_DIALOG_JSON = 'dialog/source/adminLessonCreateDialog.json';
 
+// ダイアログの共通JSON
+COMMON_LIST_DIALOG_JSON = 'source/commonListDialog.json'; //2016.09.21 r.shibata 追加
+
 // テーブルから取り出す列名
 COLUMN_NAME_MAX_NUM = 'max_num'; // １限に予約できる最大の数
 COLUMN_NAME_START_TIME = 'start_time'; // 授業開始時間
