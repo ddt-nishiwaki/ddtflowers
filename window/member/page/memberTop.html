@@ -68,9 +68,9 @@
 						.done(function(){	//whenのコード終了後
 						//	setTimeout(function(){	//遅延してコールバックを走らせる
 								// 日ごと授業のjsonを読み込む
-								create_tag.getJsonFile('source/eachDayLesson.json');
+								// create_tag.getJsonFile('source/eachDayLesson.json'); // 2016.09.21 r.shibata 未使用のため削除
 								// 日ごと授業のテンプレートを読み込む
-								create_tag.getDomFile('template/eachDayLesson.html');
+								// create_tag.getDomFile('template/eachDayLesson.html');// 2016.09.21 r.shibata 未使用のため削除
 								// カレンダーを作り、クリックでダイアログ作成を作る
 								// 2016.09.08 mod k.urabe カレンダーの選択可能な最大日付を定数で渡すように変更
 			 					var memCalendar = new memberCalendar('.lessonCalendar', CALENDAR_MAX_DATE, memberInfo, create_tag);

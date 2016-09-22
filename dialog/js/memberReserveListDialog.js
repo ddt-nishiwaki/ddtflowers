@@ -73,6 +73,8 @@ function memberReserveListDialog(dialog){
 	this.getJson = function(){
 		//このダイアログ用のJSONファイルを取得する
 		this[VAR_CREATE_TAG].getJsonFile(RESERVE_LIST_JSON);
+		//ダイアログ共通のJSONファイルを取得する
+		this[VAR_CREATE_TAG].getJsonFile(COMMON_LIST_DIALOG_JSON);
 		//JSONに授業データをセットする
 		commonFuncs.setLessonDataToJSON(this[DIALOG_CLASS], this[VAR_CREATE_TAG]);	
 	};
