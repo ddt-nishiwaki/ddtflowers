@@ -1,7 +1,7 @@
 #ストアドプロシージャ登録
 #UPDATE文にはSELECT ROW_COUNT();を最後に入れないと更新件数が返らない？
 
-#授業予約
+#授業予約  例外処理を追加し、発生したらROLLBACKして終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -28,6 +28,8 @@ DECLARE user_classwork_is_exists int(11);
 DECLARE latest_timestamp VARCHAR(25);
 #UPDATE文による更新レコード数。UPDATEの成否判定に使う
 DECLARE updated_count int(11);
+# エラーハンドラーの設定 エラーが発生したらロールバックして終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 
 #user_classworkテーブル内のレコードの中で最新の更新日付を取得する
 #出力対象の列を指定する
@@ -128,36 +130,36 @@ VALUES (
 
 #既にレコードが存在する場合(キャンセルからの再予約)
 ELSE
-#既存の授業データをキャンセル状態から予約状態に変更する
-#以下のテーブルのレコードを更新する
-UPDATE
-    #受講情報テーブル
-    user_classwork
-#更新対象の列と値を指定する
-SET
-    #1(予約受付)
-    user_work_status = 1
-    #引数のデフォルト花材費
-    ,flower_cost = in_default_flower_cost
-    #引数のデフォルト受講料
-    ,user_classwork_cost = in_default_user_classwork_cost
-    #引数のステージ情報ID
-    ,stage_key = in_stage_key
-    #引数の現在のステージNo
-    ,stage_no = in_stage_no_present
-    #引数のレベル情報ID
-    ,level_key = in_level_key
-    #引数の現在のレベルNo
-    ,level_no = in_level_no_present
-    #現在時刻
-    ,update_datetime = NOW()
-    #現在時刻
-    ,order_datetime = NOW()
-#検索条件を指定する
-WHERE
-    #引数で指定した受講IDを持つレコード
-    id = in_id;
-#分岐終了
+    #既存の授業データをキャンセル状態から予約状態に変更する
+    #以下のテーブルのレコードを更新する
+    UPDATE
+        #受講情報テーブル
+        user_classwork
+    #更新対象の列と値を指定する
+    SET
+        #1(予約受付)
+        user_work_status = 1
+        #引数のデフォルト花材費
+        ,flower_cost = in_default_flower_cost
+        #引数のデフォルト受講料
+        ,user_classwork_cost = in_default_user_classwork_cost
+        #引数のステージ情報ID
+        ,stage_key = in_stage_key
+        #引数の現在のステージNo
+        ,stage_no = in_stage_no_present
+        #引数のレベル情報ID
+        ,level_key = in_level_key
+        #引数の現在のレベルNo
+        ,level_no = in_level_no_present
+        #現在時刻
+        ,update_datetime = NOW()
+        #現在時刻
+        ,order_datetime = NOW()
+    #検索条件を指定する
+    WHERE
+        #引数で指定した受講IDを持つレコード
+        id = in_id;
+    #分岐終了
 END IF;
 
 #正常なINSERT、UPDATEがなされたかを確認するために追加・更新を行ったレコード数を取得する
@@ -180,6 +182,8 @@ INTO updated_count;
 IF updated_count = 1 THEN
 #UPDATE、INSERTを確定する
     COMMIT;
+    # 返却用の結果セット（1行返却）を実行する
+    SELECT NOW();
 #以前の最新のタイムスタンプより新しいレコードがない場合は失敗とみなす
 ELSE
     #不正なUPDATE、INSERTが成立しないようにロールバックする
@@ -191,7 +195,7 @@ END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
-#授業予約キャンセル
+#授業予約キャンセル  例外処理を追加し、発生したらROLLBACKして終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -213,6 +217,8 @@ DECLARE latest_timestamp VARCHAR(25);
 DECLARE updated_count int(11); 
 #キャンセル要因をわけるための変数。ユーザからのキャンセルなら10、管理者からのキャンセルなら11が入る
 DECLARE cancel_status tinyint(4);
+# エラーハンドラーの設定 エラーが発生したらロールバックして終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 
 #テーブル更新前の最新のタイムスタンプを取得し、UPDATE後に対象レコードのタイムスタンプと照らし合わせる
 #出力対象の列を指定する
@@ -234,6 +240,9 @@ ELSE
 	#user_work_statusが11になるようにする
 	SET cancel_status = 11;
 END IF;
+
+# トランザクションを開始する
+START TRANSACTION;
 
 #対象の受講情報データをキャンセル状態にする
 #以下に指定したテーブルのレコードを更新する
@@ -269,31 +278,33 @@ INTO updated_count;
 
 #正しく更新されていたら
 IF updated_count = 1 THEN
-#授業情報テーブルを今回の受講情報の更新に合わせて更新する 
-#下記のテーブルのレコードを更新する
-UPDATE 
-    #授業情報テーブル
-    classwork
-#更新対象の列と値を指定する
-SET
-    #予約人数を1人減らす
-    order_students = order_students-1
-    #現在時刻で更新タイムスタンプを更新する
-    ,update_datetime = NOW()
-    #キャンセル料をレコードにセットする
-    ,cancel_charge = in_cancel_charge
-#検索条件を指定する
-WHERE
-    #更新対象の授業テーブルID
-    id = in_classwork_key;
-#テーブルの更新を確定する
-COMMIT;
+    #授業情報テーブルを今回の受講情報の更新に合わせて更新する 
+    #下記のテーブルのレコードを更新する
+    UPDATE 
+        #授業情報テーブル
+        classwork
+    #更新対象の列と値を指定する
+    SET
+        #予約人数を1人減らす
+        order_students = order_students-1
+        #現在時刻で更新タイムスタンプを更新する
+        ,update_datetime = NOW()
+        #キャンセル料をレコードにセットする
+        ,cancel_charge = in_cancel_charge
+    #検索条件を指定する
+    WHERE
+        #更新対象の授業テーブルID
+        id = in_classwork_key;
+    #テーブルの更新を確定する
+    COMMIT;
+    # 返却用の結果セット（1行返却）を実行する
+    SELECT NOW();
 
 #正しく受講情報データが更新されていなかった場合
 ELSE
-#更新を無効にする
-ROLLBACK;
-#分岐終了
+    #更新を無効にする
+    ROLLBACK;
+    #分岐終了
 END IF;
 #ストアドプロシージャの処理を終える
 END $$
@@ -491,7 +502,7 @@ END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
-#ブログ記事作成
+#ブログ記事作成  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -515,6 +526,8 @@ CREATE PROCEDURE insertNewBlogArticle(
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #ブログ記事データを新規に追加する
 #以下に列挙した列の値を指定してテーブルにレコードを追加する
 INSERT INTO
@@ -556,12 +569,14 @@ VALUES (
         #記事画像3
         ,blogImage3
     );
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
-#ブログ記事更新
+#ブログ記事更新  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -586,6 +601,8 @@ CREATE PROCEDURE updateBlogArticle
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #ブログテーブルを更新する
 #指定したテーブルを更新する
 UPDATE
@@ -609,12 +626,14 @@ SET
 WHERE
     #指定した記事IDの記事を対象にする
     id = blogId;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
-#ブログ記事削除
+#ブログ記事削除  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -625,6 +644,8 @@ CREATE PROCEDURE deleteBlogArticle(
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #指定した記事を削除する
 #データ削除対象のテーブルを指定する
 DELETE FROM
@@ -634,6 +655,8 @@ DELETE FROM
 WHERE
     #指定したIDの記事を削除する
     id = articleId;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
@@ -880,7 +903,7 @@ END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
-#マイギャラリー記事作成
+#マイギャラリー記事作成  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -892,6 +915,8 @@ CREATE PROCEDURE insertGalleryContent(
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #ギャラリー記事を追加する
 #以下に列挙した列の値を指定してテーブルにレコードを追加する
 INSERT INTO
@@ -914,13 +939,15 @@ INSERT INTO
         ,NOW()
     )
     ;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
 
-#マイギャラリー記事更新
+#マイギャラリー記事更新  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -933,6 +960,8 @@ CREATE PROCEDURE updateGalleryContent(
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #以下に指定したテーブルを更新する
 UPDATE
     #ギャラリーテーブル
@@ -947,13 +976,15 @@ SET
 WHERE
     #指定した記事ID
     id = articleId;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
 
-#マイギャラリー記事削除
+#マイギャラリー記事削除  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -964,6 +995,8 @@ CREATE PROCEDURE deleteGalleryContent(
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #データ削除対象のテーブルを指定する
 DELETE FROM
     #ギャラリーテーブル
@@ -972,6 +1005,8 @@ DELETE FROM
 WHERE
     #指定した記事ID
     id IN (articleId);
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
@@ -1527,7 +1562,7 @@ END $$
 delimiter ;
 
     
-#パスワード変更
+#パスワード変更  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -1540,7 +1575,8 @@ CREATE PROCEDURE updateUserPassword
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
-    
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #パスワードの更新を行う
 #以下に指定したテーブルを更新する
 UPDATE
@@ -1556,7 +1592,8 @@ WHERE
     #指定したユーザIDのレコードを更新対象にする
     id = userId
 ;
-
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
@@ -1613,7 +1650,7 @@ END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
-#ユーザプロフィール変更
+#ユーザプロフィール変更  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #プロフィール更新
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
@@ -1636,6 +1673,8 @@ CREATE PROCEDURE updateUserProfile
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #プロフィールの更新を行う
 #以下に指定したテーブルの情報を更新する 
 UPDATE
@@ -1668,6 +1707,8 @@ SET
 WHERE
     #指定したユーザID
     id = userId;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
@@ -1860,7 +1901,7 @@ END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
-#お知らせ登録1(お知らせ情報)
+#お知らせ登録1(お知らせ情報)  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -1873,7 +1914,8 @@ CREATE PROCEDURE insertMessageInfo
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
-    
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #新たにお知らせ情報を登録する
 #以下に列挙した列の値を指定してテーブルにレコードを追加する
 INSERT INTO
@@ -1908,12 +1950,14 @@ INSERT INTO
         #現在時刻
         ,NOW()
     );
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
-#お知らせ登録2(送信先)
+#お知らせ登録2(送信先)  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -1925,6 +1969,8 @@ CREATE PROCEDURE insertMessageTo
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #指定したテーブルにレコードを追加する
 #以下に列挙した列の値を指定してテーブルにレコードを追加する
 INSERT INTO message_to
@@ -1965,6 +2011,8 @@ INSERT INTO message_to
         #現在時刻
         ,NOW()
     );
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
     
@@ -2188,7 +2236,7 @@ END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
-#受講承認更新
+#受講承認更新  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #受講情報の更新
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
@@ -2206,6 +2254,8 @@ CREATE PROCEDURE doLecturePermit
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #受講情報テーブルを更新し、対象レコードを受講状態にする
 #以下に指定したテーブルのレコードを更新する
 UPDATE
@@ -2233,12 +2283,14 @@ SET
 WHERE
     #指定した受講情報テーブルID
     id = userClassworkKey;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
 delimiter ; 
 
-#獲得ポイント更新
+#獲得ポイント更新  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -2251,7 +2303,8 @@ CREATE PROCEDURE updateLecturePermitGetPoint
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
-    
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #ユーザの所持ポイントを更新する
 #以下に指定したテーブルを更新する
 UPDATE
@@ -2267,12 +2320,14 @@ WHERE
     #指定したユーザID
     id = userKey
     ;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
-#使用ポイント更新
+#使用ポイント更新  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -2285,7 +2340,8 @@ CREATE PROCEDURE updateLecturePermitUsePoint
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
-
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #ユーザの獲得ポイントを使用しただけ減らす
 #以下に指定したテーブルを更新する
 UPDATE    
@@ -2303,6 +2359,8 @@ WHERE
     #指定したユーザID
     id = userKey
     ;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
@@ -2340,7 +2398,7 @@ END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
-# 商品代情報の更新
+# 商品代情報の更新  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -2360,7 +2418,8 @@ CREATE PROCEDURE insertSellCommodity
     
 #以降にストアドプロシージャの処理を記述する
 BEGIN
-    
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #商品購入情報を追加する
 #以下に列挙した列の値を指定してテーブルにレコードを追加する
 INSERT INTO commodity_sell(
@@ -2411,6 +2470,8 @@ VALUES (
 
 #ポイントを反映する
 CALL updateLecturePermitPoints(getPoint, commodityUsePoint, userKey);    
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
@@ -2545,7 +2606,7 @@ END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
-#使用ポイントの更新
+#使用ポイントの更新  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -2558,6 +2619,8 @@ CREATE PROCEDURE updateLecturePermitListPoint
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #以下のテーブルを更新する
 UPDATE
     #ユーザ情報
@@ -2572,12 +2635,14 @@ SET
 WHERE
     #指定したユーザID
     id = userKey;    
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
-# 受講情報の更新
+# 受講情報の更新  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -2593,6 +2658,8 @@ CREATE PROCEDURE updateLecturePermitListClasswork
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #授業データの更新
 #以下に指定したテーブルのレコードを更新する
 UPDATE
@@ -2613,12 +2680,14 @@ WHERE
 ;
 #受講承認における使用ポイントを更新する
 CALL updateLecturePermitListPoint(diffPoint, userKey);
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
 delimiter ;
 
-# 商品代の更新
+# 商品代の更新  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -2627,6 +2696,8 @@ DROP PROCEDURE IF EXISTS `updateLecturePermitListCommodity` $$
 CREATE PROCEDURE updateLecturePermitListCommodity(IN userClassworkCost int ,commodityKey int,usePoint int,commoditySellKey int,diff_point int,userKey int)
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 #以下のテーブルを更新する
 UPDATE
     #商品売り上げ情報テーブル
@@ -2648,6 +2719,8 @@ WHERE
 ;
 #受講承認での使用ポイントを更新する
 CALL updateLecturePermitListPoint(@result, diffPoint, userKey);
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
 #区切り文字をセミコロンに戻す
@@ -2759,7 +2832,7 @@ ON
 END $$
 #区切り文字をセミコロンに戻す
 
-#受講一覧-商品の更新   プロシージャの内容見直し、UPDATEの更新成功可否をメッセージハンドラを使用する事で判定するよう変更 2016.09.20 r.shibata
+#受講一覧-商品の更新   プロシージャの内容見直し、UPDATEの更新成功可否をメッセージハンドラを使用する事で判定するよう変更 2016.09.20 r.shibata  成功時に返却する結果セット変更 2016.09.24 k.urabe
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
 DROP PROCEDURE IF EXISTS p_update_approval_list_purchase $$
 # 商品売り上げ情報テーブルの更新を行うためのプロシージャを登録する
@@ -2809,21 +2882,12 @@ IF in_diff_point <> 0 THEN
 END IF;
 # テーブルの更新を確定する
 COMMIT;
-# 値を取得する
-SELECT
-    update_datetime # 更新時刻
-# データ取得元のテーブルを指定する
-FROM
-    # 商品売り上げ情報テーブル
-    commodity_sell
-# 条件を指定する
-WHERE
-    # ユーザIDが一致するレコードを取得する
-    id = in_id;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 # プロシージャを終了する
 END$$
 
-#受講一覧-授業の更新   プロシージャの内容見直し、UPDATEの更新成功可否をメッセージハンドラを使用する事で判定するよう変更 2016.09.20 r.shibata
+#受講一覧-授業の更新   プロシージャの内容見直し、UPDATEの更新成功可否をメッセージハンドラを使用する事で判定するよう変更 2016.09.20 r.shibata  成功時に返却する結果セット変更 2016.09.24 k.urabe
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
 DROP PROCEDURE IF EXISTS p_update_approval_list_lesson $$
 # 受講情報テーブルの更新を行うためのプロシージャを登録する
@@ -2871,21 +2935,12 @@ IF in_diff_point <> 0 THEN
 END IF;
 # テーブルの更新を確定する
 COMMIT;
-# 値を取得する
-SELECT
-    update_datetime # 更新時刻
-# データ取得元のテーブルを指定する
-FROM
-    # 受講情報テーブル
-    user_classwork
-# 条件を指定する
-WHERE
-    # ユーザIDが一致するレコードを取得する
-    id = in_user_classwork_key;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 # プロシージャを終了する
 END$$
 
-#受講承認-授業の更新   プロシージャの内容見直し、UPDATEの更新成功可否をメッセージハンドラを使用する事で判定するよう変更 2016.09.20 r.shibata
+#受講承認-授業の更新   プロシージャの内容見直し、UPDATEの更新成功可否をメッセージハンドラを使用する事で判定するよう変更 2016.09.20 r.shibata  成功時に返却する結果セット変更 2016.09.24 k.urabe
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
 DROP PROCEDURE IF EXISTS p_update_approval_lesson $$
 # 受講情報テーブルの更新を行うためのプロシージャを登録する
@@ -2964,21 +3019,12 @@ ELSE
 END IF;
 # テーブルの更新を確定する
 COMMIT;
-# 値を取得する
-SELECT
-    update_datetime # 更新時刻
-# データ取得元のテーブルを指定する
-FROM
-    # 受講情報テーブル
-    user_classwork
-# 条件を指定する
-WHERE
-    # ユーザIDが一致するレコードを取得する
-    id = in_user_classwork_key;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 # プロシージャを終了する
 END$$
 
-#受講承認-商品の更新   プロシージャの内容見直し、UPDATEの更新成功可否をメッセージハンドラを使用する事で判定するよう変更 2016.09.20 r.shibata
+#受講承認-商品の更新   プロシージャの内容見直し、UPDATEの更新成功可否をメッセージハンドラを使用する事で判定するよう変更 2016.09.20 r.shibata  成功時に返却する結果セット変更 2016.09.24 k.urabe
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
 DROP PROCEDURE IF EXISTS p_update_approval_purchase $$
 # 商品売り上げ情報テーブルの更新を行うためのプロシージャを登録する
@@ -3032,20 +3078,12 @@ IF 0 < in_purchase_status THEN
 END IF;
 # テーブルの更新を確定する
 COMMIT;
-# 値を取得する
-SELECT
-    update_datetime # 更新時刻
-# データ取得元のテーブルを指定する
-FROM
-    # 商品売り上げ情報テーブル
-    commodity_sell
-# 条件を指定する
-WHERE
-    # ユーザIDが一致するレコードを取得する
-    id = in_id;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 # プロシージャを終了する
 END$$
 
+# 例外処理を追加し、発生したらROLLBACKして終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 DROP PROCEDURE IF EXISTS p_insert_approval_purchase $$
 CREATE PROCEDURE p_insert_approval_purchase (
     IN in_sell_number INT
@@ -3062,6 +3100,8 @@ DECLARE new_count int;
 DECLARE latest_timestamp_user VARCHAR(25);
 DECLARE updated_timestamp_user VARCHAR(25);
 DECLARE last_purchase_id int;
+# エラーハンドラーの設定 エラーが発生したらロールバックして終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 
 SELECT 
     COUNT(id)
@@ -3162,10 +3202,15 @@ ELSE
     ROLLBACK;
 END IF;
 
-SELECT ROW_COUNT();
+# 処理が成功しているか判定する
+IF result = 1 THEN
+    # 返却用の結果セット（1行返却）を実行する
+    SELECT NOW();
+END IF;
 
 END$$
 
+# 例外処理を追加し、発生したらROLLBACKして終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 DROP PROCEDURE IF EXISTS p_delete_approval_purchase $$
 CREATE PROCEDURE p_delete_approval_purchase (
     IN in_id INT
@@ -3175,6 +3220,8 @@ BEGIN
     
 DECLARE old_count int;
 DECLARE new_count int;
+# エラーハンドラーの設定 エラーが発生したらロールバックして終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 
 SELECT 
     COUNT(id)
@@ -3201,11 +3248,13 @@ INTO
 IF old_count > new_count THEN
     SELECT 1 INTO result;
     COMMIT;
+    # 返却用の結果セット（1行返却）を実行する
+    SELECT NOW();
 ELSE
     SELECT 0 INTO result;
     ROLLBACK;
 END IF;
-
+    
 END$$
 
 #商品購入承認一覧のデータ取得
@@ -3276,7 +3325,7 @@ ORDER BY
 #ストアドプロシージャの処理を終える
 END $$
 
-#授業削除
+#授業削除　　例外処理を追加し、発生したらROLLBACKして終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 DROP PROCEDURE IF EXISTS p_delete_classwork $$
 CREATE PROCEDURE p_delete_classwork (
     IN in_id INT
@@ -3290,6 +3339,8 @@ DECLARE new_count int;
 DECLARE timetabledaykey_save int;
 # 2016.09.12 add k.urabe 授業削除後に、当該時間帯の授業の件数を記録するための変数を追加
 DECLARE timetabledaykey_count int;
+# エラーハンドラーの設定 エラーが発生したらロールバックして終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 
 SELECT 
     COUNT(id)
@@ -3348,6 +3399,8 @@ END IF;
 IF old_count > new_count THEN
     SELECT 1 INTO result;
     COMMIT;
+    # 返却用の結果セット（1行返却）を実行する
+    SELECT NOW();
 ELSE
     SELECT 0 INTO result;
     ROLLBACK;
@@ -3355,7 +3408,7 @@ END IF;
 
 END$$
 
-#メルマガ削除
+#メルマガ削除　 例外処理を追加し、発生したらROLLBACKして終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 DROP PROCEDURE IF EXISTS p_delete_mail_magazine $$
 CREATE PROCEDURE p_delete_mail_magazine (
     IN in_id INT
@@ -3365,6 +3418,8 @@ BEGIN
     
 DECLARE old_count int;
 DECLARE new_count int;
+# エラーハンドラーの設定 エラーが発生したらロールバックして終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 
 SELECT 
     COUNT(id)
@@ -3391,6 +3446,8 @@ INTO
 IF old_count > new_count THEN
     SELECT 1 INTO result;
     COMMIT;
+    # 返却用の結果セット（1行返却）を実行する
+    SELECT NOW();
 ELSE
     SELECT 0 INTO result;
     ROLLBACK;
@@ -3430,7 +3487,7 @@ AND
     uc.user_key = in_user_key;
 END$$
 
-# 授業の最大人数、最小人数変更
+# 授業の最大人数、最小人数変更　　 例外処理を追加し、発生したらROLLBACKして終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 DROP PROCEDURE IF EXISTS p_update_capacity_classwork $$
 CREATE PROCEDURE p_update_capacity_classwork (
     IN in_id INT
@@ -3442,6 +3499,8 @@ BEGIN
 
 DECLARE updated_old DATETIME;
 DECLARE updated DATETIME;
+# エラーハンドラーの設定 エラーが発生したらロールバックして終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 
 SELECT 
     MAX(update_datetime)
@@ -3471,6 +3530,8 @@ INTO
 IF updated > updated_old THEN
     SELECT 1 INTO result;
     COMMIT;
+    # 返却用の結果セット（1行返却）を実行する
+    SELECT NOW();
 ELSE
     SELECT 0 INTO result;
     ROLLBACK;
@@ -3478,7 +3539,7 @@ END IF;
 
 END$$
 
-# 時間帯の最大人数、最小人数変更
+# 時間帯の最大人数、最小人数変更  例外処理を追加し、発生したらROLLBACKして終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 DROP PROCEDURE IF EXISTS p_update_capacity_time_table_day $$
 CREATE PROCEDURE p_update_capacity_time_table_day (
     IN in_id INT
@@ -3490,6 +3551,8 @@ BEGIN
 
 DECLARE updated_old DATETIME;
 DECLARE updated DATETIME;
+# エラーハンドラーの設定 エラーが発生したらロールバックして終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 
 SELECT 
     MAX(update_datetime)
@@ -3518,8 +3581,9 @@ INTO
 
 IF updated > updated_old THEN
     SELECT 1 INTO result;
-    SELECT ROW_COUNT();
     COMMIT;
+    # 返却用の結果セット（1行返却）を実行する
+    SELECT NOW();
 ELSE
     SELECT 0 INTO result;
     ROLLBACK;
@@ -3527,7 +3591,7 @@ END IF;
 
 END$$
 
-# 授業更新プロシージャ
+# 授業更新プロシージャ  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 DROP PROCEDURE IF EXISTS p_update_lesson_detail $$
 CREATE PROCEDURE p_update_lesson_detail (
     IN in_max_students INT
@@ -3540,6 +3604,9 @@ CREATE PROCEDURE p_update_lesson_detail (
 )
 # プロシージャ開始
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
+
 	UPDATE 
 		classwork 
 	SET 
@@ -3552,7 +3619,8 @@ BEGIN
 	WHERE 
 		id = in_classwork_key
 	;
-	SELECT ROW_COUNT();
+	# 返却用の結果セット（1行返却）を実行する
+    SELECT NOW();
 END$$
 
 # お知らせ用ブログ記事取得
@@ -3611,7 +3679,7 @@ LIMIT 3;
 
 END$$
 
-# 授業時間帯作成プロシージャ
+# 授業時間帯作成プロシージャ  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 DROP PROCEDURE IF EXISTS p_insert_time_table_day $$
 CREATE PROCEDURE p_insert_time_table_day (
     IN in_timetable_key INT
@@ -3622,6 +3690,8 @@ CREATE PROCEDURE p_insert_time_table_day (
 )
 # プロシージャ開始
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 # レコードを以下のテーブルに新規追加する
 INSERT INTO 
 	# 授業時間帯テーブル
@@ -3653,10 +3723,12 @@ VALUES
 		,NOW() 
 		,NOW() 
 	);
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 # プロシージャを終了する
 END$$
 
-# 時間帯作成と同時に授業作成するときに使うプロシージャ
+# 時間帯作成と同時に授業作成するときに使うプロシージャ  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 DROP PROCEDURE IF EXISTS p_insert_new_classwork $$
 CREATE PROCEDURE p_insert_new_classwork (
 	IN in_max_students INT
@@ -3670,6 +3742,8 @@ CREATE PROCEDURE p_insert_new_classwork (
 )
 # プロシージャ開始
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 # レコードを以下のテーブルに新規追加する
 INSERT INTO 
 	classwork
@@ -3699,9 +3773,11 @@ INSERT INTO
 			,in_lesson_key 
 			,(SELECT id FROM time_table_day WHERE timetable_key = in_timetable_key order by create_datetime DESC LIMIT 1) ,NOW() ,NOW(), 0 )
 ;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 END $$
 
-# 通常通り授業作成するときに使うプロシージャ
+# 通常通り授業作成するときに使うプロシージャ  例外処理を追加し、発生した終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
 DROP PROCEDURE IF EXISTS p_insert_normal_classwork $$
 CREATE PROCEDURE p_insert_normal_classwork (
 	IN in_max_students INT
@@ -3716,6 +3792,8 @@ CREATE PROCEDURE p_insert_normal_classwork (
 )
 # プロシージャ開始
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
 # レコードを以下のテーブルに新規追加する
 INSERT INTO 
 	classwork
@@ -3748,6 +3826,8 @@ VALUES
 		,NOW()
 		,0)
 ;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
 END$$
 
 # 時間帯一覧取得
