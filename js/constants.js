@@ -660,8 +660,6 @@ SELECTOR_SELECT_ALL_ROW_LABEL    = '.selectAllRowLabel';
 SEL_SELECT_USER = '.selectRecord';
 // 管理者、会員一覧で選択されたユーザにつくセレクタ-の名称 2016.09.11 r.shibata 追加
 SELECT_RECORD = 'selectRecord';
-// ユーザ一覧画面、チェックのつくエリアのセレクタ名称 2016.09.14 r.shibata 追加
-CHECK_AREA = 'check_area';
 // 一人もユーザが選択されていない状態でメールダイアログまたはお知らせダイアログを開くボタンを押した時の処理
 TEXT_ERROR_SELECT_USER = '1人以上選択してください';
 // ユーザ名のセレクタ

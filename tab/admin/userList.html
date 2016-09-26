@@ -70,16 +70,16 @@
 				commonFuncs.putCommonButton('#userList .userListButtons', 'selectUser fRight', 'select', true, true, true, {"onclick": "returnFromUserList(this);", "data-buttontype": "0"});
 			}
 			
-			//会員一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する 2016.09.14 r.shibata チェックボックスエリアの追加対応により削除
-			//toggleClassClickElement('tr', 'selectRecord', '.userListTableOutside');
+			//会員一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する
+			toggleClassClickElement('tr', 'selectRecord', '.userListTableOutside');
 			
 			//検索ボタンを押すと検索ダイアログを開く
 			setPopupSearchDialog('#userList .showUserSearchListDialogButton');
 			//検索フォームフォーカス時エンターキー押下で検索を行う様にする
 			commonFuncs.enterKeyCallFunction('.adminUserSearch', '#adminTab .searchUserList', 'userListSearch("#userList");');
 			
-			//会員データクリックで対象ユーザページへログインする
-			loginMemberPageFromAdminPage(SELECTOR_USER_LIST_TABLE_OUTSIDE, SELECTOR_TBODY_TR, SEL_ID);
+			//会員データダブルクリックで対象ユーザページへログインする
+			doubleClickToLogin('.userListTableOutside');
 			//通常メールボタンをクリックしたときに通常メール作成のためのダイアログを開く
 			adminMessageCreate('.createMail', 'mail');
 			//お知らせボタンをクリックしたときにお知らせのためのダイアログを開く
