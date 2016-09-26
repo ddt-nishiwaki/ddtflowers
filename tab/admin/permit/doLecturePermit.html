@@ -26,6 +26,8 @@
 			// 共通パーツのDOMを取得する
 			create_tag.getDomFile('template/common.html');
 
+			//全選択ボタンを追加する
+			create_tag.outputTag(SELECT_ALL_ROW, SELECT_ALL_ROW, DO_LECTUREPERMIT_TAB); // 2016.09.26 r.shibata 追加
 			//ユーザ追加のボタンを追加する
 			commonFuncs.putCommonButton('#doLecturePermit', 'addUserRecordButton fRight', 'add', true, true, true, {}, false);
 			//受講承認待ちデータの削除のボタンを追加する
@@ -76,9 +78,8 @@
 
 			//会員一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する
 			toggleClassClickElement('tr', 'selectRecord', '.doLecturePermitInfoTable');
-			//全選択ボタンを追加する
-			commonFuncs.addSelectAllBox('#doLecturePermit .addUserRecordButton', '全選択', false, '.doLecturePermitInfoTable', 'selectRecord', false);
-			
+			//全選択ボタンの設定を行う
+			commonFuncs.addSelectAllBoxEvent(DO_LECTUREPERMIT_TAB + SPACE + SELECTOR_SELECT_ALL_ROW_CHECKBOX, SELECTOR_SELECT_ALL_ROW_LABEL, SELECTOR_DO_LECTURE_PERMIT_INFO_TABLE, SELECT_RECORD); // 2016.09.26 r.shibata 変更
 			//追加ボタンを押したらユーザ一覧画面へ遷移するようにする
 			moveToUserList('doLecturePermit', '#doLecturePermit .addUserRecordButton');
 			

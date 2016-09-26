@@ -871,5 +871,14 @@
 		"user_key": {
 			"value": ""
 		}
+	},
+	"selectAllRow": {
+		"selectAllRowCheckBox": {
+			"type":"checkbox"
+		},
+		"selectAllRowLabel": {
+			"text": "全選択"
+		}
 	}
+
 }
