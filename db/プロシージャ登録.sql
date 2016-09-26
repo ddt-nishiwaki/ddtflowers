@@ -180,7 +180,22 @@ INTO updated_count;
 
 #更新対象が以前の最新のタイムスタンプより新しいものとなっていれば
 IF updated_count = 1 THEN
-#UPDATE、INSERTを確定する
+    #授業情報テーブルを今回の受講情報の更新に合わせて更新する  授業予約時にclassworkテーブルの予約人数を+1するクエリを追加 2016.09.26 k.urabe
+    #下記のテーブルのレコードを更新する
+    UPDATE 
+        #授業情報テーブル
+        classwork
+    #更新対象の列と値を指定する
+    SET
+        #予約人数を1人増やす
+        order_students = order_students+1
+        #現在時刻で更新タイムスタンプを更新する
+        ,update_datetime = NOW()
+    #検索条件を指定する
+    WHERE
+        #更新対象の授業テーブルID
+        id = in_classwork_key;
+    #UPDATE、INSERTを確定する
     COMMIT;
     # 返却用の結果セット（1行返却）を実行する
     SELECT NOW();
@@ -255,6 +270,8 @@ SET
     user_work_status = cancel_status
     #現在時刻を更新時刻としてセットする
     ,update_datetime = NOW()
+    #キャンセル料をレコードにセットする  classworkテーブルに移動 2016.09.26 k.urabe
+    ,cancel_charge = in_cancel_charge
 #検索条件を指定する
 WHERE
     #プロシージャの引数で指定したIDのレコードを更新対象とする
@@ -289,8 +306,6 @@ IF updated_count = 1 THEN
         order_students = order_students-1
         #現在時刻で更新タイムスタンプを更新する
         ,update_datetime = NOW()
-        #キャンセル料をレコードにセットする
-        ,cancel_charge = in_cancel_charge
     #検索条件を指定する
     WHERE
         #更新対象の授業テーブルID

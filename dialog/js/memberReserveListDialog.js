@@ -394,7 +394,7 @@ function memberReserveListDialog(dialog){
 				$('#alreadyReserved')[0].create_tag.tableReload(RESERVED_LESSON_TABLE);
 
 				//DBの更新に失敗していたら
-				if(parseInt(sendResult.message)) {
+				if(!parseInt(sendResult.message)) {
 				
 					//openイベントはsetArgumentObjでセットしておく
 					var confirmDialog = new dialogEx(CONFIRM_DIALOG_PATH,

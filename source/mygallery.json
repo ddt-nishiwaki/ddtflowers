@@ -95,12 +95,12 @@
 		}
 	},
 	"insertMyGalleryPhoto": {
-		"db_setQuery": "INSERT INTO user_image( user_key, photo_title, update_timestamp) VALUES ('user_key', 'photo_title', NOW());"
+		"db_setQuery": "CALL insertGalleryContent('user_key', 'photo_title');"
 	},
 	"updateMyGalleryPhoto": {
-		"db_setQuery": "UPDATE user_image SET photo_summary='photo_summary', article_title='article_title' WHERE id='id';"
+		"db_setQuery": "CALL updateGalleryContent('photo_summary', 'article_title' ,'id');"
 	},
 	"deleteMyGalleryPhoto": {
-		"db_setQuery": "DELETE FROM user_image WHERE id IN ('id');"
+		"db_setQuery": "CALL deleteGalleryContent('id');"
 	}
 }
