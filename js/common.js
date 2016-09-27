@@ -216,6 +216,47 @@ this.messageDialogDefaultOption = {
 }
 
 //以上、授業一覧テーブル作成用のデータ
+	/* 
+	 * 関数名:sortArray
+	 * 概要  :受け取った配列を昇順にソートして返す
+	 * 引数  :Array targetArray : 並び替え対象とする配列
+	 *      :String targetProperty : 対象が多次元配列の際に、対象とするプロパティ
+	 * 返却値:なし
+	 * 作成者:k.urabe
+	 * 作成日:2016.09.27
+	 */
+	this.sortArray = function(targetArray, targetProperty) {
+	 	// 多次元配列を探索対象としているか
+	 	if(targetProperty) {
+	 		// 多次元配列を対象としたソートを行う
+	 		targetArray.sort(function(val1, val2){
+			// 配列内の前要素が小さいか判定
+				if(val1[targetProperty] < val2[targetProperty]) {
+					return -1;
+				}
+				// 配列要素の後要素が小さいか判定
+				if(val2[targetProperty] < val1[targetProperty]) {
+					return 1;
+				}
+				// 2つの要素が等しいためそのまま
+				return 0;
+				});
+	 	// 通常の配列を対象としたソートを行う
+	 	} else {
+	 		targetArray.sort(function(val1, val2){
+			// 配列内の前要素が小さいか判定
+			if(val1 < val2) {
+				return -1;
+			}
+			// 配列要素の後要素が小さいか判定
+			if(val2 < val1) {
+				return 1;
+			}
+			// 2つの要素が等しいためそのまま
+			return 0;
+			});
+	 	}
+	}
 
 	/* 
 	 * 関数名:getTotalStudentsOfTimeTable
@@ -227,28 +268,29 @@ this.messageDialogDefaultOption = {
 	 * 変更者:T.Masuda
 	 * 変更日:2015.10.11
 	 * 内容　:カウンター変数を削りました。$.eachのコールバック関数の引数を代わりに使うようにしました。
+	 * 変更者:k.urabe
+	 * 変更日:2016.09.27
+	 * 内容:時間帯ごとの予約人数を算出する処理全体を見直し。配列を必ずソートし、処理自体をすべてeachの中で行うように修正
 	 */
 	 this.getTotalStudentsOfTimeTable = function(rowData) {
-		//時限の値を変数に入れる
-		var lessonTime = rowData[0][COLUMN_NAME_START_TIME];
-		//生徒の数を連想配列に入れる
+	 	// 当該日の授業日データが格納されている連想配列を、授業開始時間でソートする
+	 	this.sortArray(rowData, COLUMN_NAME_START_TIME);
+		// 時間帯のプロパティを保持するための変数を用意
+		var lessonTime;
+		// 時間帯ごとの生徒数を格納するための配列を用意
 		var students = {};
-		//生徒の数を0で初期化する
-		students[lessonTime] = 0;
 
 		//取り出した行の数だけループする
 		$.each(rowData, function(i) {
-			// 時限が同じときは合計の変数に足す
-			if(lessonTime === rowData[i][COLUMN_NAME_START_TIME]) {
-				// 合計の変数に値を足す
-				students[lessonTime] += Number(rowData[i][COLUMN_NAME_ORDER_STUDENTS]);
-			// 違う時限になった時の処理
-			} else {
-				// 時限の値を変数に入れる
+			// 生徒の数を格納する連想配列に当該時間帯のプロパティが存在していないことを検証
+			if(!students[rowData[i][COLUMN_NAME_START_TIME]]) {
+				// 当該時間帯をプロパティとして追加する
 				lessonTime = rowData[i][COLUMN_NAME_START_TIME];
-				//生徒の数を0で初期化する
+				// 当該時間帯の人数を0で初期化する
 				students[lessonTime] = 0;
 			}
+			// 当該時限の合計人数として加算する
+			students[lessonTime] += Number(rowData[i][COLUMN_NAME_ORDER_STUDENTS]);
 		});
 		
 		// 生徒の合計人数を返す
@@ -351,16 +393,19 @@ this.messageDialogDefaultOption = {
 	 * 変更者:T.Masuda
 	 * 変更日:2015.10.12
 	 * 内容　:returnを1つにまとめました
+	 * 変更者:k.urabe
+	 * 変更日:2016.09.27
+	 * 内容 :時間割全体の残席を算出する処理において、存在しない変数（配列）を参照していたのを修正
 	 */
 	this.getRestOfSheets = function(rowData, timeTableStudents) {
-		var retCount = 0;	//返却値用変数を用意する
+		var retCount = 0;										//返却値用変数を用意する
 		
 		// 指定の時間割の数を取り出す
 		var targetTimeSchedule = rowData[COLUMN_NAME_START_TIME];
 		// max_num列がなければ例外処理をする
 		this.isExist(rowData, COLUMN_NAME_MAX_NUM);
 		// 最大人数を変数に入れる
-		var maxNum = rowData[COLUMN_NAME_MAX_NUM];	//最大人数(時間割)
+		var maxNum = rowData[COLUMN_NAME_MAX_NUM];				//最大人数(時間割)
 		// max_students列がなければ例外処理をする
 		this.isExist(rowData, COLUMN_NAME_MAX_STUDENTS);
 		// 授業コマの最大人数
@@ -368,17 +413,17 @@ this.messageDialogDefaultOption = {
 		// students列がなければ例外処理をする
 		this.isExist(rowData, COLUMN_NAME_ORDER_STUDENTS);
 		// 現在の予約人数を変数に入れる
-		var students = rowData[COLUMN_NAME_ORDER_STUDENTS];	// 現予約人数
+		var students = rowData[COLUMN_NAME_ORDER_STUDENTS];		// 現予約人数
 		// 時間割としての残りの人数
-		var timeTableRest = maxNum - timeTableStudents[targetTimeSchedule];	// 時間割としての残り
-		retCount = maxStudents - students;	// 授業コマとしての残り
+		var timeTableRest = maxNum - timeTableStudents;			// 時間割としての残り 2016.09.27 mod k.urabe 時間帯の全体人数timeTableStudentsはオブジェクトではないため、指定を修正
+		retCount = maxStudents - students;						// 授業コマとしての残り
 
 		// 時間割としてのが授業コマとしての数以下であるなら
 		if(timeTableRest <= retCount) {
-			retCount = timeTableRest;	//時間割基準の人数を返すようにする
+			retCount = timeTableRest;							//時間割基準の人数を返すようにする
 		}
 		
-		return retCount;	//算出した結果を返す
+		return retCount;										//算出した結果を返す
 	}
 
 	/**
