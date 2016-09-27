@@ -2611,6 +2611,10 @@ INNER JOIN
 ON
     #授業時間帯詳細情報テーブル
     timetable_inf.id = time_table_day.timetable_key 
+#抽出条件を設定する
+WHERE
+    #受講状態が受講済みの物を抽出する
+    user_classwork.user_work_status = 3
 #ソートを行う
 ORDER BY
     #授業日付が新しい順番に並べる
