@@ -1986,7 +1986,7 @@ this.messageDialogDefaultOption = {
 				//料金を空白にする
 				cost = EMPTY_STRING;
 				//残席を罰にする
-				rest = restMarks[0];
+				rest = this.restMarks[0];
 				//状況を予約不可にする
 				lessonStatus = classworkStatuses[4];
 			//ユーザが予約可能な授業の時、料金、残席、状況を適切な形にする
