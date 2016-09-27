@@ -23,6 +23,8 @@ function clickButtonToFile(parentClass, button, uploader, callBack, arg1, arg2, 
 				&& commonFuncs.checkEmpty(callBack)){
 			callBack(this, $parent, arg1, arg2, arg3);	//コールバック関数を実行する。
 		}
+		//アップロードボタンの値を初期化する。cloneで置き換えるため、引数をtrueとし、イベントもコピーする
+		$(uploader).replaceWith($(uploader).clone(true)); // 2016.09.27 r.shibata 追加
 	});
 	
 	//ボタンのクリックイベントを登録する。
