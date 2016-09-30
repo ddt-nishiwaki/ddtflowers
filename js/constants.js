@@ -946,6 +946,8 @@ ALERT_LECTUREPERMIT_PROCESS_ERROR = '更新処理中にエラーが発生した�
 // 商品購入承認以上終了用のメッセージ
 ALERT_SELLCOMMODITYPERMIT_PROCESS_ERROR = '更新処理中にエラーが発生したため更新処理を途中で終了しました。\n';
 JS_EOL = '\n'; // 改行文字
+// 受講承認タブのセレクタ(id) 2016.09.30 k.urabe 不足していたセレクタを追加
+SELECTOR_LECTURE_PERMIT = '#lecturePermit';
 // 受講承認一覧の各行のセレクタ
 SELECTOR_LECTUREPERMITLIST_RECORD = '.lecturePermitListRecord';
 // 商品購入承認一覧の各行のセレクタ

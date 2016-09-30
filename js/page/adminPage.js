@@ -1369,10 +1369,8 @@ var backCallbacks = {
 				// タブのインスタンスを取得する
 				var tabInstance = $('#adminTab')[0].instance;
 
-				// 元のタブに戻る
-				$('#adminTab').easytabs('select', '#lecturePermit')
-				// 呼び出し画面情報を初期値に戻す
-				tabInstance.beforePanel = null;
+				// 呼び出し元のテーブルに戻る 2016.09.30 mod k.urabe 呼び出し元画面に戻る関数を追加したことによる変更
+				executeTagreturnTag(tabInstance, false, SELECTOR_ADMIN_TAB, SELECTOR_LECTURE_PERMIT);
 			}
 		},
 		//商品購入承認
@@ -1423,16 +1421,32 @@ var backCallbacks = {
 
 			//タブのインスタンスを取得する
 			var tabInstance = $('#adminTab')[0].instance;
-			//タブが切り替わっても元々あったコンテンツを取得し直さない様に一時設定する
-			tabInstance.cache = true;
-			//元のタブに戻る
-			$('#adminTab').easytabs('select', '#lecturePermit')
+
+			// 呼び出し元のテーブルに戻る 2016.09.30 mod k.urabe 呼び出し元画面に戻る関数を追加したことによる変更
+			executeTagreturnTag(tabInstance, true, SELECTOR_ADMIN_TAB, SELECTOR_LECTURE_PERMIT);
 			//追加した行に製品選択用セレクトメニューを追加する
 			commonFuncs.createCommoditySelectMenu($('#sellCommodityPermit')[0].create_tag.json.selectCommodityInf.tableData, '.sellCommodityPermitInfoTable .content');
-
-			//呼び出し画面情報を初期値に戻す
-			tabInstance.beforePanel = null;
 		}
+}
+
+/* 
+* 関数名:executeTagreturnTag
+* 概要  :戻り先のタブに戻る処理をまとめた関数です
+* 引数  :object tabInstance	:tabExクラスのインスタンス
+       :boolean cache		:trueだと戻り先のタブをリロードしない、falseだと戻り先のタブをリロードする
+       :selector tabParent	:戻り先の対象とする親のタブ（例：#adminTab）
+       :selector tabChild	:戻り先の対象とする子のタブ（例：#lecturePermit）
+* 返却値:なし
+* 作成者:k.urabe
+* 作成日:2016.09.30
+*/
+function executeTagreturnTag(tabInstance, cache, tabParent, tabChild) {
+	// 戻り先のタブの内容をリロードするか設定する
+	tabInstance.cache = cache;
+	// 指定された戻り先に戻る
+	$(tabParent).easytabs('select', tabChild);
+	// 保持していた呼び出し元の画面情報を初期値に戻す。
+	tabInstance.beforePanel = null;
 }
 
 /* 
