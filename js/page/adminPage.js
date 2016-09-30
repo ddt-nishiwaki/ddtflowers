@@ -1377,8 +1377,8 @@ var backCallbacks = {
 		},
 		//商品購入承認
 		sellCommodityPermit : function(records, buttonType){
-			//押されたボタンがキャンセルでなければ
-			if (buttonType != 0) {
+			//押されたボタンが選択であれば 2016.09.30 k.urabe buttonTypeを取得できるようになったので、条件を変更
+			if (buttonType == 0) {
 				//商品購入承認画面のcreateTagを取得する
 				var scpc = $('#sellCommodityPermit')[0].create_tag;
 				//レコードを走査する
