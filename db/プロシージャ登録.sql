@@ -3958,6 +3958,8 @@ CREATE PROCEDURE getLecturePermitReseveList (
 )
 # 以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 # 受講承認への追加対象一覧を取得
 # 出力対象の列を指定する
 SELECT
