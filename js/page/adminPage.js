@@ -308,8 +308,6 @@ function searchPermitListInfoTable(
 			//受講承認一覧テーブルを作る
 			searchCreateTag.outputNumberingTag(targetTable, startPage, displayPageMax, displayPage, pageNum, targetArea, callback, "$('" + createTagTarget + "')[0].");
 
-			//リストクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する 2016.09.11 r.shibata 追加
-			toggleClassClickElement(STR_TR, SELECT_RECORD, '.' + targetTable);
 		//なければ
 		} else {
 			//その旨を伝える
