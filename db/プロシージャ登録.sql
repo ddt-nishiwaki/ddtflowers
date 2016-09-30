@@ -337,6 +337,8 @@ CREATE PROCEDURE `getAdminLessonList`(
     ,IN `in_date` VARCHAR(14)
 )
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 
 #指定した日付の授業データを取得する
 #出力対象の列を指定する
@@ -441,6 +443,8 @@ CREATE PROCEDURE getBlogArticle(
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #ブログ記事データを全て取得する
 #出力対象の列を指定する
 SELECT 
@@ -498,6 +502,8 @@ CREATE PROCEDURE getBlogArticleWithId(
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #出力対象の列を指定する
 SELECT
     #全列取得
@@ -689,6 +695,8 @@ CREATE PROCEDURE getMyBlogArticle(
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #指定したユーザの記事を取得する
 #出力対象の列を指定する
 SELECT 
@@ -743,6 +751,8 @@ CREATE PROCEDURE getMyBlogList(
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #指定したユーザの記事一覧を取得する
 #出力対象の列を指定する
 SELECT
@@ -796,6 +806,8 @@ CREATE PROCEDURE getGalleryContents(
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #出力対象の列を指定する
 SELECT
     #記事ID
@@ -841,6 +853,8 @@ CREATE PROCEDURE getMyGalleryContents1(
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #出力対象の列を指定する
 SELECT
     #ユーザID
@@ -884,6 +898,8 @@ CREATE PROCEDURE getMyGalleryContents2(
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #ユーザを指定してギャラリー記事を取得する
 #出力対象の列を指定する
 SELECT
@@ -1040,6 +1056,8 @@ CREATE PROCEDURE p_user_inf(
 )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 
 #ユーザIDを出力する
 #出力対象の列を指定する
@@ -1069,6 +1087,8 @@ CREATE PROCEDURE p_message_inf(
 )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 
 #ユーザに対する最新のお知らせを取得する
 #出力対象の列を指定する
@@ -1122,6 +1142,8 @@ CREATE PROCEDURE p_booked_lessons(
 )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #ユーザの受講可能レッスン情報を取得する
 #出力対象の列を指定する
 SELECT
@@ -1321,6 +1343,8 @@ CREATE PROCEDURE p_lesson_cancel_rate(
 )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 
 #キャンセル料(率)情報を取得する
 #出力対象の列を指定する
@@ -1350,6 +1374,8 @@ CREATE PROCEDURE p_bookable_lessons(
 )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 
 #指定したユーザの受講可能レッスン一覧を取得する
 #出力対象の列を指定する
@@ -1405,6 +1431,8 @@ CREATE PROCEDURE p_user_classwork_a_day(
 )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 
 #予約用にその日の授業一覧を取得する
 #出力対象の列を指定する
@@ -1628,6 +1656,8 @@ CREATE PROCEDURE getUserProfile
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 
 #指定したユーザの情報を取得する
 #出力対象の列を指定する
@@ -1744,6 +1774,8 @@ CREATE PROCEDURE getSelfUserInfo
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #指定したユーザIDのユーザ情報を取得する
 #出力対象の列を指定する
 SELECT 
@@ -1777,6 +1809,8 @@ CREATE PROCEDURE getUserInfoList
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
     
 #昇順ソート指定なら
 IF sortOrder = 0 THEN
@@ -1831,6 +1865,8 @@ CREATE PROCEDURE getListForChooseThemes
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
     
 #テーマとマスタテーブルでのIDを取得する
 #出力対象の列を指定する
@@ -1871,6 +1907,8 @@ CREATE PROCEDURE getUserMessage
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 
 #対象のユーザの最新のお知らせを取得する
 #出力対象の列を指定する
@@ -2039,6 +2077,8 @@ DROP PROCEDURE IF EXISTS `getLecturePermit` $$
 CREATE PROCEDURE  `getLecturePermit`(OUT `result` TEXT)
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #受講承認対象の一覧を取得する
 #出力対象の列を指定する
 SELECT
@@ -2131,6 +2171,8 @@ CREATE PROCEDURE  getLecturePermitIndivisual(
     ,OUT result TEXT
 )
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 
 SELECT
     time_table_day.id AS time_table_key
@@ -2201,6 +2243,8 @@ CREATE PROCEDURE getPointRate
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #出力対象の列を指定する
 SELECT
     #ポイントレート
@@ -2228,6 +2272,8 @@ DROP PROCEDURE IF EXISTS `getCommodityNameList` $$
 CREATE PROCEDURE getCommodityNameList(out result text)
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #商品名リストのデータを取得する
 #出力対象の列を指定する
 SELECT
@@ -2390,6 +2436,8 @@ CREATE PROCEDURE updateLecturePermitPoints
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #獲得ポイントがあれば
 IF getPoint <> 0 THEN
     #ユーザの獲得ポイントを更新する
@@ -2504,6 +2552,8 @@ CREATE PROCEDURE getLecturePermitInfoList
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #出力対象の列を指定する
 SELECT
     #2016.09.11 r.shibata 項目不足による項目追加 授業日付、授業開始時間、授業終了時間 所持pt
@@ -2755,6 +2805,8 @@ CREATE PROCEDURE getEachDayLessonList
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #出力対象の列を指定する
 SELECT
     #授業時間帯情報テーブルID
@@ -3279,6 +3331,8 @@ DROP PROCEDURE IF EXISTS `getSellCommodityPermitInfoList` $$
 #商品購入承認一覧のデータ取得のプロシージャの登録を行う
 CREATE PROCEDURE `getSellCommodityPermitInfoList`(OUT `result` TEXT, IN `fromDate` VARCHAR(10), IN `toDate` VARCHAR(10))
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 #出力対象の列を指定する
 SELECT
     #商品売り上げ情報テーブルID
@@ -3480,6 +3534,8 @@ CREATE PROCEDURE check_userworkstatus(
     ,OUT `result` TEXT
 )
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 # ログインユーザの授業予約状況チェック用クエリ
 # 2016.09.08 mod k.urabe クエリが動作しなかっため、修正（selectするカラム名を解決出来ていなかった）
 SELECT DISTINCT 
@@ -3649,6 +3705,8 @@ CREATE PROCEDURE `p_get_new_blog`(
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 SELECT 
     user_name AS name
     ,CONCAT('uploadImage/flowerImage/' , image_1) AS image
@@ -3678,6 +3736,8 @@ CREATE PROCEDURE `p_get_new_gallery_photo`(
     )
 #以降にストアドプロシージャの処理を記述する
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 SELECT 
     user_name AS name
     ,CONCAT('uploadImage/flowerImage/' , photo_title) AS image
@@ -3855,6 +3915,8 @@ CREATE PROCEDURE p_select_timetable_day (
 )
 # プロシージャ開始
 BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 
 # 以下の列を取得する
 SELECT
