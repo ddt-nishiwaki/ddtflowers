@@ -66,15 +66,12 @@
 
 			var $activePanel = $('#permitTab .tabPanel.active', $currentContent);	//現タブパネルを取得する
 
-			//使用ポイントのテキストボックスの設定を書く
-			var getPointSettings = {
-					type : 'number'	//数値用テキストボックス
-					,min : 0			//最低値
-					,value : 0			//デフォルト値
-					,name : 'use_point'	//使用ポイント
-			};
-			//使用ポイントのテキストボックスをセットする
-			commonFuncs.putTextboxInTd(getPointSettings, 'td.use_point');
+			// 受講承認テーブルの受講料列をテキストボックスにする
+			create_tag.insertTextboxToTable(DO_LECTURE_PERMIT_INFO_TABLE, 'replaceTextboxCost', 'replaceTextboxCostCell');
+			// 受講承認テーブルの使用pt列をテキストボックスにする
+			create_tag.insertTextboxToTable(DO_LECTURE_PERMIT_INFO_TABLE, 'replaceTextboxUsePoint', 'replaceTextboxUsePointCell');
+			// 受講承認テーブルのテキストボックスにDBから読込んだ値をデフォルトで入れる
+			create_tag.setTableTextboxValuefromDB($(DO_LECTUREPERMIT_TAB)[0].create_tag.json[DO_LECTURE_PERMIT_INFO_TABLE][TABLE_DATA_KEY], create_tag.setInputValueToLecturePermitListInfoTable, SELECTOR_DO_LECTURE_PERMIT_INFO_TABLE);
 
 			//会員一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する
 			toggleClassClickElement('tr', 'selectRecord', '.doLecturePermitInfoTable');

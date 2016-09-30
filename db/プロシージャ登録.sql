@@ -2031,8 +2031,7 @@ SELECT NOW();
 #ストアドプロシージャの処理を終える
 END $$
     
-#受講承認
-#受講承認
+#受講承認  受講承認の対象抽出が当日のみとなっていたが、「受付」ステータスの授業をすべて抽出するよう修正（後日承認に対応するため） 2016.09.28 k.urabe
 #受講承認対象の一覧取得
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
 DROP PROCEDURE IF EXISTS `getLecturePermit` $$
@@ -2040,7 +2039,7 @@ DROP PROCEDURE IF EXISTS `getLecturePermit` $$
 CREATE PROCEDURE  `getLecturePermit`(OUT `result` TEXT)
 #以降にストアドプロシージャの処理を記述する
 BEGIN
-#本日の受講承認対象の一覧を取得する
+#受講承認対象の一覧を取得する
 #出力対象の列を指定する
 SELECT
     #授業時間帯テーブルID
@@ -2070,9 +2069,9 @@ SELECT
     #授業名
     ,lesson_name
     #利用ポイント用列
-    ,'' AS use_point
+    ,user_classwork.use_point AS use_point
     #受講料
-    ,user_classwork_cost
+    ,user_classwork_cost AS cost
     #校舎テーブルID
     ,timetable_inf.school_key AS school_key
 #データ取得元のテーブルを指定する
@@ -2087,10 +2086,6 @@ INNER JOIN
 ON
     #授業情報テーブルID
     time_table_day.id = classwork.time_table_day_key 
-#合致条件を追加指定する
-AND
-    #授業日付
-    time_table_day.lesson_date = SUBSTRING(NOW(), 1, 10) 
 #結合対象の列の値がnullのデータを排除して結合する 
 INNER JOIN 
     #受講情報テーブル
@@ -3892,6 +3887,120 @@ WHERE
 ;
 # プロシージャを終了する
 END$$
+
+# 受講承認  受講承認の追加ボタンで表示されるデータ群を取得するストアドを追加 2016.09.28 k.urabe
+# 受講承認への追加対象一覧を取得
+DROP PROCEDURE IF EXISTS getLecturePermitReseveList $$
+CREATE PROCEDURE getLecturePermitReseveList (
+    OUT `result` TEXT
+)
+# 以降にストアドプロシージャの処理を記述する
+BEGIN
+# 受講承認への追加対象一覧を取得
+# 出力対象の列を指定する
+SELECT
+    # 授業日付
+    time_table_day.lesson_date AS lesson_date
+    # 授業開始時間
+    ,start_time 
+    # 授業終了時間
+    ,end_time 
+    # ユーザ名
+    ,user_name
+    # 受講情報テーブルID
+    ,user_classwork.id AS user_classwork_key
+    # ユーザID
+    ,user_inf.id AS id
+    # 所持ポイント
+    ,user_inf.get_point AS get_point
+    # 授業名
+    ,lesson_name
+    # 受講料
+    ,user_classwork_cost
+# データ取得元のテーブルを指定する
+FROM
+    # 授業時間帯テーブル
+    time_table_day 
+# 結合対象の列の値がnullのデータを排除して結合する 
+INNER JOIN
+    # 授業情報テーブル
+    classwork 
+# 以下に指定した列を基に結合を行う
+ON
+    # 授業情報テーブルID
+    time_table_day.id = classwork.time_table_day_key 
+AND
+    # 授業日が本日を含み以前のデータを抽出
+    time_table_day.lesson_date <= DATE(NOW())
+# 結合対象の列の値がnullのデータを排除して結合する 
+INNER JOIN 
+    # 受講情報テーブル
+    user_classwork 
+# 以下に指定した列を基に結合を行う
+ON
+    # 授業情報テーブルID
+    classwork.id = user_classwork.classwork_key
+# 結合対象列にnullが入っている列を排除して結合を行う
+INNER JOIN user_inf 
+# 以下に指定した列を基に結合を行う
+ON
+    # ユーザ情報テーブルID
+    user_inf.id = user_classwork.user_key 
+# 結合対象の列の値がnullのデータを排除して結合する 
+INNER JOIN
+    # 授業詳細情報テーブル
+    lesson_inf 
+# 以下に指定した列を基に結合を行う
+ON
+    # 授業詳細情報テーブルID
+    lesson_inf.id = classwork.lesson_key 
+# 結合対象の列の値がnullのデータを排除して結合する 
+INNER JOIN
+    # 授業時間帯詳細情報テーブル
+    timetable_inf 
+# 以下に指定した列を基に結合を行う
+ON
+    # 授業時間帯詳細情報テーブル
+    timetable_inf.id = time_table_day.timetable_key 
+# 合致条件を追加指定する
+AND
+    # 受講状態が「予約済み」になっているレコードのみ取り出す
+    user_classwork.user_work_status = 1
+;
+# ストアドプロシージャの処理を終える
+END $$
+
+# 受講承認  受講承認の追加画面で承認した際にデータを更新するストアド 2016.09.29 k.urabe
+# 追加画面で承認し、「受付」にする
+DROP PROCEDURE IF EXISTS set_reserved_status_to_reception $$
+CREATE PROCEDURE set_reserved_status_to_reception (
+    # 受講情報テーブルの会員ごとの授業ID
+    IN in_user_classwork_key INT
+)
+# 以降にストアドプロシージャの処理を記述する
+BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
+# 会員ごとの授業テーブルを更新する
+# 指定したテーブルを更新する
+UPDATE
+    #　会員ごとの授業テーブル
+    user_classwork 
+#更新対象の列と値を指定する
+SET 
+    # 予約状況を「受付」に更新する
+    user_work_status = 2
+    # 更新日付を現在時刻で更新
+    ,update_datetime = NOW()
+#検索条件を指定する
+WHERE
+    # クライアントから受け取ったuser_classwork_keyのレコードを更新対象
+    id = in_user_classwork_key
+;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
+# ストアドプロシージャの処理を終える
+END $$
 
 #区切り文字をセミコロンに戻す
 delimiter ;

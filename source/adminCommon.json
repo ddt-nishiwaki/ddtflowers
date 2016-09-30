@@ -155,8 +155,9 @@
 				"lesson_name": {
 					"columnName": "内容"
 				},
-				"user_classwork_cost": {
-					"columnName": "受講料"
+				"cost": {
+					"columnName": "受講料",
+					"className": "user_classwork_cost replaceTextboxCostCell"
 				},
 				"user_key": {
 					"style": "display:none;",
@@ -189,7 +190,7 @@
 				},
 				"use_point": {
 					"columnName": "使用ポイント",
-					"className": "use_point"
+					"className": "use_point replaceTextboxUsePointCell"
 				}
 			}
 		}
@@ -612,7 +613,7 @@
 	"userListInfoTable": {
 		"class": "userListInfoTable commonTable",
 		"db_getQuery": "SELECT user_name, pre_paid, get_point, DATE(update_datetime) AS update_date, id, mail_address , user_status FROM user_inf",
-		"queryForDoLecturePermit": "SELECT DISTINCT user_name,pre_paid,user_inf.get_point,DATE(user_inf.update_datetime) AS update_date,user_inf.id,mail_address, user_status FROM user_inf INNER JOIN user_classwork ON user_inf.id = user_classwork.user_key WHERE user_classwork.user_work_status = 2 ",
+		"queryForDoLecturePermit": "CALL getLecturePermitReseveList(@result); SELECT @result AS 'result';",
 		"config": {
 			"columns": {
 				"user_name": {
@@ -640,6 +641,26 @@
 				"user_status": {
 					"className": "user_status",
 					"columnName": "入会状況"
+				},
+				"lesson_date": {
+					"columnName": "日時"
+				},
+				"lesson_name": {
+					"columnName": "内容"
+				},
+				"user_classwork_cost": {
+					"columnName": "受講料",
+					"className": "user_classwork_cost"
+				},
+				"start_time": {
+					"columnName": "開始時間"
+				},
+				"end_time": {
+					"columnName": "終了時間"
+				},
+				"user_classwork_key": {
+					"className": "user_classwork_key",
+					"style": "display:none"
 				}
 			}
 		}
@@ -842,11 +863,19 @@
 		"db_setQuery": "CALL p_delete_mail_magazine('id', @result); SELECT @result AS result;"
 	},
 	"getAdditionalUserForLecturePermit": {
-		"db_getQuery": "SELECT  time_table_day.id AS time_table_key  ,time_table_day.lesson_date AS lesson_date     ,classwork.order_students AS order_students     ,classwork.lesson_key AS lesson_key  ,start_time  ,end_time  ,lesson_name  ,user_name  ,user_classwork.stage_no AS stage_no  ,user_classwork.level_no AS level_no  ,user_classwork_cost  ,user_inf.get_point AS get_point  ,user_classwork.id AS user_classwork_key  ,user_inf.id AS user_key  ,timetable_inf.school_key AS school_key FROM  time_table_day INNER JOIN  classwork ON  time_table_day.id = classwork.time_table_day_key INNER JOIN  user_classwork ON  classwork.id = user_classwork.classwork_key INNER JOIN  user_inf ON  user_inf.id = user_classwork.user_key AND  user_inf.id = 'user_key' INNER JOIN   lesson_inf ON  lesson_inf.id = classwork.lesson_key INNER JOIN  timetable_inf ON  timetable_inf.id = time_table_day.timetable_key AND  user_classwork.user_work_status = 2;",
+		"db_getQuery": "SELECT  time_table_day.id AS time_table_key  ,time_table_day.lesson_date AS lesson_date     ,classwork.order_students AS order_students     ,classwork.lesson_key AS lesson_key  ,start_time  ,end_time  ,lesson_name  ,user_name  ,user_classwork.stage_no AS stage_no  ,user_classwork.level_no AS level_no  ,user_classwork_cost  ,user_inf.get_point AS get_point  ,user_classwork.id AS user_classwork_key  ,user_inf.id AS user_key  ,timetable_inf.school_key AS school_key FROM  time_table_day INNER JOIN  classwork ON  time_table_day.id = classwork.time_table_day_key INNER JOIN  user_classwork ON  classwork.id = user_classwork.classwork_key INNER JOIN  user_inf ON  user_inf.id = user_classwork.user_key AND  user_inf.id = 'user_key' INNER JOIN   lesson_inf ON  lesson_inf.id = classwork.lesson_key INNER JOIN  timetable_inf ON  timetable_inf.id = time_table_day.timetable_key AND  user_classwork.user_work_status = 1 WHERE user_classwork.id = 'user_classwork_key';",
 		"user_key": {
+			"value": ""
+		},
+		"user_classwork_key": {
 			"value": ""
 		}
 	},
+
+	"setReservedStatusToReception": {
+		"db_setQuery": "CALL set_reserved_status_to_reception('user_classwork_key');"
+	},
+
 	"searchClassworkExist": {
 		"db_getQuery": "SELECT distinct lesson_date FROM `time_table_day` WHERE lesson_date >= 'fromDate' and lesson_date <= 'toDate';",
 		"fromDate": {

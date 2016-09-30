@@ -100,6 +100,14 @@ function common(){
 			arrow_left_double : {
 				src : SRC_ARROW_LEFT_DOUBLE_BUTTON,
 				text : ''
+			},
+			reception : {							// 2016.09.29 add k.urabe 受講承認の追加画面用に追加
+				src : SRC_PERMIT_BUTTON,
+				text : '受付'
+			},
+			back : {								// 2016.09.29 add k.urabe 受講承認の追加画面用に追加
+				src : SRC_CANCEL_BUTTON,
+				text : '戻る'
 			}
 	};
 	

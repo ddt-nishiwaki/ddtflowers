@@ -1313,6 +1313,9 @@ function moveToUserList(beforePanel, button) {
  * 返却値  :なし
  * 作成者:T.Masuda
  * 作成日:2016.03.19
+ * 変更者:k.urabe
+ * 変更日:2016.09.29
+ * 内容　:受講承認の追加画面仕様変更に伴い、主にbackCallbacks[doLecturePermit]内の処理を全体的に修正
  */
 function returnFromUserList(button) {
 	//管理者タブから前の画面名を取得する
@@ -1320,76 +1323,59 @@ function returnFromUserList(button) {
 	//選択済みの行を取得する
 	var selectedRecords = $(SELECTED_USER_RECORDS);
 	//押されたボタンの値を取得する
-	var buttonType = $(this).attr('data-buttontype');
+	var buttonType = $(button).attr('data-buttontype');		// 2016.09.29 mod k.urabe セレクタをthisからbuttonに修正
 	
 	//元の画面に戻る前の処理を行う
 	backCallbacks[moveTo](selectedRecords, buttonType);
 }
 
-//ユーザ一覧から元画面に戻るときにコールする関数
+//ユーザ一覧から元画面に戻るときにコールする関数 2016.09.29 mod　k.urabe 画面の機能仕様変更に伴い、doLecturePermitプロパティから呼ばれる無名関数を修正
 var backCallbacks = {
 		//受講承認
 		doLecturePermit : function(records, buttonType){
-			//押されたボタンがキャンセルでなければ
-			if (buttonType != 0) {
-				//受講承認タブのcreateTagを取得する
+			// 押されたボタンが選択ならば
+			if (buttonType == 0) {
+				// 受講承認タブのcreateTagを取得する
 				var dlpc = $(DO_LECTUREPERMIT_TAB)[0].create_tag;
-				//DOMの入れ物を作る
-				var recordList = $(TAG_DIV)[0];
-				var idList = [];	//ID一覧の入れ物を作る
-				//新たな受講承認データを作る
-				var newData = dlpc.json.doLecturePermitInfoTable.tableData.concat();
+				// DB更新のキーとして選択行のuser_classwork_keyキーを保存するための変数
+				var sendUpdateDate　= {};
+				// DB更新に使用するクエリを保持するための変数を宣言し、クエリを取得する
+				var sendQuery = $.extend(true, {}, dlpc.json.setReservedStatusToReception);
+				// 更新対象となるレコード件数を保持するための変数を宣言し、件数を取得する
+				var updateRecordNum = records.length;
 
-				//元テーブルからID行を取り出す
-				$(SELECTOR_DO_LECTURE_PERMIT_INFO_TABLE + ' td.user_key:not(:first)').each(function(){
-					//IDリストにIDを追加していく
-					idList.push($(this).text());
-				});
-				
-				//元テーブルのID一覧を作る
-				for (var i = 0; i < records.length; i++) {
-					//レコードからIDを抽出してJSONにセットする
-					dlpc.json.getAdditionalUserForLecturePermit.user_key.value = $(records[i]).children('.id').text();
-					
-					//IDチェックを始める
-					for(var j = 0; j < idList.length + 1; j++) {
-						//IDが一致したら
-						if(idList[j] == dlpc.json.getAdditionalUserForLecturePermit.user_key.value){
-							//追加を行わない
-							break;
-						//どれにも当てはまらなければレコード追加
-						} else if(j == idList.length){
-							//DBからユーザに対応した受講承認データを取得する
-							dlpc.getJsonFile(URL_GET_JSON_ARRAY_PHP, dlpc.json.getAdditionalUserForLecturePermit, 'getAdditionalUserForLecturePermit');
-							//受講承認用のDOMを作り入れ物に追加する
-							$(recordList).append(creaetLecturePermitRecord(dlpc.json.getAdditionalUserForLecturePermit.tableData[0]));
-							var tmpData = dlpc.json.getAdditionalUserForLecturePermit.tableData.concat();
-							//受講承認用JSONデータを追加する
-							newData.push(tmpData[0]);
-							dlpc.json.getAdditionalUserForLecturePermit.tableData = [];
-							break;	//ループをやめる
-						}
+				// 更新対象の行が選択されているか検証する
+				if(0 < updateRecordNum) {
+					// 選択行を走査し、選択された会員に紐付く授業を「受付」に更新する
+					for (var i = 0; i < updateRecordNum; i++) {
+						// 現在行の更新対象となるuser_classwork_keyキーを抽出する
+						sendUpdateDate[KEY_USER_CLASSWORK_KEY]　= $(records[i]).children(SELECTOR_USER_CLASSWORK_KEY).text();
+						// 抽出したuser_classwork_keyをキーとして予約状況を更新する
+						dlpc.setDBdata(sendQuery, sendUpdateDate, EMPTY_STRING);
 					}
+					// テーブルを再表示するためにテーブルの描画エリアをリセットする
+					dlpc.tableReset(KEY_USER_INFO_LIST_TABLE);
+					// 追加画面用のクエリをセットする
+					dlpc.json.userListInfoTable.db_getQuery = dlpc.json.userListInfoTable.queryForDoLecturePermit;
+					// 追加対象の会員データ一覧を取得する
+					dlpc.getJsonFile(URL_GET_JSON_ARRAY_PHP, create_tag.json[KEY_USER_INFO_LIST_TABLE], KEY_USER_INFO_LIST_TABLE);
+					// ページング機能付きで追加対象の会員データ一覧テーブルを作る
+					dlpc.outputNumberingTag(KEY_USER_INFO_LIST_TABLE, 1, 4, 1, 15, SELECTOR_USER_LIST_TABLE_OUTSIDE, FUNC_AFTER_RELOAD_USER_LIST_INFO_TABLE, "$(SELECTOR_USER_LIST)[0].");
+				// 選択されていなかった場合
+				} else {
+					// 1行以上選択する必要がある旨を出力する
+					alert(MESSAGE_NEED_SELECT_MORE_1_RECORD);
 				}
+			// 押されたボタンがキャンセルならば
+			} else {
+				// タブのインスタンスを取得する
+				var tabInstance = $('#adminTab')[0].instance;
+
+				// 元のタブに戻る
+				$('#adminTab').easytabs('select', '#lecturePermit')
+				// 呼び出し画面情報を初期値に戻す
+				tabInstance.beforePanel = null;
 			}
-			
-			//作成した受講承認用データをcreateTagに渡す
-			dlpc.json.doLecturePermitInfoTable.tableData = newData.concat();
-			//作成したレコードを受講承認テーブルに追加する
-			$('.doLecturePermitInfoTable').append($('tr', recordList));
-			
-			//タブのインスタンスを取得する
-			var tabInstance = $('#adminTab')[0].instance;
-			//タブが切り替わっても元々あったコンテンツを取得し直さない様に一時設定する
-			tabInstance.cache = true;
-			
-			//連番を振り直す
-			commonFuncs.insertSequenceNo(SELECTOR_DO_LECTURE_PERMIT_INFO_TABLE, SELECTOR_NO_COL);
-			
-			//元のタブに戻る
-			$('#adminTab').easytabs('select', '#lecturePermit')
-			//呼び出し画面情報を初期値に戻す
-			tabInstance.beforePanel = null;
 		},
 		//商品購入承認
 		sellCommodityPermit : function(records, buttonType){

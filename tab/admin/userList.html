@@ -64,10 +64,10 @@
 				commonFuncs.putCommonButton('#userList .userListButtons', 'announceButton', 'notice', true, true, true);
 			//普通に読み込まれていたら
 			} else {
-				// キャンセルボタンを作る
-				commonFuncs.putCommonButton('#userList .userListButtons', 'cancelUser fRight', 'cancel', true, true, true, {"onclick": "returnFromUserList(this);","data-buttontype": "1"});
-				// 追加ボタンを作る
-				commonFuncs.putCommonButton('#userList .userListButtons', 'selectUser fRight', 'select', true, true, true, {"onclick": "returnFromUserList(this);", "data-buttontype": "0"});
+				// キャンセルボタンを作る 2016.09.29 mod k.urabe　ボタンのタイプを変更
+				commonFuncs.putCommonButton('#userList .userListButtons', 'cancelUser fRight', 'back', true, true, true, {"onclick": "returnFromUserList(this);","data-buttontype": "1"});
+				// 追加ボタンを作る 2016.09.29 mod k.urabe　ボタンのタイプを変更
+				commonFuncs.putCommonButton('#userList .userListButtons', 'selectUser fRight', 'reception', true, true, true, {"onclick": "returnFromUserList(this);", "data-buttontype": "0"});
 			}
 			
 			//会員一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する

@@ -1072,6 +1072,8 @@ SELECTOR_USER_INFO_LIST_TABLE = '.userListInfoTable';
 SELECTOR_USER_LIST_TABLE_OUTSIDE = '.userListTableOutside';
 // ユーザ一覧テーブルリロード後処理関数名
 FUNC_AFTER_RELOAD_USER_LIST_INFO_TABLE = 'afterReloadUserListInfoTable';
+// ユーザ一覧テーブルのセレクタ(id)
+SELECTOR_USER_LIST = '#userList';
 // name属性を指定するセレクタの前後の文字列
 ATTR_EQUAL_NAME_FRONT = '[name="';
 ATTR_EQUAL_NAME_REAR = '"]';
@@ -1128,6 +1130,10 @@ SELECTOR_SELL_COMMODITY_PERMIT_TAB = '#sellCommodityPermit';
 KEY_PAY_PRICE = 'pay_price';
 // 支払額のキー
 KEY_PAY_CASH = 'pay_cash';
+// 会員ごとの授業データのキー（user_classwork_key） 2016.09.29 add k.urabe
+KEY_USER_CLASSWORK_KEY = 'user_classwork_key';
+// 会員ごとの授業データのセレクター（user_classwork_key） 2016.09.29 add k.urabe
+SELECTOR_USER_CLASSWORK_KEY = '.user_classwork_key';
 // メールの送信に失敗したという旨のメッセージ
 MESSAGE_FALED_TO_SEND_MAIL = 'メールの送信に失敗しました。\n時間を置いてお試しください。';
 // メールの送信に失敗したという旨のメッセージ
