@@ -753,7 +753,7 @@ KEY_DB_GETQUERY = 'db_getQuery';
 NUMBERING_START = 1; // ページングの最初の表示する値。1つ目のコンテンツからから表示
 NUMBERING_PAGE = 4; // ページング化される数。5ページ目から＞＞の記号になる
 NUMBERING_DEFAULT = 1; // ページングは1ページ目から表示する
-NUMBERING_DISPLAY = 10; // ページングの1つのページにつき、10件を表示するようにする
+NUMBERING_DISPLAY = 15; // ページングの1つのページにつき、15件を表示するようにする  2016.10.02 k.urabe 当該定数を使用するべき箇所の数値に合わせて修正（作成済み定数が未使用であった）
 
 // 会員ページトップ予約関連処理
 MESSAGE_FAILED_LESSON_RESERVE_TEXT = '選択したの授業の予約に失敗しました。\n時間を置いてお試しください。'; // 予約失敗テキスト

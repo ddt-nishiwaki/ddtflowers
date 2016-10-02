@@ -1351,14 +1351,10 @@ var backCallbacks = {
 						// 抽出したuser_classwork_keyをキーとして予約状況を更新する
 						dlpc.setDBdata(sendQuery, sendUpdateDate, EMPTY_STRING);
 					}
-					// テーブルを再表示するためにテーブルの描画エリアをリセットする
-					dlpc.tableReset(KEY_USER_INFO_LIST_TABLE);
 					// 追加画面用のクエリをセットする
 					dlpc.json.userListInfoTable.db_getQuery = dlpc.json.userListInfoTable.queryForDoLecturePermit;
-					// 追加対象の会員データ一覧を取得する
-					dlpc.getJsonFile(URL_GET_JSON_ARRAY_PHP, create_tag.json[KEY_USER_INFO_LIST_TABLE], KEY_USER_INFO_LIST_TABLE);
-					// ページング機能付きで追加対象の会員データ一覧テーブルを作る
-					dlpc.outputNumberingTag(KEY_USER_INFO_LIST_TABLE, 1, 4, 1, 15, SELECTOR_USER_LIST_TABLE_OUTSIDE, FUNC_AFTER_RELOAD_USER_LIST_INFO_TABLE, "$(SELECTOR_USER_LIST)[0].");
+					// ページング機能付きテーブルを再表示する 2016.09.10 mod k.urabe テーブル再表示処理を関数にまとめたので変更
+					reloadPagingTable(dlpc, KEY_USER_INFO_LIST_TABLE, SELECTOR_USER_LIST_TABLE_OUTSIDE, SELECTOR_USER_LIST);
 				// 選択されていなかった場合
 				} else {
 					// 1行以上選択する必要がある旨を出力する
@@ -1447,6 +1443,26 @@ function executeTagReturn(tabInstance, cache, tabParent, tabChild) {
 	$(tabParent).easytabs('select', tabChild);
 	// 保持していた呼び出し元の画面情報を初期値に戻す。
 	tabInstance.beforePanel = null;
+}
+
+/* 
+* 関数名:reloadPagingTable
+* 概要  :ページャ付きのテーブルを表示（再表示）する関数をまとめた関数
+* 引数  :object reservedObject		: createLittleContentのインスタンス
+*      :object tableName			: 対象とするテーブルのクラス名（例：userListInfoTable）
+*      :selector outsideSelector	: 対象とするテーブルの外側のセレクタークラス名（例：.userListTableOutside）
+*      :selector targetSelector		: 対象とするテーブルのセレクターID名（例：#userList）
+* 返却値:なし
+* 作成者:k.urabe
+* 作成日:2016.10.02
+*/
+function reloadPagingTable(reservedObject, tableName, outsideSelector, targetSelector) {
+	// テーブルを表示（再表示）するためにテーブルの描画エリアをリセットする
+	reservedObject.tableReset(tableName);
+	// 対象のデータ一覧を取得する
+	reservedObject.getJsonFile(URL_GET_JSON_ARRAY_PHP, reservedObject.json[tableName], tableName);
+	// ページング機能付きで対象のデータ一覧テーブルを作る
+	reservedObject.outputNumberingTag(tableName, NUMBERING_START, NUMBERING_PAGE, NUMBERING_DEFAULT, NUMBERING_DISPLAY, outsideSelector, FUNC_AFTER_RELOAD_USER_LIST_INFO_TABLE, "$('" + targetSelector + "')[0].");
 }
 
 /* 

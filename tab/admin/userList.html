@@ -48,11 +48,9 @@
 					create_tag.json.userListInfoTable.db_getQuery = create_tag.json.userListInfoTable.queryForDoLecturePermit;
 				}
 			}
-			
-			//会員一覧のデータを取り出す
-			create_tag.getJsonFile('php/GetJSONArray.php', create_tag.json['userListInfoTable'], 'userListInfoTable');
-			//ページング機能付きでユーザ情報一覧テーブルを作る
-			create_tag.outputNumberingTag('userListInfoTable', 1, 4, 1, 15, '.userListTableOutside', 'afterReloadUserListInfoTable', "$('#userList')[0].");
+		
+			//ページング機能付きでユーザ情報一覧テーブルを作る 2016.10.02 k.urabe 一連の処理を関数としてまとめたため変更
+			reloadPagingTable(create_tag, KEY_USER_INFO_LIST_TABLE, SELECTOR_USER_LIST_TABLE_OUTSIDE, SELECTOR_USER_LIST);
 			//会員一覧タブのボタン群れ
 			create_tag.outputTag('userListButtons', 'userListButtons', '#userList');
 
