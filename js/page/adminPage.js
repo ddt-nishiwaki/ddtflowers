@@ -1370,7 +1370,7 @@ var backCallbacks = {
 				var tabInstance = $('#adminTab')[0].instance;
 
 				// 呼び出し元のテーブルに戻る 2016.09.30 mod k.urabe 呼び出し元画面に戻る関数を追加したことによる変更
-				executeTagreturnTag(tabInstance, false, SELECTOR_ADMIN_TAB, SELECTOR_LECTURE_PERMIT);
+				executeTagReturn(tabInstance, false, SELECTOR_ADMIN_TAB, SELECTOR_LECTURE_PERMIT);
 			}
 		},
 		//商品購入承認
@@ -1423,14 +1423,14 @@ var backCallbacks = {
 			var tabInstance = $('#adminTab')[0].instance;
 
 			// 呼び出し元のテーブルに戻る 2016.09.30 mod k.urabe 呼び出し元画面に戻る関数を追加したことによる変更
-			executeTagreturnTag(tabInstance, true, SELECTOR_ADMIN_TAB, SELECTOR_LECTURE_PERMIT);
+			executeTagReturn(tabInstance, true, SELECTOR_ADMIN_TAB, SELECTOR_LECTURE_PERMIT);
 			//追加した行に製品選択用セレクトメニューを追加する
 			commonFuncs.createCommoditySelectMenu($('#sellCommodityPermit')[0].create_tag.json.selectCommodityInf.tableData, '.sellCommodityPermitInfoTable .content');
 		}
 }
 
 /* 
-* 関数名:executeTagreturnTag
+* 関数名:executeTagReturn
 * 概要  :戻り先のタブに戻る処理をまとめた関数です
 * 引数  :object tabInstance	:tabExクラスのインスタンス
        :boolean cache		:trueだと戻り先のタブをリロードしない、falseだと戻り先のタブをリロードする
@@ -1440,7 +1440,7 @@ var backCallbacks = {
 * 作成者:k.urabe
 * 作成日:2016.09.30
 */
-function executeTagreturnTag(tabInstance, cache, tabParent, tabChild) {
+function executeTagReturn(tabInstance, cache, tabParent, tabChild) {
 	// 戻り先のタブの内容をリロードするか設定する
 	tabInstance.cache = cache;
 	// 指定された戻り先に戻る
