@@ -2551,7 +2551,7 @@ this.messageDialogDefaultOption = {
 		//セレクトメニューに未選択データを追加する
 		$select.append($('<option></option>').addClass('contentOption').text(COMMODITY_NOT_SELECTED).attr({
 			value : COMMODITY_NOT_SELECTED
-			,'data-price' : 0
+			,'data-price' : ''
 			,'data-commodity_Key' : COMMODITY_NOT_SELECTED_KEY_2
 		}));
 

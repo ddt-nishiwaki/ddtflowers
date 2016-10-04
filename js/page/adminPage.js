@@ -1143,6 +1143,8 @@ function permitSellCommodity() {
 
 		//商品購入承認テーブルの行を1行ごとに更新するため、1行を特定するためにカウンタを作る
 		var counter = 0;
+		//更新成功数をカウントする変数を作成する // 2016.10.04 r.shibata
+		var successcounter = 0;
 		//商品購入承認を行った生徒の方のリストを作る
 		var processedList = new Array();
 		//序文を追加する
@@ -1212,6 +1214,8 @@ function permitSellCommodity() {
 					deleteList.push(i); // 2016.10.04 r.shibata 指定が[i]だったのを修正
 					//承認を終えた行を削除する
 					$(this).remove();
+					//更新成功数をインクリメントする //2016.10.04 r.shibata 追加
+					successcounter++;
 				}
 				
 				//カウンターをインクリメントする
@@ -1219,8 +1223,8 @@ function permitSellCommodity() {
 			});
 		//例外処理
 		} catch(e){
-			//処理件数が0件であれば
-			if (counter == 0) {
+			//処理件数が0件であれば 2016.10.04 r.shibata 更新成功するを参照するよう変更
+			if (successcounter == 0) {
 				processedList = [];		//序文を消す
 			}
 			//メッセージの先頭を追加する
@@ -1381,47 +1385,24 @@ var backCallbacks = {
 					var recordData = createRecordFromDom(this);
 					//承認用データを作る
 					var permitData = creaetSellCommodityPermitData(recordData);
-					//元画面に追加するレコード(DOM)を作成する
-					var addRecord = creaetSellCommodityPermitRecord(recordData);
 					//商品購入承認のレコードをINSERTする準備を行う
+					//ユーザーキーを設定する
 					scpc.json.insertSellCommodityRecord.user_key.value = permitData.user_key;
+					//デフォルトの商品コードを設定する
+					scpc.json.insertSellCommodityRecord.purchase_id.value = COMMODITY_NOT_SELECTED_KEY_2;
 					//レコードの保存を行う
 					var result = scpc.getJsonFile(URL_SAVE_JSON_DATA_PHP, scpc.json.insertSellCommodityRecord, 'insertSellCommodityRecord');
-					//レコードの保存に成功した
-					if (parseInt(result.message)) {
-						//最新の商品販売IDを取得し、画面に追加する行のデータへ追加する
-						scpc.getJsonFile(URL_GET_JSON_ARRAY_PHP, scpc.json.getCommoditySellId, 'getCommoditySellId');
-						//承認データに商品販売IDを追加する
-						console.log(scpc.json.getCommoditySellId);
-						permitData.commodity_sell_key = scpc.json.getCommoditySellId.tableData[0].id;
-						//承認用データをJSONに追加する
-						scpc.json.sellCommodityPermitInfoTable.tableData.push(permitData);
-						$('.sellCommodityPermitInfoTable tbody').append($('tr', addRecord));
 					//レコードの保存ができなかった
-					} else {
+					if (!parseInt(result.message)) {
 						//レコードの保存が出来なかった旨を伝達する
 						alert(COUNDNT_INSERT_SELLCOMMODITY_PERMIT_MESSAGE + permitData.user_name + ' 会員番号 : ' + permitData.user_key);
 					}
 				});
 			}
-
-			//連番を振る
-			commonFuncs.insertSequenceNo('.sellCommodityPermitInfoTable', '.No');
-			
-			//数量、価格、使用ポイント、合計金額列をテキストボックスに置き換える
-			//商品キー列は隠しinputに置き換える
-			replaceSellCommodityPermitInputs(commonFuncs);
-
-			//合計金額列を編集不可にする
-			$('input[name="pay_price"]').attr('readonly', 'readonly');
-
 			//タブのインスタンスを取得する
 			var tabInstance = $('#adminTab')[0].instance;
-
-			// 呼び出し元のテーブルに戻る 2016.09.30 mod k.urabe 呼び出し元画面に戻る関数を追加したことによる変更
-			executeTagReturn(tabInstance, true, SELECTOR_ADMIN_TAB, SELECTOR_LECTURE_PERMIT);
-			//追加した行に製品選択用セレクトメニューを追加する
-			commonFuncs.createCommoditySelectMenu($('#sellCommodityPermit')[0].create_tag.json.selectCommodityInf.tableData, '.sellCommodityPermitInfoTable .content');
+			// 呼び出し元のテーブルに戻る 2016.09.30 mod k.urabe 呼び出し元画面に戻る関数を追加したことによる変更 2016.10.04 r.shibata タブ遷移後画面をリロードするように変更
+			executeTagReturn(tabInstance, false, SELECTOR_ADMIN_TAB, SELECTOR_LECTURE_PERMIT);
 		}
 }
 
