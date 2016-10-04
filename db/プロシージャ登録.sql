@@ -3150,6 +3150,7 @@ SELECT NOW();
 END$$
 
 # 例外処理を追加し、発生したらROLLBACKして終了（exit）する。また、成功時に返却する結果セット追加 2016.09.24 k.urabe
+# 初期選択の商品IDが、最終登録の商品IDとなっていたため、入力の商品IDを設定するように変更、最終登録の商品ID取得SQLの削除 2016.10.04 r.shibata
 DROP PROCEDURE IF EXISTS p_insert_approval_purchase $$
 CREATE PROCEDURE p_insert_approval_purchase (
     IN in_sell_number INT
@@ -3157,6 +3158,7 @@ CREATE PROCEDURE p_insert_approval_purchase (
     ,IN in_use_point INT
     ,IN in_user_key INT
     ,IN in_purchase_status INT
+    ,IN in_purchase_id INT
     ,OUT result INT
 )
 BEGIN
@@ -3165,7 +3167,6 @@ DECLARE old_count int;
 DECLARE new_count int;
 DECLARE latest_timestamp_user VARCHAR(25);
 DECLARE updated_timestamp_user VARCHAR(25);
-DECLARE last_purchase_id int;
 # エラーハンドラーの設定 エラーが発生したらロールバックして終了(EXIT)する
 DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 
@@ -3177,20 +3178,6 @@ INTO
     old_count;
 
 START TRANSACTION;
-
-SELECT
-    commodity_key
-FROM
-    commodity_sell
-WHERE
-    create_datetime = (
-        SELECT
-            MAX(create_datetime)
-        FROM
-            commodity_sell
-    )
-LIMIT 1
-INTO last_purchase_id;
 
 INSERT INTO
     commodity_sell (
@@ -3207,7 +3194,7 @@ INSERT INTO
         ,update_datetime
     )
 VALUES (
-    last_purchase_id
+    in_purchase_id
     ,1
     ,in_user_key
     ,in_purchase_status
@@ -4063,6 +4050,66 @@ WHERE
 ;
 # 返却用の結果セット（1行返却）を実行する
 SELECT NOW();
+# ストアドプロシージャの処理を終える
+END $$
+
+
+# 商品承認(未承認) 一覧表示 2016.10.04 r.shibata 追加 json記載のSQL文の移行と修正
+DROP PROCEDURE IF EXISTS p_select_approval_purchase $$
+CREATE PROCEDURE p_select_approval_purchase (
+)
+# 以降にストアドプロシージャの処理を記述する
+BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
+# 出力対象の列を指定する
+SELECT 
+    # 連番(一覧出力後設定する)
+    '' AS no, 
+    # ユーザ名
+    user_name, 
+    # 所持ポイント
+    user_inf.get_point AS get_point, 
+    # 商品ID
+    commodity_key, 
+    # ユーザーID
+    user_key, 
+    # 商品名
+    content, 
+    # 販売額(単価)
+    selling_price, 
+    # 販売個数
+    sell_number, 
+    # 使用ポイント
+    commodity_sell.use_point, 
+    # 支払額(合計)
+    pay_cash + commodity_sell.get_point AS pay_price, 
+    # 商品売り上げ情報テーブルのID
+    commodity_sell.id AS commodity_sell_key 
+# データ取得元のテーブルを指定する
+FROM 
+    # 商品売り上げ情報テーブル
+    commodity_sell 
+# 結合対象の列の値がnullのデータを排除して結合する 
+INNER JOIN 
+    # ユーザ情報テーブル
+    user_inf 
+# 以下に指定した列を基に結合を行う
+ON 
+    # ユーザIDが合致する
+    commodity_sell.user_key = user_inf.id
+#結合対象の列の値のnullを許可して結合する 
+LEFT JOIN 
+    # 商品詳細情報テーブル
+    commodity_inf 
+# 以下に指定した列を元に結合を行う
+ON 
+    # 商品ID
+    commodity_sell.commodity_key = commodity_inf.id 
+#検索条件を指定する
+WHERE 
+    # 販売状態が未承認の物を選択する
+    purchase_status = 0;
 # ストアドプロシージャの処理を終える
 END $$
 

@@ -43,9 +43,9 @@
 			create_tag.getJsonFile('php/GetJSONArray.php', create_tag.json['sellCommodityPermitInfoTable'], 'sellCommodityPermitInfoTable');
 			//何も取得できなければ
 			if (create_tag.json['sellCommodityPermitInfoTable'].tableData.length == 0){
-				//ダミー行データを作る
+				//ダミー行データを作る // 2016.10.04 r.shibata ダミーレコードの単価の名称と単価、個数の位置が逆だった点を修正
 				create_tag.json.sellCommodityPermitInfoTable.tableData = [
-				                                      					{'no' : 0, 'user_name' : '', 'get_point' : 0, 'commodity_key' :0, 'user_key' : 0, 'content' : "", 'sell_number' : 0, 'price' : 0, 'use_point' : 0, 'pay_price' : 0}
+				                                      					{'no' : 0, 'user_name' : '', 'get_point' : 0, 'commodity_key' :0, 'user_key' : 0, 'content' : "", 'selling_price' : 0, 'sell_number' : 0, 'use_point' : 0, 'pay_price' : 0}
 					];
 				//商品販売テーブルを一旦出力する
 				create_tag.outputTagTable('sellCommodityPermitInfoTable', 'sellCommodityPermitInfoTable', '.sellCommodityPermitInfoTableOutSideArea');

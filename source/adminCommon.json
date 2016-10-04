@@ -206,7 +206,7 @@
 		"date": {
 			"value": "CALL p_delete_approval_purchase('id', @result); SELECT @result AS result;"
 		},
-		"db_getQuery": "SELECT '' AS no, user_name, user_inf.get_point AS get_point, commodity_key, user_key, content, selling_price, sell_number, commodity_sell.use_point, pay_cash + commodity_sell.get_point AS pay_price, commodity_sell.id AS commodity_sell_key FROM commodity_sell INNER JOIN user_inf ON commodity_sell.user_key = user_inf.id INNER JOIN commodity_inf ON commodity_sell.commodity_key = commodity_inf.id WHERE purchase_status like 0;",
+		"db_getQuery": "CALL p_select_approval_purchase();",
 		"config": {
 			"columns": {
 				"no": {
@@ -258,7 +258,7 @@
 		"db_setQuery": "CALL p_delete_approval_purchase('id', @result); SELECT @result AS result;"
 	},
 	"insertSellCommodityRecord": {
-		"db_setQuery": "CALL p_insert_approval_purchase('sell_number', 'pay_cash', 'use_point', 'user_key', 'purchase_status', @result); SELECT @result AS message;",
+		"db_setQuery": "CALL p_insert_approval_purchase('sell_number', 'pay_cash', 'use_point', 'user_key', 'purchase_status', 'purchase_id', @result); SELECT @result AS message;",
 		"sell_number": {
 			"value": "1"
 		},
@@ -273,6 +273,9 @@
 		},
 		"purchase_status": {
 			"value": "0"
+		},
+		"purchase_id": {
+			"value": ""
 		}
 	},
 	"commodityPlusPoint": {
