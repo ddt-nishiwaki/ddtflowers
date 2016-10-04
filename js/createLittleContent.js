@@ -370,29 +370,21 @@ function createLittleContents(){
 	 * 変更日:2015.11.03
 	 * 変更者:T.Masuda
 	 * 内容　:機能していなかったので機能を作りました
+	 * 変更日:2016.10.04
+	 * 内容  :複数件数削除時に動作していなかったため、1件ずつ削除するように修正しました。
 	 */
 	this.deletePhoto = function(){
 		//チェックボックスが入っている写真があれば
 		if($('.myPhotoCheck:checked').length){
-			
-			//写真のIDを格納する配列を用意する
-			var idArray = new Array();
+			// インスタンスを関数内で使用するため変数に参照を持たせる
+			thisElem = this;
+			//写真の削除件数を格納する変数を用意する
+			var result = 0;
 			//対象となる写真を走査する
 			$('.myPhoto').has('.myPhotoCheck:checked').each(function(){
-				//写真のIDを配列に追加していく
-				idArray.push($('.id', this).text());
+				//対象の写真を削除し、削除件数をカウントしていく
+				result = result + thisElem.setDBdata(thisElem.json.deleteMyGalleryPhoto, { id : $(SEL_ID, this).text() }, EMPTY_STRING);
 			});
-			
-			//削除用のクエリを取得する
-			var deleteQuery = this.json['deleteMyGalleryPhoto'].db_setQuery;
-			//クエリのID部分を置換し取得元にセットし直す
-			this.json['deleteMyGalleryPhoto'].db_setQuery = deleteQuery.replace("'id'", idArray.join(','));
-			
-			//記事を削除しDBを更新する
-			 var result = this.setDBdata(this.json['deleteMyGalleryPhoto'], { id : EMPTY_STRING }, EMPTY_STRING);
-			 //すげ替えたクエリを元に戻す
-			 this.json['deleteMyGalleryPhoto'].db_setQuery = deleteQuery;
-			 
 			 //削除に成功していたら
 			 if (result) {
 				//その旨を伝える
