@@ -1171,7 +1171,7 @@ function permitSellCommodity() {
 				if(commonFuncs.checkEmpty($(this).attr(CLASS)) && $(this).attr(CLASS).indexOf('selectRecord') != -1){
 
 					// DBを更新するための値を取得するために置換する連想配列を取得する
-					var sendReplaceArray = scpc.getSendReplaceArray(KEY_SELL_COMMODITY_PERMIT_INFO_TABLE, counter, '.sellCommodityPermitInfoTable tr:not(:first):eq(' + counter + ')');
+					var sendReplaceArray = scpc.getSendReplaceArray(KEY_SELL_COMMODITY_PERMIT_INFO_TABLE, counter, '.sellCommodityPermitInfoTable tr:not(:first):eq(' + $(this).index() + ')'); // 2016.10.04 r.shibata 行指定が異なっていた点を修正
 					//商品が未選択であれば
 					if(sendReplaceArray.commodity_key == COMMODITY_NOT_SELECTED_KEY_1 || sendReplaceArray.commodity_key == COMMODITY_NOT_SELECTED_KEY_2) {
 						//エラー扱いにするため例外を投げる。対象の行のお客様の名前を挙げる
@@ -1209,7 +1209,7 @@ function permitSellCommodity() {
 					processedList.push(sendReplaceArray.user_name + ' ' + sendReplaceArray.content + ' ' + sendReplaceArray.sell_number + '個 ' + sendReplaceArray.pay_cash + '円' + '\n');	
 
 					//データ削除用リストに番号を追加する
-					deleteList.push[i];
+					deleteList.push(i); // 2016.10.04 r.shibata 指定が[i]だったのを修正
 					//承認を終えた行を削除する
 					$(this).remove();
 				}
