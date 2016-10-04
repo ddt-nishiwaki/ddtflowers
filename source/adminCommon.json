@@ -505,7 +505,8 @@
 					"style": "display:none;"
 				}
 			}
-		}
+		},
+		"noSearchMessage":"指定した期間内に受講データがありませんでした。"
 	},
 	"sellCommodityPermitListInfoTable": {
 		"class": "sellCommodityPermitListInfoTable commonTable",
@@ -561,7 +562,8 @@
 					"style": "display:none;"
 				}
 			}
-		}
+		},
+		"noSearchMessage":"指定した期間内に商品データがありませんでした。"
 	},
 	"contentSelect": {
 		"name": "commodity_key",

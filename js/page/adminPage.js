@@ -311,7 +311,7 @@ function searchPermitListInfoTable(
 		//なければ
 		} else {
 			//その旨を伝える
-			alert('指定した期間内に受講データがありませんでした。');
+			alert(searchCreateTag.json[targetTable].noSearchMessage);
 		}
 	});
 }
