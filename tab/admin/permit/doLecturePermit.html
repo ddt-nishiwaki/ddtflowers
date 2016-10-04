@@ -74,7 +74,7 @@
 			create_tag.setTableTextboxValuefromDB($(DO_LECTUREPERMIT_TAB)[0].create_tag.json[DO_LECTURE_PERMIT_INFO_TABLE][TABLE_DATA_KEY], create_tag.setInputValueToLecturePermitListInfoTable, SELECTOR_DO_LECTURE_PERMIT_INFO_TABLE);
 
 			//会員一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する
-			toggleClassClickElement('tr', 'selectRecord', '.doLecturePermitInfoTable');
+			toggleClassClickElement(SELECTOR_TBODY_TR, SELECT_RECORD, SELECTOR_DO_LECTURE_PERMIT_INFO_TABLE);	// 2016.10.04 mod k.urabe 対象のセレクタをテーブル本体内のtr要素に限定
 			//全選択ボタンの設定を行う
 			commonFuncs.addSelectAllBoxEvent(DO_LECTUREPERMIT_TAB + SPACE + SELECTOR_SELECT_ALL_ROW_CHECKBOX, SELECTOR_SELECT_ALL_ROW_LABEL, SELECTOR_DO_LECTURE_PERMIT_INFO_TABLE, SELECT_RECORD); // 2016.09.26 r.shibata 変更
 			//追加ボタンを押したらユーザ一覧画面へ遷移するようにする
