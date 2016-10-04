@@ -634,7 +634,7 @@
         }
     },
     "cancelReservedData":{
-        "db_setQuery":"CALL cancel_classwork('id', 'classwork_key', 'cancel_charge');"
+        "db_setQuery":"CALL cancel_classwork('id', 'classwork_key', 'cancel_charge', 'cancel_user');"
     },
 	"lessonListSearch": {
 		"class": "lessonListSearch cf inlineBlock floatLeft",

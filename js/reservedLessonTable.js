@@ -98,6 +98,8 @@ function reservedLessonTable() {
 		retObj[KEY_DB_SETQUERY] = create_tag.json.cancelReservedData.db_setQuery;
 		//キャンセル料をセットする
 		retObj.cancel_charge = dialogBuilder.create_tag.cancel_charge;
+		// キャンセルがユーザか管理者かの判定の値をセットする 2016.10.04 add k.urabe
+		retObj.cancel_user = !dialogBuilder.create_tag.isAdminLoginToMemberPage() ? VALUE_USER_CANCEL : VALUE_ADMIN_CANCEL;
 		//ダイアログ専用クラスインスタンスがdialogExクラスインスタンスを通じてデータを取り出す
 		return retObj;
 	};
