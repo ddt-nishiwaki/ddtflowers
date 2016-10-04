@@ -518,7 +518,7 @@ function loopUpdatePermitLesson() {
 				//選択されているものだけを更新するように条件設定する
 				if(commonFuncs.checkEmpty($(this).attr('class')) && $(this).attr('class').indexOf('selectRecord') != -1) {
 						// DBを更新するための値を取得するために置換する連想配列を取得する
-						var sendReplaceArray = create_tag.getSendReplaceArray('doLecturePermitInfoTable', counter, '.doLecturePermitInfoTable tr:not(:first):eq(' + $('doLecturePermitInfoTable tr:not(:first)').index(this) + ')');
+						var sendReplaceArray = create_tag.getSendReplaceArray('doLecturePermitInfoTable', counter, SELECTOR_DO_LECTURE_PERMIT_SELECTED_INDEX + ':eq(' + $(SELECTOR_DO_LECTURE_PERMIT_SELECTED_INDEX).index(this) + ')');
 						//取得した値が不正かどうかをチェックする
 						VALIDATOR.validate(validateSettings, sendReplaceArray);
 						

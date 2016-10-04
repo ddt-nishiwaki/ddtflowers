@@ -1008,6 +1008,8 @@ TD_FROM_REAR = '</td><td>';
 TD_FROM_REAR_DISPLAY_NONE = '</td><td style="display : none">';
 SELECTOR_SELLCOMMODITY_PERMIT_LIST_INFO_TABLE = '.sellCommodityPermitListInfoTable'; // 管理者、商品購入承認一覧テーブルのセレクタ
 SELECTOR_DO_LECTURE_PERMIT_INFO_TABLE = '.doLecturePermitInfoTable'; // 管理者、受講承認テーブルのセレクタ
+// 受講承認の更新時に選択行のインデックスを取得するためのセレクタ 2016.10.04 add k.urabe
+SELECTOR_DO_LECTURE_PERMIT_SELECTED_INDEX = SELECTOR_DO_LECTURE_PERMIT_INFO_TABLE + SPACE + TAG_TR + SELECTOR_NOT_FIRST
 // 受講承認のダミーデータ
 DUMMY_LECTUREPERMIT_DATA = {
 	time_table_key : "",
