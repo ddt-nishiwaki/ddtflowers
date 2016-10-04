@@ -1114,6 +1114,8 @@ TEXT_MAIL_MAGA_DIALOG = 'メルマガ編集';
 SELECTOR_MAIL_MAGA_TAB = '#mailMagaAndAnnounce';
 // メルマガテーブルのキー
 KEY_MAIL_MAGA_TABLE = 'mailMagaTable';
+// メルマガテーブルの囲う要素のセレクタ 2016.10.04 add k.urabe
+SELECTOR_MAIL_MAGA_TABLE_OUTSIDE = '.mailMagaTableOutside';
 // UNIXタイムスタンプの開始日付
 UNIX_TIMESTAMP_START_DATE = '1900-01-01';
 // 商品購入承認テーブルのキー

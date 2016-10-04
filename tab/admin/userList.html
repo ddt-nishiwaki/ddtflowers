@@ -69,7 +69,7 @@
 			}
 			
 			//会員一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する
-			toggleClassClickElement('tr', 'selectRecord', '.userListTableOutside');
+			toggleClassClickElement(SELECTOR_TBODY_TR, SELECT_RECORD, SELECTOR_USER_LIST_TABLE_OUTSIDE);		// 2016.10.04 mod k.urabe 対象のセレクタをテーブル本体内のtr要素に限定
 			
 			//検索ボタンを押すと検索ダイアログを開く
 			setPopupSearchDialog('#userList .showUserSearchListDialogButton');

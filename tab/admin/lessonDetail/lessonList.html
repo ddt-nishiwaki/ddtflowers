@@ -56,7 +56,7 @@
 			$(DOT + LESSON_TABLE + TAG_CHILD_TR, $(SELECTOR_ADMIN_LESSON_LIST_TABLE_AREA)).has("td.lesson_name:empty, td.school_name:empty").hide();
 
 			//会員一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する
-			toggleClassClickElement('tr', 'selectRecord', '.lessonTable');
+			toggleClassClickElement(SELECTOR_TBODY_TR, SELECT_RECORD, SELECTOR_LESSON_TABLE);	// 2016.10.04 mod k.urabe 対象のセレクタをテーブル本体内のtr要素に限定
 			
 			//レッスンのステータス領域を作る
 			create_tag.outputTag(EXPLAIN_FIRST, EXPLAIN_FIRST, SELECTOR_LESSON_LIST_TAB);

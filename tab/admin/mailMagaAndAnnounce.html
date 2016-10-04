@@ -55,7 +55,7 @@
 			create_tag.loadTableData('mailMagaTable', 1, 4, 1, MAILMAGA_TABLE_SHOW_NUMBER, '.mailMagaTableOutside', 'afterReloadMailMagaTable', "$('#mailMagaAndAnnounce')[0].");
 			
 			//メルマガ一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する
-			toggleClassClickElement('tr', 'selectRecord', '.mailMagaTableOutside');
+			toggleClassClickElement(SELECTOR_TBODY_TR, SELECT_RECORD, SELECTOR_MAIL_MAGA_TABLE_OUTSIDE);	// 2016.10.04 mod k.urabe 対象のセレクタをテーブル本体内のtr要素に限定
 			
 			//メルマガ検索機能を実装する
 			mailMagaSearch();
