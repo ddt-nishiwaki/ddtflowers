@@ -1177,6 +1177,8 @@ SELECTOR_MAILMAGA_EDIT_AREA = '.mailMagaAndAnnounceArea';
 SELECTOR_MAILMAGA_EDIT_AREA_TITLE = '.messageTitleTextbox';
 // メルマガ編集フォーム内部の内容エリアのセレクタ 2016.09.09 r.shibata 追加
 SELECTOR_MAILMAGA_EDIT_AREA_TEXT = '.messageTextarea';
+// メルマガ編集フォーム内部の店舗セレクトボックスのセレクタ 2016.10.06 r.shibata 追加
+SELECTOR_MAILMAGA_EDIT_AREA_SCOOLNAME_SELECTBOX = '.schoolNameSelectBox';
 // カレンダー表示のディレイ
 CALENDAR_SHOW_DELAY = 200;
 // 2016.09.08 add k.urabe カレンダーの選択可能な最大日付(nullは無制限)

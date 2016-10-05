@@ -1112,6 +1112,9 @@ function sendMailMaga() {
  * 修正者:R.Shibata
  * 修正日:2016.09.07
  * 内容  :テキストボックスの値がクリアされていなかった点を修正しました
+ * 修正者:R.Shibata
+ * 修正日:2016.10.06
+ * 内容  :店舗セレクトボックスの値を初期化する処理を追加しました
  */
 function resetMailMageSendContent() {
 //削除ボタンがクリックされたとき、テキストボックスの中身も空白にする
@@ -1119,6 +1122,8 @@ function resetMailMageSendContent() {
 		//メッセージ内容テキストエリアの中身を空にする
 		$(SELECTOR_MAILMAGA_EDIT_AREA + SPACE + SELECTOR_MAILMAGA_EDIT_AREA_TITLE).val('');//タイトルエリアの値を削除する
 		$(SELECTOR_MAILMAGA_EDIT_AREA + SPACE + SELECTOR_MAILMAGA_EDIT_AREA_TEXT).val('');//内容エリアの値を削除する
+		//店舗セレクトボックスの値を初期化する(セレクトボックスの一つ目の要素の値を取得し、セレクトボックスの値へ設定する) 2016.10.06 r.shibata 追加
+		$(SELECTOR_MAILMAGA_EDIT_AREA + SPACE + SELECTOR_MAILMAGA_EDIT_AREA_SCOOLNAME_SELECTBOX).val($(SELECTOR_MAILMAGA_EDIT_AREA + SPACE + SELECTOR_MAILMAGA_EDIT_AREA_SCOOLNAME_SELECTBOX).children().first().val());
 	});
 }
  
