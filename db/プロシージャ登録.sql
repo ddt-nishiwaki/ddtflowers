@@ -3617,6 +3617,9 @@ SELECT
     MAX(update_datetime)
 FROM
     time_table_day
+# 2016.10.05 add k.urabe 最新の更新時間を取得する際、当該idの更新時間を抽出条件に追加
+WHERE
+    id = in_id
 INTO
     updated_old;
 
@@ -3635,6 +3638,9 @@ SELECT
     MAX(update_datetime)
 FROM
     time_table_day
+# 2016.10.05 add k.urabe 最新の更新時間を取得する際、当該idの更新時間を抽出条件に追加
+WHERE
+    id = in_id
 INTO
     updated;
 
