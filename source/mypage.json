@@ -28,7 +28,27 @@
     },
     "myPageBlogTitle": {
         "class": "myPageBlogTitle myPageTitle",
-        "text": "ブログ"
+        "image": {
+            "src": "image/icon(redbranchleaf).png"
+        },
+        "title": {
+            "text": "Myブログ"
+        },
+        "summary": {
+            "text": ""
+        }
+    },
+    "BlogTitle": {
+        "class": "myPageBlogTitle myPageTitle",
+        "image": {
+            "src": "image/icon(redbranchleaf).png"
+        },
+        "title": {
+            "text": "ブログ"
+        },
+        "summary": {
+            "text": ""
+        }
     },
     "myPageBlogButtons": {
         "myPageBlogButtonHidden": {
