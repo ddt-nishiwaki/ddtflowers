@@ -1026,7 +1026,7 @@ DUMMY_LECTUREPERMIT_DATA = {
 	get_point : "",
 	lesson_name : "",
 	use_point : "",
-	user_classwork_cost : "",
+	cost : "",
 	school_key : ""
 };
 // 未選択の商品名
