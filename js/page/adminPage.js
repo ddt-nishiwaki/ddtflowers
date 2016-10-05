@@ -1455,11 +1455,13 @@ function reloadPagingTable(reservedObject, tableName, outsideSelector, targetSel
  * 作成日:2016.03.26
  */
 function replaceSellCommodityPermitInputs(common) {
+	// 入力可能テキストボックスに設定する設定を作成する 2016.10.05 r.shibata 追加
+	var settings = {onkeydown : FUNC_CONTROLL_INPUT_CHAR, min : 0}
 	//数量、価格、使用ポイント、合計金額列をテキストボックスに置き換える
 	//商品キー列は隠しinputに置き換える
-	common.tdReplaceToTextbox('.sellCommodityPermitInfoTable', '.sell_number:not(:first)', 'sell_number', 'number');
-	common.tdReplaceToTextbox('.sellCommodityPermitInfoTable', '.price:not(:first)', 'price', 'number');
-	common.tdReplaceToTextbox('.sellCommodityPermitInfoTable', '.use_point:not(:first)', 'use_point', 'number');
+	common.tdReplaceToTextbox('.sellCommodityPermitInfoTable', '.sell_number:not(:first)', 'sell_number', 'number', settings);	// 第5引数追加、テキストボックスに設定する 2016.10.05 r.shibata
+	common.tdReplaceToTextbox('.sellCommodityPermitInfoTable', '.price:not(:first)', 'price', 'number', settings);				// 第5引数追加、テキストボックスに設定する 2016.10.05 r.shibata
+	common.tdReplaceToTextbox('.sellCommodityPermitInfoTable', '.use_point:not(:first)', 'use_point', 'number', settings);		// 第5引数追加、テキストボックスに設定する 2016.10.05 r.shibata
 	common.tdReplaceToTextbox('.sellCommodityPermitInfoTable', '.pay_price:not(:first)', 'pay_price', 'number');
 	common.tdReplaceToTextbox('.sellCommodityPermitInfoTable', '.commodity_key:not(:first)', 'commodity_key', 'hidden');
 }
