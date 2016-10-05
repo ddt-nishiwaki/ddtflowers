@@ -757,3 +757,49 @@
         text-indent: -8px;      /* 字下げのためにインデントをとる */
     }
 }
+
+/* 
+ * セレクタ:.myPageBlogTitle img
+ * 概要   :ブログ共通のタイトルの画像
+ * 作成者 :k.urabe
+ * 作成日 :2016.10.06
+ */
+.myPageBlogTitle img{
+    width: 100px;           /* 画像サイズに関係なく幅を100pxにする。 */
+    height: auto;           /* 画像の縦横比に応じた高さを取る。 */
+    padding: 0 5px;         /* 左右に5pxのpaddingを配置する。 */
+    box-sizing: border-box; /* サイズの計算にpaddingと枠線を加える。 */
+    background: #FFF;       /* 仮の背景色を指定する。 */
+    display: inline-block;  /* 横並びにするためにブロック要素にする */
+    vertical-align: middle; /* 中央揃えにする */
+}
+
+/* 
+ * セレクタ:.myPageBlogTitle .title
+ * 概要   :ブログ共通のタイトルの文字
+ * 作成者 :k.urabe
+ * 作成日 :2016.10.06
+ */
+.myPageBlogTitle .title{
+    width:          82%;        /* 余った幅いっぱいに横幅を取る。 */
+    height:         auto;       /* 高さを自動調整する。 */
+    font-size:      28px;       /* フォントサイズを28pxに指定する。 */
+    box-sizing:     border-box; /* サイズの計算にpaddingと枠線を加える。 */
+    text-align:     center;     /* 文字を中央に寄せる。 */
+    display: inline-block;      /* ブロック要素にして中心寄せを有効にする。 */
+    vertical-align: middle;     /* 中央揃えにする */
+}
+
+/* 
+ * セレクタ:.myPageBlogTitle .summary
+ * 概要   :ブログ共通のタイトルの概要
+ * 作成者 :k.urabe
+ * 作成日 :2016.10.06
+ */
+.myPageBlogTitle .summary{
+    clear: both;            /* 回り込みをなくす */
+    width:      700px;      /* 幅を660pxに設定する。 */
+    text-indent: 1em;       /* インデントを1文字分入れる */
+    padding: 5px 0;         /* 要素の幅を5px広げる */
+    margin: 0 auto;         /* 中央に寄せる。 */
+}
