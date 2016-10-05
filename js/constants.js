@@ -975,6 +975,9 @@ KEY_TO_DATE = 'toDate';
 // Myギャラリーの表示記事数
 MY_GALLERY_SHOW_PHOTO_NUM = 6;
 
+//キーボード入力時、数値以外を受け付けない関数を示す文字列 2016.10.05 r.shibata 追加
+FUNC_CONTROLL_INPUT_CHAR = 'return controllInputChar(event)';
+
 // 商品購入承認ボタンのセレクタ
 SELECTOR_SELLCOMMODITYPERMIT_BUTTON = '.sellCommodityPermitButton';
 // 何も子要素がない要素のセレクタ。主にfilter関数での絞り込みに使う

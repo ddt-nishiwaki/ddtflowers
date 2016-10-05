@@ -2670,7 +2670,7 @@ this.messageDialogDefaultOption = {
 			if($(this).attr('name').indexOf('content') != -1) {
 				var $targetOption = $(this).children('[value="' + $(this).val() + '"]');
 				//価格テキストボックスの値を選択した商品の価格に変更する
-				$('[name="price"]', $parent).attr('value', $targetOption.attr('data-price'));
+				$('[name="price"]', $parent).val($targetOption.attr('data-price')) // arrtの'value'だと、条件により表示が変わらなかったため、直接value（.val()）を使用するよう変更 2016.10.05 r.shibata
 				//商品キーを更新する
 				$('[name="commodity_key"]', $parent).val($targetOption.attr('data-commodity_key'));
 			}
