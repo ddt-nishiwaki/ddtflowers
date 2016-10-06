@@ -624,6 +624,8 @@ DATE_STOP_LESSON = 'dateStopLesson';
 DATE_HAS_CLASS = 'dateHasClass';
 // 2016.09.20 add k.urabe カレンダーのハイライト処理に使用する色を判定するクラス名（授業がない日）
 DATE_NOT_LESSON = 'dateNotLesson';
+// 2016.10.06 add k.urabe カレンダーのハイライト処理に使用する全ての色を判定するクラス名
+HIGHLIGHT_CLASS_NAME = DATE_HAS_LESSON + SPACE + DATE_CANCEL_LESSON + SPACE + DATE_STOP_LESSON + SPACE + DATE_HAS_CLASS + SPACE + DATE_NOT_LESSON;
 
 // 残席のマーク
 MARK_DOUBLE_CIRCLE = 7;
