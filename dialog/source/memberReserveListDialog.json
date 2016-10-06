@@ -131,7 +131,7 @@
         "db_setQuery":"CALL cancel_classwork('id', 'classwork_key', 'cancel_charge', 'cancel_user');"
     },
     "sendReservedData":{
-        "db_setQuery":"CALL book_classwork('default_user_classwork_cost', 'default_flower_cost', 'userId', 'classwork_key', 'stage_key', 'stage_no_present', 'level_key', 'level_no_present', 'id');"
+        "db_setQuery":"CALL book_classwork('default_user_classwork_cost', 'default_flower_cost', 'userId', 'classwork_key', 'stage_key', 'stage_no_present', 'level_key', 'level_no_present', -1);"
     },
     "updateReservedData":{
         "db_setQuery":"CALL book_classwork('default_user_classwork_cost', 'default_flower_cost', 'userId', 'classwork_key', 'stage_key', 'stage_no_present', 'level_key', 'level_no_present', 'id');"
