@@ -25,7 +25,7 @@ function createMemberFinishedLessonContent() {
 	// ナンバリング領域を作る
 	create_tag.outputTag('numberingOuter', 'numberingOuter', '.finishedLessonPagingArea');
 	//受講済み授業一覧テーブルを表示する
-	create_tag.loadTableData('finishedLessonTable', NUMBERING_START, NUMBERING_PAGE, NUMBERING_DEFAULT, NUMBERING_DISPLAY, '.finishedLessonTableOutside', 'finshedLessonTableAfterPaging');
+	create_tag.loadTableData('finishedLessonTable', NUMBERING_START, NUMBERING_PAGE, NUMBERING_DEFAULT, NUMBERING_DISPLAY_FINISHEDLESSON_TABLE, '.finishedLessonTableOutside', 'finshedLessonTableAfterPaging'); //  表示件数を示す定数を共通の物でなく、受講済み一覧用の定数を使用するよう変更 2016.10.06 r.shibata
 	//授業の絞り込み機能を実装する
 	setConfigFinishedLesson();
 }
@@ -115,7 +115,7 @@ function finshedLessonTableThemeSelect() {
 		//授業データがあれば
 		if(create_tag.json.finishedLessonTable.tableData.length > 0){
 			//ページング機能付きで受講済みテーブルを作り直す
-			create_tag.outputNumberingTag('finishedLessonTable', NUMBERING_START, NUMBERING_PAGE, NUMBERING_DEFAULT, NUMBERING_DISPLAY, '.finishedLessonTableOutside', 'finshedLessonTableAfterPaging', "$('#finishedLesson')[0].");
+			create_tag.outputNumberingTag('finishedLessonTable', NUMBERING_START, NUMBERING_PAGE, NUMBERING_DEFAULT, NUMBERING_DISPLAY_FINISHEDLESSON_TABLE, '.finishedLessonTableOutside', 'finshedLessonTableAfterPaging', "$('#finishedLesson')[0]."); //  表示件数を示す定数を共通の物でなく、受講済み一覧用の定数を使用するよう変更 2016.10.06 r.shibata
 		}
 	});
 }
