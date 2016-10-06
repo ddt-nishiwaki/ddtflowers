@@ -4119,5 +4119,37 @@ WHERE
 # ストアドプロシージャの処理を終える
 END $$
 
+# 受講承認  受講承認で削除した際にデータを更新するストアド 2016.10.06 k.urabe
+# 削除されたら「予約済み」にする
+DROP PROCEDURE IF EXISTS set_reserved_return_status $$
+CREATE PROCEDURE set_reserved_return_status (
+    # 受講情報テーブルの会員ごとの授業ID
+    IN in_user_classwork_key INT
+)
+# 以降にストアドプロシージャの処理を記述する
+BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
+# 会員ごとの授業テーブルを更新する
+# 指定したテーブルを更新する
+UPDATE
+    #　会員ごとの授業テーブル
+    user_classwork 
+#更新対象の列と値を指定する
+SET 
+    # 予約状況を「予約済み」に更新する
+    user_work_status = 1
+    # 更新日付を現在時刻で更新
+    ,update_datetime = NOW()
+#検索条件を指定する
+WHERE
+    # クライアントから受け取ったuser_classwork_keyのレコードを更新対象
+    id = in_user_classwork_key
+;
+# 返却用の結果セット（1行返却）を実行する
+SELECT NOW();
+# ストアドプロシージャの処理を終える
+END $$
+
 #区切り文字をセミコロンに戻す
 delimiter ;

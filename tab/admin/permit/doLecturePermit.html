@@ -62,7 +62,7 @@
 			//承認ボタンクリックでデータを更新する
 			loopUpdatePermitLesson();
 			//削除ボタンを押すと選択したレコードを削除する
-			executeDeleteRecord($('#doLecturePermit .deletePermitRecordButton'), '指定したレコードを削除しますか?', '.doLecturePermitInfoTable .selectRecord', "if($(CURRENT_DIALOG_SELECTOR)[0].instance.getPushedButtonState() == YES) {deleteRecords('.doLecturePermitInfoTable', '.selectRecord', null, null, $(DO_LECTUREPERMIT_TAB)[0].create_tag.json.doLecturePermitInfoTable.tableData, '.No');}");
+			executeDeleteRecord($('#doLecturePermit .deletePermitRecordButton'), '指定したレコードを削除しますか?', '.doLecturePermitInfoTable .selectRecord', "if($(CURRENT_DIALOG_SELECTOR)[0].instance.getPushedButtonState() == YES) {deleteRecords('.doLecturePermitInfoTable', '.selectRecord', $(DO_LECTUREPERMIT_TAB)[0].create_tag.json.deleteLecturePermitRecordQuery, null, $(DO_LECTUREPERMIT_TAB)[0].create_tag.json.doLecturePermitInfoTable.tableData, '.No');}");		// 2016.10.06 mod k.urabe キャンセルダイアログで「はい」押下時に実行される関数の引数にクエリを追加
 
 			var $activePanel = $('#permitTab .tabPanel.active', $currentContent);	//現タブパネルを取得する
 

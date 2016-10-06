@@ -196,7 +196,7 @@
 		}
 	},
 	"deleteLecturePermitRecordQuery": {
-		"db_setQuery": ""
+		"db_setQuery": "CALL set_reserved_return_status('id')"
 	},
 	"sellCommodityPermitInfoTableOutSideArea" : {
 	    "class" : "sellCommodityPermitInfoTableOutSideArea tableScrollXParent"
