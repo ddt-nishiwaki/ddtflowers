@@ -3573,6 +3573,9 @@ function calendar(selector) {
 
 		//当該月の日付を走査する
 		$(STR_TD, this.dom).each(function() {
+			// 当該日に現在付いているハイライト判定用のクラスを削除 2016.10.06 add k.urabe カレンダーがリロードされない限りクラス名が残ってしまう問題に対処
+			$(this).removeClass(HIGHLIGHT_CLASS_NAME);
+
 			// 授業有無および予約状況に合わせたハイライトを判定するための変数に初期値として「授業がない状態」を設定
 			var userWorkStatus = NOT_LESSON;
 			//カレンダーから日付を取得する
