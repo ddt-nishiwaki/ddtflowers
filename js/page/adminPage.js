@@ -1857,7 +1857,7 @@ function setPopupSearchDialog (target){
  */
 function deleteAfterReloadMailMagaTable(){
 	//テーブルをリロードする
-	$('#mailMagaAndAnnounce')[0].create_tag.loadTableData('mailMagaTable', 1, 4, 1, MAILMAGA_TABLE_SHOW_NUMBER, '.mailMagaTableOutside', 'afterReloadMailMagaTable', '$("#mailMagaAndAnnounce")[0].');
+	$('#mailMagaAndAnnounce')[0].create_tag.loadTableData('mailMagaTable', 1, 4, 1, MAILMAGA_TABLE_SHOW_NUMBER, '.mailMagaTableOutside', 'afterReloadMailMagaTable', GET_MAILMAFATABLE_CREATE_TAG); // create_tag取得用の引数の値を修正し定数化 2016.10.06 r.shibata
 } 
 
 /*

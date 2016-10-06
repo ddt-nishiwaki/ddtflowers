@@ -1121,6 +1121,8 @@ SELECTOR_MAIL_MAGA_TAB = '#mailMagaAndAnnounce';
 KEY_MAIL_MAGA_TABLE = 'mailMagaTable';
 // メルマガテーブルの囲う要素のセレクタ 2016.10.04 add k.urabe
 SELECTOR_MAIL_MAGA_TABLE_OUTSIDE = '.mailMagaTableOutside';
+// outputNumberingTagでcreateTagをonclick内で取得するための文字列。メルマガテーブル用 2016.10.06 r.shibata 追加
+GET_MAILMAFATABLE_CREATE_TAG = "$('#mailMagaAndAnnounce')[0]."
 // UNIXタイムスタンプの開始日付
 UNIX_TIMESTAMP_START_DATE = '1900-01-01';
 // 商品購入承認テーブルのキー
