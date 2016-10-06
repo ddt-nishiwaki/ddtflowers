@@ -1008,6 +1008,10 @@ SELECTOR_ADMIN_TAB = '#adminTab';
 SELECTED_USER_RECORDS = '.userListInfoTable tr.selectRecord';
 // 受講承認タブ
 DO_LECTUREPERMIT_TAB = '#doLecturePermit';
+// 受講承認タブの削除ボタンのセレクタ 2016.10.06 add k.urabe
+SELECTOR_LECTUREPERMIT_DELETE_BUTTON = '#doLecturePermit .deletePermitRecordButton';
+// 削除可否のダイアログに表示する文言 2016.10.06 add k.urabe
+MESSAGE_DELETE_CONFIRM = '指定したレコードを削除しますか?';
 // tdタグ後方から
 TD_FROM_REAR = '</td><td>';
 TD_FROM_REAR_DISPLAY_NONE = '</td><td style="display : none">';
