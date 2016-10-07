@@ -4153,3 +4153,100 @@ END $$
 
 #区切り文字をセミコロンに戻す
 delimiter ;
+
+#ユーザ情報取得_条件付き 2016.10.07 r.shiabta 追加
+#コード記述のため区切り文字を一時的に変更する
+DELIMITER $$
+#当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
+DROP PROCEDURE IF EXISTS `p_user_inf_conditional` $$
+#ユーザ情報取得のプロシージャの登録を行う
+CREATE PROCEDURE p_user_inf_conditional(
+    IN in_user_key varchar(11)
+    ,IN in_user_name varchar(40)
+    ,IN in_name_kana varchar(40)
+    ,IN in_telephone varchar(20)
+    ,IN in_mail_address varchar(255)
+    ,IN in_date_from varchar(10)
+    ,IN in_date_to varchar(10)
+    ,IN in_lesson_name varchar(40)
+)
+#以降にストアドプロシージャの処理を記述する
+BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
+#出力対象の列を指定する
+SELECT 
+    #ユーザー名
+    user_name 
+    #残高
+    ,pre_paid 
+    #所持ポイント
+    ,get_point 
+    #最終予約日（最終更新日）
+    ,DATE(update_datetime) AS update_date 
+    #ユーザID
+    ,id 
+    #メールアドレス
+    ,mail_address 
+    #入会状況
+    ,user_status 
+#データ取得元のテーブルを指定する
+FROM 
+    #ユーザ情報テーブル
+    user_inf
+#検索条件を指定する
+WHERE
+    #ユーザIDが一致、又は未入力
+    (id = in_user_key OR in_user_key ='')
+AND
+    #ユーザ名が部分一致、又は未入力
+    (user_name LIKE concat('%', in_user_name, '%') OR in_user_name ='')
+AND
+    #ユーザ名(カナ)が部分一致、又は未入力
+    (name_kana LIKE concat('%', in_name_kana, '%') OR in_name_kana ='')
+AND
+    #電話番号が部分一致、又は未入力
+    (telephone LIKE concat('%', in_telephone, '%') OR in_telephone ='')
+AND
+    #メールアドレスが部分一致、又は未入力
+    (mail_address LIKE concat('%', in_mail_address, '%') OR in_mail_address ='')
+AND
+    #期間Fromが更新日以下、又は未入力
+    (in_date_from <= update_datetime OR in_date_from ='')
+AND
+    #期間Toが更新日以上、又は未入力
+    (update_datetime <= in_date_to OR in_date_to ='')
+AND
+    #idが以下の値と一致する、
+    (id 
+    IN (
+        #出力対象の列を指定する
+        SELECT
+            #ユーザIDを出力する
+            user_key
+        #データ取得元のテーブルを指定する
+        FROM
+            #授業詳細情報テーブル
+            lesson_inf
+        #結合対象列にnullが入っている列を排除して結合を行う
+        INNER JOIN  
+            #授業情報テーブル
+            user_lesson
+        # 以下に指定した列を基に結合を行う
+        ON 
+            #レッスンID
+            user_lesson.lesson_key = lesson_inf.id
+        #検索条件を指定する
+        AND
+            #レッスン名称が部分一致
+            lesson_inf.lesson_name LIKE CONCAT('%', in_lesson_name, '%')
+        )
+    #又はレッスン名称が未入力
+    OR
+        in_lesson_name = ''
+    )
+;
+#ストアドプロシージャの処理を終える
+END $$
+#区切り文字をセミコロンに戻す
+delimiter ;

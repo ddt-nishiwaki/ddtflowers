@@ -693,20 +693,23 @@ function loopUpdatePermitLessonList(button, targetTab, rowSelector, targetTable,
  * 変更者:T.Yamamoto
  * 変更日:2016.04.10
  * 内容　:イベントコールバック登録を除去しました。
+ * 変更者:R.Shibata
+ * 変更日:2016.10.07
+ * 内容  :検索SQLをストアドプロシージャに変更した事により処理を変更しました。
  */
 function userListSearch(targetPage) {
 		//当該画面のcreateTagを取得する
 		var userListCreateTag = $(targetPage)[0].create_tag;
-		//クエリのデフォルトを取得する
-		var defaultQuery = userListCreateTag.json.userListInfoTable.db_getQuery;
-		//クエリを変数に入れてクエリ発行の準備をする
-		var sendQuery = {db_getQuery:new adminUserSearcher($.extend(true, {}, userListCreateTag.json.userListInfoTable)).execute(SELECTOR_SEARCH_USER_LIST_CURRENT)}
+		//オブジェクトをコピーしてクエリ発行の準備をする コピーするよう変更、クエリでなくオブジェクトなので名称変更 2016.10.07 r.shibata 
+		var sendQueryObject = $.extend(true, {}, userListCreateTag.json.userListInfoTable);
+		//検索エリアの要素を走査する 2016.10.07 r.shiabta 追加
+		$(SELECTOR_SEARCH_USER_LIST_CURRENT + SPACE + SELECTOR_SEARCH_USER_LIST_ADMIN_USER_SEARCH).each(function(){
+			//コピーしたオブジェクトに対し、検索値を要素より取得してセットする。
+			sendQueryObject[$(this).data(KEY_COL_NAME)].value = $(this).val()
+		});
 		userListCreateTag.json.userListInfoTable.tableData = [];	//データを消しておく
 		//会員一覧のデータを取り出す
-		userListCreateTag.getJsonFile(URL_GET_JSON_ARRAY_PHP, sendQuery, KEY_USER_INFO_LIST_TABLE);
-		//クエリをデフォルトに戻す
-		userListCreateTag.json.userListInfoTable.db_getQuery = defaultQuery;
-
+		userListCreateTag.getJsonFile(URL_GET_JSON_ARRAY_PHP, sendQueryObject, KEY_USER_INFO_LIST_TABLE); //クエリでなくオブジェクトなので名称変更 2016.10.07 r.shibata 
 		//1件以上取得できていれば
 		if(userListCreateTag.json[KEY_USER_INFO_LIST_TABLE].tableData.length){
 			//ページング機能付きでユーザ情報一覧テーブルを作る

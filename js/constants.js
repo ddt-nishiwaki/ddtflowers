@@ -1123,6 +1123,10 @@ ATTR_EQUAL_NAME_FRONT = '[name="';
 ATTR_EQUAL_NAME_REAR = '"]';
 // ユーザ一覧タブ内の検索フォームのセレクタ
 SELECTOR_SEARCH_USER_LIST_INF_ADMINTAB = '#adminTab .searchUserList';
+// ユーザ一覧タブ内の検索する値の入ったテキストのセレクタ 2016.10.07 r.shibata 追加
+SELECTOR_SEARCH_USER_LIST_ADMIN_USER_SEARCH = '.adminUserSearch';
+// 列名を取得するためのキーとなる文字列 2016.10.07 r.shibata 追加
+KEY_COL_NAME = 'col_name';
 // エンターキーの識別番号
 NUM_ENTER_KEY = 13;
 // キーが押されたイベント

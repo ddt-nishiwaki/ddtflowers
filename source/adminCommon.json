@@ -617,8 +617,32 @@
 	},
 	"userListInfoTable": {
 		"class": "userListInfoTable commonTable",
-		"db_getQuery": "SELECT user_name, pre_paid, get_point, DATE(update_datetime) AS update_date, id, mail_address , user_status FROM user_inf",
+        "db_getQuery": "CALL p_user_inf_conditional('user_key', 'user_name', 'name_kana', 'telephone', 'mail_address', 'lesson_date_from', 'lesson_date_to', 'lesson_key')",
 		"queryForDoLecturePermit": "CALL getLecturePermitReseveList(@result); SELECT @result AS 'result';",
+		"user_key": {
+			"value": ""
+		},
+		"user_name": {
+			"value": ""
+		},
+		"name_kana": {
+			"value": ""
+		},
+		"telephone": {
+			"value": ""
+		},
+		"mail_address": {
+			"value": ""
+		},
+		"lesson_date_from": {
+			"value": ""
+		},
+		"lesson_date_to": {
+			"value": ""
+		},
+		"lesson_key": {
+			"value": ""
+		},
 		"config": {
 			"columns": {
 				"user_name": {
