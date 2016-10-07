@@ -798,35 +798,35 @@ function loginInsteadOfMember (memberId) {
  */
 function afterReloadPermitListInfoTable() {
 	//当該タブのcreateTagを取得する
-	var lecturePermitList = $('#lecturePermitList')[0].create_tag;
+	var lecturePermitList = $(SELECTOR_LECTUREPERMITLIST_TAB)[0].create_tag;
 	//受講承認一覧テーブルの取り出した行にクラス名を付ける
-	setTableRecordClass('lecturePermitListInfoTable', 'lecturePermitListRecord');
+	setTableRecordClass(LECTURE_PERMIT_LIST_INFO_TABLE, LECTUREPERMITLIST_RECORD);
 	//受講承認一覧テーブルの列内を編集する
 	commonFuncs.dbDataTableReplaceExecute(DOT + LECTURE_PERMIT_LIST_INFO_TABLE, lecturePermitList.json[LECTURE_PERMIT_LIST_INFO_TABLE][TABLE_DATA_KEY], LECTURE_PERMIT_LIST_INFO_TABLE_REPLACE_FUNC, null, DEFAULT_SHOW_MAX_ROW);
 	//受講承認一覧テーブルの料金列をテキストボックスにする
-	lecturePermitList.insertTextboxToTable('lecturePermitListInfoTable', 'replaceTextboxCost', 'replaceTextboxCostCell');
+	lecturePermitList.insertTextboxToTable(LECTURE_PERMIT_LIST_INFO_TABLE, REPLACE_TEXTBOX_COST, REPLACE_TEXTBOX_COST_CELL);
 	//受講承認一覧テーブルの使用pt列をテキストボックスにする
-	lecturePermitList.insertTextboxToTable('lecturePermitListInfoTable', 'replaceTextboxUsePoint', 'replaceTextboxUsePointCell');
+	lecturePermitList.insertTextboxToTable(LECTURE_PERMIT_LIST_INFO_TABLE, REPLACE_TEXTBOX_USE_POINT, REPLACE_TEXTBOX_USE_POINT_CELL);
 	//セレクトメニューを列にアウトプットする
-	lecturePermitList.outputTag('contentSelect', 'contentSelect', '.appendSelectbox');
+	lecturePermitList.outputTag(CONTENT_SELECT, CONTENT_SELECT, SELECTOR_APPEND_SELECTBOX);
 	//受講承認のアコーディオンの備品名にセレクトボックスの値をDBから取り出した値で追加する
-	lecturePermitList.setSelectboxText(lecturePermitList.json.selectCommodityInf[TABLE_DATA_KEY], lecturePermitList.json.accordionContent.contentCell.contentSelect.contentOption, 'commodity_name');
+	lecturePermitList.setSelectboxText(lecturePermitList.json.selectCommodityInf[TABLE_DATA_KEY], lecturePermitList.json.accordionContent.contentCell.contentSelect.contentOption, COMMODITY_NAME);
 	//受講承認一覧テーブルのテキストボックスにDBから読込んだ値をデフォルトで入れる
-	lecturePermitList.setTableTextboxValuefromDB(lecturePermitList.json['lecturePermitListInfoTable'][TABLE_DATA_KEY], create_tag.setInputValueToLecturePermitListInfoTable, '.lecturePermitListInfoTable');
+	lecturePermitList.setTableTextboxValuefromDB(lecturePermitList.json[LECTURE_PERMIT_LIST_INFO_TABLE][TABLE_DATA_KEY], create_tag.setInputValueToLecturePermitListInfoTable, SELECTOR_LECTUREPERMITLIST_INFOTABLE, DEFAULT_SHOW_MAX_ROW);		// 2016.10.07 mod k.urabe 当該関数の引数を追加したため
 	
 	//セレクトメニューが生成されていたら
-	if($('.contentSelect').length){
+	if($(SELECTOR_CONTENT_SELECT).length){
 		//セレクトボックスのvalueを画面に表示されている値にする
-		lecturePermitList.setSelectboxValue('.contentSelect', LECTURE_PERMIT_LIST_INFO_TABLE, 'commodity_key', lecturePermitList.json.selectCommodityInf[TABLE_DATA_KEY]);
+		lecturePermitList.setSelectboxValue(SELECTOR_CONTENT_SELECT, LECTURE_PERMIT_LIST_INFO_TABLE, COMMODITY_KEY, lecturePermitList.json.selectCommodityInf[TABLE_DATA_KEY]);
 		//備品販売IDを格納するための隠しフォームを各行にセットする
-		lecturePermitList.outputTag('commoditySellId','commoditySellId', '.appendSelectbox');
+		lecturePermitList.outputTag(COMMODITY_SELL_ID, COMMODITY_SELL_ID, SELECTOR_APPEND_SELECTBOX);
 		//備品セレクトボックスを規定のものにする
-		setSelectedCommodity(lecturePermitList, null, LECTURE_PERMIT_LIST_INFO_TABLE, '.lecturePermitListRecord');
+		setSelectedCommodity(lecturePermitList, null, LECTURE_PERMIT_LIST_INFO_TABLE, SELECTOR_LECTUREPERMITLIST_RECORD);
 	}
 	
 	//置換済みテキストボックスに数値入力のみできるようにする
-	$('.lecturePermitListInfoTable .replaceTextbox').attr({
-        onkeydown:"return controllInputChar(event);"	//数値のみ入力できるように関数を登録
+	$(SELECTOR_LECTUREPERMITLIST_REPLACE_TEXTBOX).attr({
+        onkeydown: FUNC_CONTROLL_INPUT_CHAR	//数値のみ入力できるように関数を登録
 	});
 }
 
@@ -1261,36 +1261,36 @@ function permitSellCommodity() {
  */
 function afterReloadSellCommodityPermitListInfoTable() {
 	//当該タブのcreateTagを取得する
-	var sellCommodityPermitList = $('#sellCommodityPermitList')[0].create_tag;
+	var sellCommodityPermitList = $(SELECTOR_SELLCOMMODITYPERMITLIST_TAB)[0].create_tag;
 	//受講承認一覧テーブルの取り出した行にクラス名を付ける
-	setTableRecordClass('sellCommodityPermitListInfoTable', 'sellCommodityPermitListRecord');
+	setTableRecordClass(SELLCOMMODITY_PERMIT_LIST_INFO_TABLE, SELLCOMMODITYPERMITLIST_RECORD);
 	//受講承認一覧テーブルの列内を編集する
 	commonFuncs.dbDataTableReplaceExecute(DOT + SELLCOMMODITY_PERMIT_LIST_INFO_TABLE, sellCommodityPermitList.json[SELLCOMMODITY_PERMIT_LIST_INFO_TABLE][TABLE_DATA_KEY], SELLCOMMODITY_PERMIT_LIST_INFO_TABLE_REPLACE_FUNC, null, DEFAULT_SHOW_MAX_ROW);
 	//受講承認一覧テーブルの料金列をテキストボックスにする
-	sellCommodityPermitList.insertTextboxToTable('sellCommodityPermitListInfoTable', 'replaceTextboxCost', 'replaceTextboxCostCell');
+	sellCommodityPermitList.insertTextboxToTable(SELLCOMMODITY_PERMIT_LIST_INFO_TABLE, REPLACE_TEXTBOX_COST, REPLACE_TEXTBOX_COST_CELL);
 	//受講承認一覧テーブルの使用pt列をテキストボックスにする
-	sellCommodityPermitList.insertTextboxToTable('sellCommodityPermitListInfoTable', 'replaceTextboxUsePoint', 'replaceTextboxUsePointCell');
+	sellCommodityPermitList.insertTextboxToTable(SELLCOMMODITY_PERMIT_LIST_INFO_TABLE, REPLACE_TEXTBOX_USE_POINT, REPLACE_TEXTBOX_USE_POINT_CELL);
 	//セレクトメニューを列にアウトプットする
-	sellCommodityPermitList.outputTag('contentSelect', 'contentSelect', '.appendSelectbox');
+	sellCommodityPermitList.outputTag(CONTENT_SELECT, CONTENT_SELECT, SELECTOR_APPEND_SELECTBOX);
 	//受講承認のアコーディオンの備品名にセレクトボックスの値をDBから取り出した値で追加する
-	sellCommodityPermitList.setSelectboxText(sellCommodityPermitList.json.selectCommodityInf[TABLE_DATA_KEY], sellCommodityPermitList.json.accordionContent.contentCell.contentSelect.contentOption, 'commodity_name');
+	sellCommodityPermitList.setSelectboxText(sellCommodityPermitList.json.selectCommodityInf[TABLE_DATA_KEY], sellCommodityPermitList.json.accordionContent.contentCell.contentSelect.contentOption, COMMODITY_NAME);
 	//受講承認一覧テーブルのテキストボックスにDBから読込んだ値をデフォルトで入れる
-	sellCommodityPermitList.setTableTextboxValuefromDB(sellCommodityPermitList.json['sellCommodityPermitListInfoTable'][TABLE_DATA_KEY], create_tag.setInputValueToLecturePermitListInfoTable, '.sellCommodityPermitListInfoTable');
+	sellCommodityPermitList.setTableTextboxValuefromDB(sellCommodityPermitList.json[SELLCOMMODITY_PERMIT_LIST_INFO_TABLE][TABLE_DATA_KEY], create_tag.setInputValueToLecturePermitListInfoTable, SELECTOR_SELLCOMMODITY_PERMIT_LIST_INFO_TABLE, DEFAULT_SHOW_MAX_ROW);
 
 	//テーブルにデータがあれば
-	if($('.sellCommodityPermitListInfoTable tbody tr').length){
+	if($(SELECTOR_SELLCOMMODITY_PERMIT_LIST_INFO_TABLE_BODY_TR).length){
 		//セレクトボックスのvalueを画面に表示されている値にする
-		sellCommodityPermitList.setSelectboxValue('.contentSelect', LECTURE_PERMIT_LIST_INFO_TABLE, 'commodity_key', sellCommodityPermitList.json.selectCommodityInf[TABLE_DATA_KEY]);
+		sellCommodityPermitList.setSelectboxValue(SELECTOR_CONTENT_SELECT, LECTURE_PERMIT_LIST_INFO_TABLE, COMMODITY_KEY, sellCommodityPermitList.json.selectCommodityInf[TABLE_DATA_KEY]);
 		//備品販売IDを格納するための隠しフォームを各行にセットする
-		sellCommodityPermitList.outputTag('commoditySellId','commoditySellId', '.appendSelectbox');
+		sellCommodityPermitList.outputTag(COMMODITY_SELL_ID, COMMODITY_SELL_ID, SELECTOR_APPEND_SELECTBOX);
 		//備品セレクトボックスを規定のものにする
-		setSelectedCommodity(sellCommodityPermitList, null, SELLCOMMODITY_PERMIT_LIST_INFO_TABLE, '.sellCommodityPermitListInfoTable tbody tr');
+		setSelectedCommodity(sellCommodityPermitList, null, SELLCOMMODITY_PERMIT_LIST_INFO_TABLE, SELECTOR_SELLCOMMODITY_PERMIT_LIST_INFO_TABLE_BODY_TR);
 	}
 	
 	//置換済みテキストボックスに数値入力のみできるようにする
 	//2016.09.11 r.shibata 指定されているセレクタ不正を修正
 	$(SELECTOR_SELLCOMMODITYPERMITLIST_TAB + SPACE + SELECTOR_REPLACETEXTBOX).attr({
-        onkeydown:"return controllInputChar(event);"	//数値のみ入力できるように関数を登録
+        onkeydown: FUNC_CONTROLL_INPUT_CHAR	//数値のみ入力できるように関数を登録
 	});
 }
 
