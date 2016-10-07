@@ -1346,28 +1346,31 @@ function createLittleContents(){
 	 * 返却値  :なし
 	 * 作成者:T.Yamamoto
 	 * 作成日:2015.07.11
+	 * 変更者:k.urabe
+	 * 変更日:2016.10.06
+	 * 内容:呼び出し元の処理を修正したことにより、行指定に使用する変数を変更。それに伴い処理を統一
 	 */
 	this.setInputValueToLecturePermitListInfoTable = function(recordData, targetParent) {
 		//DBから取得した料金の値を取得する
-		resultValueCost = recordData['cost'];
+		resultValueCost = recordData[KEY_COST];
 		//DBから取得した使用ptの値を取得する
-		resultValueUsePoint = recordData['use_point'];
+		resultValueUsePoint = recordData[KEY_USE_POINT];
 		//テーブルの料金のテキストボックスに対してデフォルトでDBから読込んだ値を入れる
-		$('[name=user_classwork_cost]', $(targetParent)).eq(counter).attr({
+		$(SELECTOR_TR_INDEX_FRONT + rowNumber + SELECTOR_TR_INDEX_USER_CLASSWORK_COST, $(targetParent)).attr({
 				value : resultValueCost,
 				min   : 0
 			});
 		//テーブルの料金の使用ptに対してデフォルトでDBから読込んだ値を入れる
-		$('.replaceTextboxUsePointCell [name=use_point]', $(targetParent)).eq(counter).attr({
+		$(SELECTOR_TR_INDEX_FRONT + rowNumber + SELECTOR_TR_INDEX_USE_POINT, $(targetParent)).attr({
 				value : resultValueUsePoint,
 				min   : 0
 			});
 		//授業データでなく備品データのとき備品データをデフォルトでセットする
-		if(recordData['lesson_name'] == "" && recordData['content'] != "") {
+		if(recordData[COLUMN_NAME_LESSON_NAME] == EMPTY_STRING && recordData[KEY_CONTENT] != EMPTY_STRING) {
 			//DBから取得した日備品の値を取得する
-			resultValueCommodityName = recordData['content'];
+			resultValueCommodityName = recordData[KEY_CONTENT];
 			//備品名セレクトボックスにデフォルト値をDBから読込んだ値で設定する。
-			$('tr:eq(' + rowNumber + ') [name="content"]', $(targetParent)).val(resultValueCommodityName);
+			$(SELECTOR_TR_INDEX_FRONT + rowNumber + SELECTOR_TR_INDEX_CONTENT, $(targetParent)).val(resultValueCommodityName);
 		}
 	}
 	
@@ -1377,15 +1380,28 @@ function createLittleContents(){
 	 * 引数 :tableArray:DBから読込んだテーブルのデータが入っている連想配列:例(受講者一覧テーブル) json.LecturePermitListInfoTable.table
 			:setTablefunc:テーブルのテキストボックスに値をセットするための関数
 			:targetParent:処理対象行の一意の祖先要素
+			:showMaxRow:1ページのテーブル最大表示件数
 	 * 返却値  :なし
 	 * 作成者:T.Yamamoto
 	 * 作成日:2015.07.11
+	 * 更新者:k.urabe
+	 * 更新日:2016.10.06
+	 * 内容:2ページ目以降に適切な値をセットするため、ページ判定処理関連を追加（1ページの最大表示数の引数も追加）
 	 */
-	this.setTableTextboxValuefromDB = function(tableArray, setTablefunc, targetParent) {
+	this.setTableTextboxValuefromDB = function(tableArray, setTablefunc, targetParent, showMaxRow) {
 		//DBから読込んだ値を取り出すためにカウンターを初期値0で作る
 		counter = 0;
 		//テーブルに値をセットするために行番号を初期値1で作る(0は見出しであるため、1から数え始める)
 		rowNumber = 1;
+		// DBから取得した値の件数を保存する
+		var tableArrayNum = tableArray.length;
+
+		// ページャが存在するか確認
+		if($(SELECTOR_SELECT_PAGE).length){
+			// ページ分数、DBから取得したレコードのカウンターを調整する
+			counter = (showMaxRow) * (parseInt($(SELECTOR_SELECT_PAGE).text()) - 1);
+		}
+
 		//DBから取り出したテーブルの行数分ループしてテキストボックスにデフォルト値をセットする
 		$.each(tableArray, function(){
 			//DBから読込んだ値を取り出すためにループのカウンターに対応した行の値を指定する
@@ -1396,6 +1412,11 @@ function createLittleContents(){
 			rowNumber++;
 			//カウンタ変数をインクリメントする
 			counter++;
+			// 最後の値まで走査したか検証
+			if(tableArrayNum <= counter) {
+				// 走査を終了する
+				return false;
+			}
 		});
 	}
 

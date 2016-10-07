@@ -71,7 +71,7 @@
 			// 受講承認テーブルの使用pt列をテキストボックスにする
 			create_tag.insertTextboxToTable(DO_LECTURE_PERMIT_INFO_TABLE, 'replaceTextboxUsePoint', 'replaceTextboxUsePointCell');
 			// 受講承認テーブルのテキストボックスにDBから読込んだ値をデフォルトで入れる
-			create_tag.setTableTextboxValuefromDB($(DO_LECTUREPERMIT_TAB)[0].create_tag.json[DO_LECTURE_PERMIT_INFO_TABLE][TABLE_DATA_KEY], create_tag.setInputValueToLecturePermitListInfoTable, SELECTOR_DO_LECTURE_PERMIT_INFO_TABLE);
+			create_tag.setTableTextboxValuefromDB($(DO_LECTUREPERMIT_TAB)[0].create_tag.json[DO_LECTURE_PERMIT_INFO_TABLE][TABLE_DATA_KEY], create_tag.setInputValueToLecturePermitListInfoTable, SELECTOR_DO_LECTURE_PERMIT_INFO_TABLE, DEFAULT_SHOW_MAX_ROW);		// 2016.10.07 mod k.urabe 当該関数の引数を追加したため
 
 			//会員一覧テーブルがクリックされた時にuserSelectクラスをがなければ追加しあるなら消去する
 			toggleClassClickElement(SELECTOR_TBODY_TR, SELECT_RECORD, SELECTOR_DO_LECTURE_PERMIT_INFO_TABLE);	// 2016.10.04 mod k.urabe 対象のセレクタをテーブル本体内のtr要素に限定

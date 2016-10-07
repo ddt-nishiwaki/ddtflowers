@@ -841,6 +841,8 @@ RESERVE_AFTER_DEADLINE = '予約締切';
 ALERT_EMPTY_CONTENTS = '空欄があります。タイトル、お問い合わせ内容の記入をお願いします。';
 // デフォルトの最大表示行数
 DEFAULT_SHOW_MAX_ROW = 15;
+// 選択されているページャのセレクタ 2016.10.06 add k.urabe
+SELECTOR_SELECT_PAGE = '.numbering .select:visible';
 // 記事投稿選択前のメッセージ
 SAVE_ARTICLE_BEFORE_CONFIRM_MESSAGE = '入力した内容で記事を投稿します。';
 // 記事投稿選択前の確認ダイアログのタイトル
@@ -944,6 +946,8 @@ NOTICE_RECORD_UPDATE_MESSAGE_AND_NUMBER = '件のレコードを更新しまし�
 SELECTOR_LECTUREPERMITLIST_OUTSIDE = '.lecturePermitListInfoTableOutsideArea';
 // 受講承認一覧テーブルの領域 2016.09.11 r.shibata 追加
 SELECTOR_LECTUREPERMITLIST_INFOTABLE = '.lecturePermitListInfoTable';
+// 受講承認一覧テーブル内のテキストボックスを指定するセレクタ 2016.10.07 add k.urabe
+SELECTOR_LECTUREPERMITLIST_REPLACE_TEXTBOX= '.lecturePermitListInfoTable .replaceTextbox';
 // 受講承認異常終了用のメッセージ
 ALERT_LECTUREPERMIT_PROCESS_ERROR = '更新処理中にエラーが発生したため更新処理を途中で終了しました。\n';
 // 商品購入承認以上終了用のメッセージ
@@ -951,12 +955,36 @@ ALERT_SELLCOMMODITYPERMIT_PROCESS_ERROR = '更新処理中にエラーが発生�
 JS_EOL = '\n'; // 改行文字
 // 受講承認タブのセレクタ(id) 2016.09.30 k.urabe 不足していたセレクタを追加
 SELECTOR_LECTURE_PERMIT = '#lecturePermit';
+// 受講承認一覧の各行のクラス名 2016.10.07 add k.urabe
+LECTUREPERMITLIST_RECORD = 'lecturePermitListRecord';
 // 受講承認一覧の各行のセレクタ
 SELECTOR_LECTUREPERMITLIST_RECORD = '.lecturePermitListRecord';
+// 商品購入承認一覧の各行のクラス名 2016.10.07 add k.urabe
+SELLCOMMODITYPERMITLIST_RECORD = 'sellCommodityPermitListRecord';
 // 商品購入承認一覧の各行のセレクタ
 SELECTOR_SELLCOMMODITYPERMITLIST_RECORD = '.sellCommodityPermitListRecord';
 // 受講承認一覧タブのセレクタ
 SELECTOR_LECTUREPERMITLIST_TAB = '#lecturePermitList';
+// 商品テーブルで使用されるセレクトメニューカラム 2016.10.07 add k.urabe
+CONTENT_SELECT = 'contentSelect';
+// 商品テーブルで使用されるセレクトメニューカラムのセレクタ 2016.10.07 add k.urabe
+SELECTOR_CONTENT_SELECT = '.contentSelect';
+// 商品テーブルで使用されるセレクトメニューカラムの追加先セレクタ 2016.10.07 add k.urabe
+SELECTOR_APPEND_SELECTBOX = '.appendSelectbox';
+// 受講・商品テーブルで使用される料金カラムの追加名 2016.10.07 add k.urabe
+REPLACE_TEXTBOX_COST = 'replaceTextboxCost';
+// 受講・商品テーブルで使用される料金カラムの追加先名 2016.10.07 add k.urabe
+REPLACE_TEXTBOX_COST_CELL = 'replaceTextboxCostCell';
+// 受講・商品テーブルで使用される使用ポイントカラムの追加名 2016.10.07 add k.urabe
+REPLACE_TEXTBOX_USE_POINT = 'replaceTextboxUsePoint';
+// 受講・商品テーブルで使用される使用ポイントカラムの追加先名 2016.10.07 add k.urabe
+REPLACE_TEXTBOX_USE_POINT_CELL = 'replaceTextboxUsePointCell';
+// 商品テーブルでセレクトメニューのキー 2016.10.07 add k.urabe
+COMMODITY_KEY = 'commodity_key';
+// 商品テーブルでセレクトメニュー内にIDセットするためのキー 2016.10.07 add k.urabe
+COMMODITY_SELL_ID = 'commoditySellId';
+// DBから取得した商品名が格納されているキー 2016.10.07 add k.urabe
+COMMODITY_NAME = 'commodity_name';
 // 承認タブのセレクタ
 SELECTOR_PERMIT_TAB = '#permitTab';
 // 承認一覧タブのセレクタ
@@ -1017,6 +1045,8 @@ MESSAGE_DELETE_CONFIRM = '指定したレコードを削除しますか?';
 TD_FROM_REAR = '</td><td>';
 TD_FROM_REAR_DISPLAY_NONE = '</td><td style="display : none">';
 SELECTOR_SELLCOMMODITY_PERMIT_LIST_INFO_TABLE = '.sellCommodityPermitListInfoTable'; // 管理者、商品購入承認一覧テーブルのセレクタ
+// 管理者、商品購入承認一覧テーブルのテーブル本体内の行セレクタ 2016.10.07 add k.urabe
+SELECTOR_SELLCOMMODITY_PERMIT_LIST_INFO_TABLE_BODY_TR = '.sellCommodityPermitListInfoTable tbody tr';
 SELECTOR_DO_LECTURE_PERMIT_INFO_TABLE = '.doLecturePermitInfoTable'; // 管理者、受講承認テーブルのセレクタ
 // 受講承認の更新時に選択行のインデックスを取得するためのセレクタ 2016.10.04 add k.urabe
 SELECTOR_DO_LECTURE_PERMIT_SELECTED_INDEX = SELECTOR_DO_LECTURE_PERMIT_INFO_TABLE + SPACE + TAG_TR + SELECTOR_NOT_FIRST
@@ -1142,6 +1172,18 @@ SELECTOR_NO_COL = '.No';
 KEY_GET_POINT = 'get_point';
 // 使用ポイントのキー
 KEY_USE_POINT = 'use_point';
+// 料金のキー 2016.10.07 add k.urabe
+KEY_COST = 'cost';
+// コンテンツ（内容）のキー 2016.10.07 add k.urabe
+KEY_CONTENT = 'content';
+// テーブル内のindex検索に用いるセレクタ（前半） 2016.10.07 add k.urabe
+SELECTOR_TR_INDEX_FRONT  = 'tr:eq(';
+// テーブル内のindex検索に用いるセレクタ（後半：name要素がuser_classwork_cost） 2016.10.07 add k.urabe
+SELECTOR_TR_INDEX_USER_CLASSWORK_COST = ') [name=user_classwork_cost]';
+// テーブル内のindex検索に用いるセレクタ（後半：name要素がuse_point） 2016.10.07 add k.urabe
+SELECTOR_TR_INDEX_USE_POINT = ') [name=use_point]';
+// テーブル内のindex検索に用いるセレクタ（後半：name要素がcontent） 2016.10.07 add k.urabe
+SELECTOR_TR_INDEX_CONTENT = ') [name="content"]';
 // 商品購入承認タブのセレクタ
 SELECTOR_SELL_COMMODITY_PERMIT_TAB = '#sellCommodityPermit';
 // 合計額のキー
