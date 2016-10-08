@@ -108,6 +108,10 @@ function common(){
 			back : {								// 2016.09.29 add k.urabe 受講承認の追加画面用に追加
 				src : SRC_CANCEL_BUTTON,
 				text : '戻る'
+			},
+			login : {							// 2016.10.07 add k.urabe ユーザ一覧通常表示時にログインボタン追加
+				src : SRC_PERMIT_BUTTON,
+				text : '代行ログイン'
 			}
 	};
 	

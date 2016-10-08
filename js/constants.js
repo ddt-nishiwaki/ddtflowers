@@ -38,6 +38,7 @@ CLASS_LOGIN_DIALOG = '.loginDialog'; // ログインダイアログのクラス�
 PATH_LOGIN_DIALOG = 'dialog/loginDialog.html'; // ログインダイアログのクラスのセレクタ
 CLASS_LOGIN = '.login'; // ログインボタンのクラスのセレクタ
 CLICK = 'click'; // クリックイベントの文字列
+DOUBLE_TAP = 'doubletap';	// ダブルタップイベントの文字列 2016.10.07 add k.urabe
 CLOSE = 'close'; // closeの文字列
 CLASS_HEADER = '.header'; // ヘッダーのクラス
 PATH_MEMBERPAGE_JSON = 'source/memberPage.json'; // 会員ページのJSON
@@ -1118,6 +1119,16 @@ SELECTOR_USER_LIST_TABLE_OUTSIDE = '.userListTableOutside';
 FUNC_AFTER_RELOAD_USER_LIST_INFO_TABLE = 'afterReloadUserListInfoTable';
 // ユーザ一覧テーブルのセレクタ(id)
 SELECTOR_USER_LIST = '#userList';
+// ユーザ一覧テーブルの中のボタン群のセレクタ
+SELECTOR_USER_LIST_UNDER_BUTTONS = '#userList .userListButtons';
+// ユーザ一覧の共通ボタンのクラス名（フル） 2016.10.07 add k.urabe
+SELECTOR_SELECT_USER_FRIGHT = 'selectUser fRight';
+// ユーザ一覧の戻るボタンのクラス名（フル） 2016.10.07 add k.urabe
+SELECTOR_CANCEL_USER_FRIGHT = 'cancelUser fRight';
+// ユーザ一覧の共通ボタンのセレクタ
+SELECTOR_SELECT_USER = '.selectUser';
+// ユーザ一覧の押下ボタンの判定用プロパティ名 2016.10.07 add k.urabe
+DATA_BUTTON_TYPE = 'data-buttontype';
 // name属性を指定するセレクタの前後の文字列
 ATTR_EQUAL_NAME_FRONT = '[name="';
 ATTR_EQUAL_NAME_REAR = '"]';
