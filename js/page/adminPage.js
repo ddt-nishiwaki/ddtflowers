@@ -1314,8 +1314,8 @@ function moveToUserList(beforePanel, button) {
 }
 
 /*
- * 関数名:returnFromUserList
- * 概要  :ユーザ情報を選択した後前の画面に戻る
+ * 関数名:clickUserListButton
+ * 概要  :ユーザ一覧画面の押されたボタンによって処理を振り分ける
  * 引数  :element button : 押されたボタン
  * 返却値  :なし
  * 作成者:T.Masuda
@@ -1323,17 +1323,43 @@ function moveToUserList(beforePanel, button) {
  * 変更者:k.urabe
  * 変更日:2016.09.29
  * 内容　:受講承認の追加画面仕様変更に伴い、主にbackCallbacks[doLecturePermit]内の処理を全体的に修正
+ * 変更者:k.urabe
+ * 変更日:2016.10.07
+ * 内容　:共通ボタン（ログインor受付）の導入に合わせて、関数名の変更および処理の判定等を追加（旧関数名：returnFromUserList）
  */
-function returnFromUserList(button) {
-	//管理者タブから前の画面名を取得する
+function clickUserListButton(button) {
+	// 管理者タブから前の画面名を取得する
 	var moveTo = $(SELECTOR_ADMIN_TAB)[0].instance.beforePanel;
-	//選択済みの行を取得する
-	var selectedRecords = $(SELECTED_USER_RECORDS);
-	//押されたボタンの値を取得する
-	var buttonType = $(button).attr('data-buttontype');		// 2016.09.29 mod k.urabe セレクタをthisからbuttonに修正
+	// 押されたボタンの値を取得する
+	var buttonType = $(button).attr(DATA_BUTTON_TYPE);
+	// 選択行を保存する変数を宣言する
+	var selectedRecords = {};
+
+	// ユーザ行のダブルクリックから呼ばれ、既に対象データを保持しているか確認する
+	if(!($(SELECTOR_USER_LIST)[0].record)) {
+		// 保持していないため、選択行をすべて取得する
+		selectedRecords = $(SELECTED_USER_RECORDS);
+	} else {
+		// 保持しているため、対象行を取得する
+		selectedRecords = $(SELECTOR_USER_LIST)[0].record;
+		// DOMが持つ選択行を初期化する
+		$(SELECTOR_USER_LIST)[0].record = null;
+	}
 	
-	//元の画面に戻る前の処理を行う
-	backCallbacks[moveTo](selectedRecords, buttonType);
+	// ユーザ一覧画面が、通常画面なのか他画面からの遷移後の画面なのかを判定する
+	if(!moveTo) {
+		// 通常画面のため、選択行が1行であるか検証する
+		if(selectedRecords.length == 1) {
+			// 対象のユーザで代行ログインする
+			loginInsteadOfMember($(SEL_ID, selectedRecords).text());
+		} else {
+			// 1行のみ選択する旨のメッセージを表示する
+			alert(MESSAGE_NEED_SELECT_RECORD);
+		}
+	} else {
+		// 遷移前の画面および押されたボタンに併せた処理を行う
+		backCallbacks[moveTo](selectedRecords, buttonType);
+	}
 }
 
 //ユーザ一覧から元画面に戻るときにコールする関数 2016.09.29 mod　k.urabe 画面の機能仕様変更に伴い、doLecturePermitプロパティから呼ばれる無名関数を修正
@@ -1664,6 +1690,24 @@ function doubleClickToLogin (targetParent){
 	$(targetParent).on('doubletap','tbody tr',function(event){
 		//対象のユーザでログインする
 		loginInsteadOfMember($('.id', this).text());
+	});
+}
+
+/*
+ * 関数名:doubleClickTo
+ * 引数  :string targetParent : コールバック登録対象の祖先要素
+ * 戻り値:なし
+ * 概要  :対象行trをダブルクリックして、対象ユーザの情報を取得するイベントをコールバック登録
+ * 作成日:2016.10.07
+ * 作成者:k.urabe
+ */
+function doubleClickTo (targetParent){
+	//対象の子孫の行データをダブルクリックしたら
+	$(targetParent).on(DOUBLE_TAP, SELECTOR_TBODY_TR,function(event){
+		// 選択された行のデータをDOMに保存する
+		$(SELECTOR_USER_LIST)[0].record = $(this);
+		// 共通ボタンをクリックする
+		$(SELECTOR_SELECT_USER).trigger(CLICK);
 	});
 }
 
