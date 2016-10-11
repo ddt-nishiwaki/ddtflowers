@@ -52,6 +52,10 @@ require_once ('JSONDBManager.php');
  * 作成日:2015.0728
  */
 class account extends JSONDBManager{
+	// ページ権限確認用の権限取得用の連想配列
+	public $pageAuthorityCheck = array(
+		"db_getQuery" => "SELECT authority FROM user_inf WHERE id='userId';",
+		"userId" => array("value" => ""), "authority" => array("text" => ""));
 	
 	/*
 	 * 関数名：init
@@ -66,6 +70,11 @@ class account extends JSONDBManager{
 		
 		//セッションを開始する
 		session_start();
+		// COOKIE内のuserIdがnullもしくは初期値（0）ならば、ゲストと判断しセッション内のuserIdに初期値をセットする
+		if(!(isset($_COOKIE['userId'])) || $_COOKIE['userId'] == 0) {
+			// セッション情報内にuserIdを作成し、初期値として0を持たせる
+			$_SESSION['userId'] = 0;
+		}
 		//DBへの接続を開始する。
 		$this->connect();
 	}
@@ -164,8 +173,12 @@ class account extends JSONDBManager{
 			if(isset($_SESSION['userId']) && isset($_COOKIE['userId']) 
 					&& $_SESSION['userId'] == $_COOKIE['userId']){
 				//セッションの変更時間を更新してログインを延長する
-				$_SESSION['modified'] = time();				
+				$_SESSION['modified'] = time();
 				$retBoo = true;	//返却値の変数にtrueを格納する
+
+				// ページに対する権限チェックを行う
+				$this->pageCheck();
+
 			//セッションがない状態であれば
 			} else {
 				//ログインチェックエラーの例外を投げる
@@ -180,5 +193,42 @@ class account extends JSONDBManager{
 
 		//真理値を返す
 		return $retBoo;
+	}
+
+	/*
+	 * 関数名：pageCheck
+	 * 概要  :ページの権限チェックを行う。
+	 * 引数  :なし
+	 * 戻り値:なし
+	 * 作成者:k.urabe
+	 * 作成日:2016.10.10
+	 */
+	function pageCheck() {
+
+		// ゲストユーザによるリクエストか検証する
+		if($_COOKIE['userId'] != 0) {
+			// ユーザ権限取得用の連想配列にセッション内のユーザIDを追加する
+			$this->pageAuthorityCheck['userId']['value'] = $_SESSION['userId'];
+			// クエリを実行してユーザに紐付くauthorityを取得する
+			$this->createJSON($this->pageAuthorityCheck, "", null);
+			// 取得したauthorityを変数に保存する
+			$authority = $this->pageAuthorityCheck['authority']['text'];
+		} else {
+			// ゲストユーザであるため、ゲスト用のユーザ権限を設定する
+			$authority = 0;
+		}
+		
+// 入ってくる想定のpageAuth（テスト用）
+$_COOKIE['pageAuth'] = 80;
+
+		// COOKIEにセットされている対象ページの権限を取得する
+		$pageAuth = $_COOKIE['pageAuth'];
+
+		// 当該ユーザで開けるページなのか検証する
+		if(0 == ($authority & $pageAuth)) {
+			//ログインチェックエラーの例外を投げる
+			throw new LoginCheckException();
+		}
+
 	}
 }
