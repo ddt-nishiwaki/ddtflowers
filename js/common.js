@@ -3285,7 +3285,7 @@ this.messageDialogDefaultOption = {
 	 * 作成日:2016.10.09
 	 */	
 	this.setPageAuthToCookie = function (){
-		//ページ権限をカレントのウィンドウから取得する
+		//ページ権限をカレントのウィンドウから取得する(16進文字列)
 		var authority = $(PAGE_AUTHORITY_NAME, CURRENT_WINDOW).text();
 		//ページ権限が取得できれば
 		if (authority){

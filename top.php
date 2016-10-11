@@ -4,7 +4,7 @@
 <header class="header">
 </header>
 	<div class="main">
-		<pageAuth style="display: none">0</pageAuth>
+		<pageAuth style="display: none">0xFF</pageAuth>
 		<script>
 			try{
 				commonFuncs = new common();						//汎用共通関数定義クラスインスタンスを生成する
