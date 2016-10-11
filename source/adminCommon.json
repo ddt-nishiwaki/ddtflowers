@@ -100,7 +100,8 @@
 					"style": "display:none;"
 				}
 			}
-		}
+		},
+		"noRecordMessage" : "この日の予約者はいません。"
 	},
 	"permitLessonContainCommodity": {
 		"db_setQuery": "CALL p_update_approval_purchase('commodity_sell_key', 'sell_number' ,'pay_cash' ,'use_point' ,'commodity_key', '1', 'user_key', @result); SELECT @result AS result;"
@@ -193,7 +194,8 @@
 					"className": "use_point replaceTextboxUsePointCell"
 				}
 			}
-		}
+		},
+        "noRecordMessage" : "受講承認待ちの情報がありません。"
 	},
 	"deleteLecturePermitRecordQuery": {
 		"db_setQuery": "CALL set_reserved_return_status('id')"
@@ -252,7 +254,8 @@
 					"className": "id"
 				}
 			}
-		}
+		},
+        "noRecordMessage" : "商品購入承認待ちの情報がありません。"
 	},
 	"deleteSellCommodityPermitRecordQuery": {
 		"db_setQuery": "CALL p_delete_approval_purchase('id', @result); SELECT @result AS result;"
@@ -509,7 +512,7 @@
 				}
 			}
 		},
-		"noSearchMessage":"指定した期間内に受講データがありませんでした。"
+		"noRecordMessage":"指定した期間内に受講データがありません。"
 	},
 	"sellCommodityPermitListInfoTable": {
 		"class": "sellCommodityPermitListInfoTable commonTable",
@@ -566,7 +569,7 @@
 				}
 			}
 		},
-		"noSearchMessage":"指定した期間内に商品データがありませんでした。"
+		"noRecordMessage":"指定した期間内に商品データがありません。"
 	},
 	"contentSelect": {
 		"name": "commodity_key",
@@ -692,7 +695,8 @@
 					"style": "display:none"
 				}
 			}
-		}
+		},
+		"noRecordMessage" : "該当するユーザー情報がありません。"
 	},
 	"userListButtons": {
 		"createMail": {
@@ -870,7 +874,8 @@
 					"columnName": "内容"
 				}
 			}
-		}
+		},
+		"noRecordMessage" : "メルマガの情報がありません。"
 	},
 	"getMailMagaMemberList": {
 		"db_getQuery": "SELECT id, user_name AS name, mail_address AS email FROM user_inf WHERE mail_deny = 0;",

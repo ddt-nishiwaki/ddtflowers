@@ -1003,6 +1003,9 @@ function createTag(){
 	 * 設計者:H.Kaneko
 	 * 作成者:T.Masuda
 	 * 作成日:2015.06.09
+	 * 変更者:R.Shibata
+	 * 変更日:2016.10.11
+	 * 内容  :取得したテーブルレコードが0件の時の処理を明示的に追加。エラーメッセージを例外処理でテーブルに表示させる。
 	 */
 	this.createTagTable = function(mapNode, domNode , pageNum, displayPage){
 		//mapNodeからテーブル用のデータを取り出す
@@ -1020,6 +1023,11 @@ function createTag(){
 		
 		//例外発生の恐れがある(レコード0時)ため、try-catchで例外処理を行う
 		try{
+			//テーブルレコード数が0の場合
+			if (mapNodeArray.length == 0){
+				//エラーを投げ、テーブルに対しメッセージを出力する
+				throw new noTableRecordException(domNode, mapNode.noRecordMessage);
+			}
 			//mapNodeの要素数を取得する。
 			var mapNodeArrayLength = mapNodeArray.length;
 			//レコードの列数を取得する

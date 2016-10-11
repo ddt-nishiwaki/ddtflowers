@@ -415,8 +415,8 @@ LEFT JOIN
 ON
     #IDが合致するデータのみ取得する
     school_inf.id = lesson_inf.school_key
-#結合対象の列の値のnullを許可して結合する
-RIGHT JOIN
+#結合対象の列の値がnullのデータを排除して結合する 
+INNER JOIN # 実質無条件でデータを取っていたため、RIGHTからINNERに変更 2016.10.12 r.shibata
     #授業時間帯詳細テーブル
     timetable_inf
 #以下に指定した列を基に結合を行う

@@ -85,7 +85,8 @@
                     "style":"display:none;"
                 }
             }
-        }
+        },
+        "noRecordMessage" : "作成済みの授業がありません。"
     },
     "lessonDeleteQuery" : {
     	"db_setQuery" : "CALL `p_delete_classwork`('id', @result); SELECT @result AS `result`;"
@@ -123,7 +124,8 @@
                     ,"className" : "id"
                 }
             }
-        }
+        },
+        "noRecordMessage": "作成済みの時間帯がありません。"
     },
     "updateTimeTable" : {
         "db_setQuery" : "CALL p_update_capacity_time_table_day('id', 'min_num', 'max_num', @result); SELECT @result AS result;",

@@ -263,6 +263,9 @@ function setPermitListFromToDate(targetKey) {
  * 作成者:T.Masuda
  * 作成日:2016.03.19
  * 内容　:引数を追加して他のテーブルでも使えるようにしました。
+ * 変更者:R.Shibata
+ * 変更日:2016.10.11
+ * 内容  :取得したテーブルレコードが0件の時の処理を削除。エラーメッセージは出力処理で表示する。
  */
 function searchPermitListInfoTable(
 		createTagTarget
@@ -302,17 +305,9 @@ function searchPermitListInfoTable(
 		searchCreateTag.json[targetTable].tableData = [];
 		//DBからデータを取得する
 		searchCreateTag.getJsonFile('php/GetJSONArray.php', searchCreateTag.json[targetTable], targetTable);
-		
-		//データがあれば
-		if (searchCreateTag.json[targetTable].tableData.length) {
-			//受講承認一覧テーブルを作る
-			searchCreateTag.outputNumberingTag(targetTable, startPage, displayPageMax, displayPage, pageNum, targetArea, callback, "$('" + createTagTarget + "')[0].");
+		//受講承認一覧テーブルを作る
+		searchCreateTag.outputNumberingTag(targetTable, startPage, displayPageMax, displayPage, pageNum, targetArea, callback, "$('" + createTagTarget + "')[0].");
 
-		//なければ
-		} else {
-			//その旨を伝える
-			alert(searchCreateTag.json[targetTable].noSearchMessage);
-		}
 	});
 }
 
@@ -696,6 +691,9 @@ function loopUpdatePermitLessonList(button, targetTab, rowSelector, targetTable,
  * 変更者:R.Shibata
  * 変更日:2016.10.07
  * 内容  :検索SQLをストアドプロシージャに変更した事により処理を変更しました。
+ * 変更者:R.Shibata
+ * 変更日:2016.10.11
+ * 内容  :取得したテーブルレコードが0件の時の処理を削除。エラーメッセージは出力処理で表示する。
  */
 function userListSearch(targetPage) {
 		//当該画面のcreateTagを取得する
@@ -710,19 +708,9 @@ function userListSearch(targetPage) {
 		userListCreateTag.json.userListInfoTable.tableData = [];	//データを消しておく
 		//会員一覧のデータを取り出す
 		userListCreateTag.getJsonFile(URL_GET_JSON_ARRAY_PHP, sendQueryObject, KEY_USER_INFO_LIST_TABLE); //クエリでなくオブジェクトなので名称変更 2016.10.07 r.shibata 
-		//1件以上取得できていれば
-		if(userListCreateTag.json[KEY_USER_INFO_LIST_TABLE].tableData.length){
-			//ページング機能付きでユーザ情報一覧テーブルを作る
-			userListCreateTag.outputNumberingTag(KEY_USER_INFO_LIST_TABLE, 1, 4, 1, 15, SELECTOR_USER_LIST_TABLE_OUTSIDE, FUNC_AFTER_RELOAD_USER_LIST_INFO_TABLE, JQUERY_OBJECT_FRONT + targetPage + JQUERY_OBJECT_REAR_0INDEX);
-		//0件ならヘッダー行だけ出力する
-		} else {
-			//ダミーデータを入れる
-			userListCreateTag.json[KEY_USER_INFO_LIST_TABLE].tableData[0] = {user_name: "", pre_paid: "", get_point:"",id:"",mail_address:"",pre_paid:"",update_date:"",user_name:""};
-			//ページング機能付きでユーザ情報一覧テーブルを作る
-			userListCreateTag.outputNumberingTag(KEY_USER_INFO_LIST_TABLE, 1, 4, 1, 15, SELECTOR_USER_LIST_TABLE_OUTSIDE, FUNC_AFTER_RELOAD_USER_LIST_INFO_TABLE, JQUERY_OBJECT_FRONT + targetPage + JQUERY_OBJECT_REAR_0INDEX);
-			//ダミー行を削除する
-			$(SELECTOR_TBODY_TR, $(SELECTOR_USER_INFO_LIST_TABLE)).remove();
-		}
+		//ページング機能付きでユーザ情報一覧テーブルを作る
+		userListCreateTag.outputNumberingTag(KEY_USER_INFO_LIST_TABLE, 1, 4, 1, 15, SELECTOR_USER_LIST_TABLE_OUTSIDE, FUNC_AFTER_RELOAD_USER_LIST_INFO_TABLE, JQUERY_OBJECT_FRONT + targetPage + JQUERY_OBJECT_REAR_0INDEX);
+
 }
 
 /* 

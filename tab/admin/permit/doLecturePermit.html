@@ -41,22 +41,10 @@
 			create_tag.json.doLecturePermitInfoTable.date.value = commonFuncs.getTodayDate();
 			// 受講承認テーブル用のJSON配列を取得する
 			create_tag.getJsonFile('php/GetJSONArray.php', create_tag.json['doLecturePermitInfoTable'], 'doLecturePermitInfoTable');
-			//データがあればテーブルを追加する
-			if(create_tag.json.doLecturePermitInfoTable[TABLE_DATA_KEY].length != 0) {
-				//受講承認タブのリストテーブル
-				create_tag.outputTagTable('doLecturePermitInfoTable', 'doLecturePermitInfoTable', '.doLecturePermitTableInfoTableOutSideArea');
-				//受講承認のテーブルを置換する
-				commonFuncs.dbDataTableReplaceExecute(DOT + DO_LECTURE_PERMIT_INFO_TABLE, create_tag.json[DO_LECTURE_PERMIT_INFO_TABLE][TABLE_DATA_KEY], DO_LECTURE_PERMIT_INFO_TABLE_REPLACE_FUNC);
-			} else {
-				//ダミーのデータを用意する
-				create_tag.json.doLecturePermitInfoTable[TABLE_DATA_KEY][0] = DUMMY_LECTUREPERMIT_DATA;
-				//受講承認タブのリストテーブル
-				create_tag.outputTagTable('doLecturePermitInfoTable', 'doLecturePermitInfoTable', '.doLecturePermitTableInfoTableOutSideArea');
-				//ダミーデータを削除する
-				create_tag.json.doLecturePermitInfoTable[TABLE_DATA_KEY] = [];
-				//ダミーの行を削除する
-				$('.doLecturePermitInfoTable tr:last').remove();
-			}
+			//受講承認タブのリストテーブル
+			create_tag.outputTagTable('doLecturePermitInfoTable', 'doLecturePermitInfoTable', '.doLecturePermitTableInfoTableOutSideArea');
+			//受講承認のテーブルを置換する
+			commonFuncs.dbDataTableReplaceExecute(DOT + DO_LECTURE_PERMIT_INFO_TABLE, create_tag.json[DO_LECTURE_PERMIT_INFO_TABLE][TABLE_DATA_KEY], DO_LECTURE_PERMIT_INFO_TABLE_REPLACE_FUNC);
 
 			
 			//承認ボタンクリックでデータを更新する

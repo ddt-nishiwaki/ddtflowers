@@ -1427,9 +1427,7 @@ function createLittleContents(){
 		//テーブルの追加先
 		addDomPlace:'.lessonTableOutsideArea',
 		//テーブルのリロードが終わった時に処理を行う関数をまとめてコールしてテーブルを編集する
-		afterReloadFunc:'commonFuncs.tableReplaceAndSetClass(LESSON_TABLE, LESSON_TABLE_REPLACE_FUNC, true, reserveLessonListcreate_tag, LESSON_TABLE_RECORD, 10)',
-		//検索結果がなかった時のエラーメッセージ
-		errorMessage:'受講承認一覧が見つかりませんでした。'
+		afterReloadFunc:'commonFuncs.tableReplaceAndSetClass(LESSON_TABLE, LESSON_TABLE_REPLACE_FUNC, true, reserveLessonListcreate_tag, LESSON_TABLE_RECORD, 10)'
 	};
 	//予約中授業テーブル
 	replaceTableOption['reservedLessonTable'] = {
@@ -1440,18 +1438,14 @@ function createLittleContents(){
 		//置換のvalueが入ったdom名
 		replaceValueDom:'#alreadyReserved .selectThemebox',
 		//置換するkey名
-		replaceQueryKey:'lesson_name',
-		//検索結果がなかった時のエラーメッセージ
-		errorMessage:'予約中の授業が見つかりませんでした。'
+		replaceQueryKey:'lesson_name'
 	}
 	//受講済み授業テーブル
 	replaceTableOption['finishedLessonTable'] = {
 		//置換のvalueが入ったdom名
 		replaceValueDom:'#finishedLesson .selectThemebox',
 		//置換するkey名
-		replaceQueryKey:'lesson_name',
-		//検索結果がなかった時のエラーメッセージ
-		errorMessage:'受講済みの授業が見つかりませんでした。'
+		replaceQueryKey:'lesson_name'
 	}
 	//管理者画面、日ごと授業一覧
 	replaceTableOption['eachDayReservedInfoTable'] = {
@@ -1462,10 +1456,7 @@ function createLittleContents(){
 		//置換するkey名
 		replaceQueryKey:'lesson_date',
 		//テーブルのリロードが終わった時に行のクラス名を付ける処理とメルマガ内容列を指定文字数以内にする関数を呼び出す関数名を定義しておく
-		afterReloadFunc:'commonFuncs.tableReplaceAndSetClass(EACH_DAY_RESERVED_INFO_TABLE, EACH_DAY_RESERVED_INFO_TABLE_REPLACE_FUNC, false, $("#dayReserver")[0].create_tag, EACH_DAY_RESERVED_INFO_TABLE_RECORD, 10)',
-		//検索結果がなかった時のエラーメッセージ
-		//検索結果がなかった時のエラーメッセージ
-		errorMessage:'この日の予約者はいません'
+		afterReloadFunc:'commonFuncs.tableReplaceAndSetClass(EACH_DAY_RESERVED_INFO_TABLE, EACH_DAY_RESERVED_INFO_TABLE_REPLACE_FUNC, false, $("#dayReserver")[0].create_tag, EACH_DAY_RESERVED_INFO_TABLE_RECORD, 10)'
 	}
 
 	//受講承認一覧テーブル
@@ -1473,9 +1464,7 @@ function createLittleContents(){
 		//テーブルのafterでの追加先
 		addDomPlace:'.lecturePermitListInfoTableOutsideArea',
 		//テーブルのリロードが終わった時に処理を行う関数をまとめてコールしてテーブルを編集する
-		afterReloadFunc:'afterReloadPermitListInfoTable()',
-		//検索結果がなかった時のエラーメッセージ
-		errorMessage:'受講承認一覧が見つかりませんでした。'
+		afterReloadFunc:'afterReloadPermitListInfoTable()'
 	};
 
 	//管理者画面、授業詳細一覧テーブル
@@ -1483,9 +1472,7 @@ function createLittleContents(){
 		//テーブルの追加先
 		addDomPlace:'.adminLessonDetailTableOutsideArea',
 		//テーブルのリロードが終わった時に処理を実行する関数名を入力してテーブルに対して処理を行う
-		afterReloadFunc:'commonFuncs.tableReplaceAndSetClass(ADMIN_LESSON_DETAIL_TABLE, ADMIN_LESSON_DETAIL_TABLE_REPLACE_FUNC, true, adminLessonListcreate_tag, ADMIN_LESSON_DETAIL_TABLE_RECORD, 10)',
-		//検索結果がなかった時のエラーメッセージ
-		errorMessage:'この日の予約できる授業はありません'
+		afterReloadFunc:'commonFuncs.tableReplaceAndSetClass(ADMIN_LESSON_DETAIL_TABLE, ADMIN_LESSON_DETAIL_TABLE_REPLACE_FUNC, true, adminLessonListcreate_tag, ADMIN_LESSON_DETAIL_TABLE_RECORD, 10)'
 	}
 
 	/*
@@ -1654,27 +1641,21 @@ function createLittleContents(){
 	 * 返却値  :なし
 	 * 作成者:T.Yamamoto
 	 * 作成日:2015.07.06
+	 * 変更者:R.Shibata
+	 * 変更日:2016.10.11
+	 * 内容  :取得したテーブルレコードが0件の時の処理を削除。エラーメッセージは出力処理で表示する。
 	 */
 	this.tableReload = function(reloadTableClassName) {
 		//テーブルを初期化する
 		this.tableReset(reloadTableClassName);
 		//テーブルを作るためのjsonをDBから持ってきた値で作る
 		this.getJsonFile(URL_GET_JSON_ARRAY_PHP, this.json[reloadTableClassName], reloadTableClassName);
-		//DBから取得した値があった時の処理
-		if(this.json[reloadTableClassName][TABLE_DATA_KEY][0]){
-			//テーブルを作り直す
-			this.outputTagTable(reloadTableClassName,reloadTableClassName, replaceTableOption[reloadTableClassName].addDomPlace);
-			//テーブルのリロード後にテーブルに対して必要な処理が必要であるならばその処理を行う
-			if(replaceTableOption[reloadTableClassName].afterReloadFunc) {
-				//リロード後に処理をする関数をコールする
-				eval(replaceTableOption[reloadTableClassName].afterReloadFunc);
-			}
-		//DBから検索結果が見つからなかった時の処理
-		} else {
-			//見つからなかったことを表示するためのdivを作る
-			$(replaceTableOption[reloadTableClassName].addDomPlace).append('<div class="' + reloadTableClassName + '"><div>');
-			//作ったdivに検索結果が見つからなかったメッセージを表示する
-			$(DOT + reloadTableClassName).text(replaceTableOption[reloadTableClassName].errorMessage);
+		//テーブルを作り直す
+		this.outputTagTable(reloadTableClassName,reloadTableClassName, replaceTableOption[reloadTableClassName].addDomPlace);
+		//テーブルのリロード後にテーブルに対して必要な処理が必要であるならばその処理を行う(レコード0件では処理を行わない)
+		if(replaceTableOption[reloadTableClassName].afterReloadFunc && this.json[reloadTableClassName][TABLE_DATA_KEY][0]) {
+			//リロード後に処理をする関数をコールする
+			eval(replaceTableOption[reloadTableClassName].afterReloadFunc);
 		}
 	}
 	

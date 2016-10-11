@@ -147,6 +147,8 @@
 <script type="text/javascript" src="js/dailyClasses.js"></script>
 <!-- イベント管理マネージャクラスを読み込む。 -->
 <script type="text/javascript" src="js/eventHandleManager.js"></script>
+<!-- 例外処理をまとめたJSファイルを読み込む。 -->
+<script type="text/javascript" src="js/exceptionHandling.js"></script>
 <script>
 	//トップページ用ウィンドウを準備する
 	windowElem = new windowEx(TOP_LOCATION, {config:{firstExec:true}});	//初回実行フラグオン
