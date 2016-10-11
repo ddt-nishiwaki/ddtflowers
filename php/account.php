@@ -70,10 +70,12 @@ class account extends JSONDBManager{
 		
 		//セッションを開始する
 		session_start();
-		// COOKIE内のuserIdがnullもしくは初期値（0）ならば、ゲストと判断しセッション内のuserIdに初期値をセットする
+		// COOKIE内のuserIdがnullもしくは初期値（0）であるか検証する（ゲストもしくは未ログイン状態であるか）
 		if(!(isset($_COOKIE['userId'])) || $_COOKIE['userId'] == 0) {
 			// セッション情報内にuserIdを作成し、初期値として0を持たせる
 			$_SESSION['userId'] = 0;
+			// COOKIE情報内にuserIdを作成し、初期値として0を持たせる
+			$_COOKIE['userId'] = 0;
 		}
 		//DBへの接続を開始する。
 		$this->connect();
@@ -211,15 +213,15 @@ class account extends JSONDBManager{
 			$this->pageAuthorityCheck['userId']['value'] = $_SESSION['userId'];
 			// クエリを実行してユーザに紐付くauthorityを取得する
 			$this->createJSON($this->pageAuthorityCheck, "", null);
-			// 取得したauthorityを変数に保存する
-			$authority = $this->pageAuthorityCheck['authority']['text'];
+			// 取得したauthorityを変数に保存する(整数化)
+			$authority = intval($this->pageAuthorityCheck['authority']['text'], 10);
 		} else {
 			// ゲストユーザであるため、ゲスト用のユーザ権限を設定する
-			$authority = 0;
+			$authority = 1;
 		}
 
-		// COOKIEにセットされている対象ページの権限を取得する
-		$pageAuth = $_COOKIE['pageAuth'];
+		// COOKIEにセットされている対象ページの権限を取得する(整数化)
+		$pageAuth = intval($_COOKIE['pageAuth'], 16);
 
 		// 当該ユーザで開けるページなのか検証する
 		if(0 == ($authority & $pageAuth)) {
