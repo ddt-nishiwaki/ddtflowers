@@ -133,6 +133,8 @@ function loginDialog(dialog){
 					commonFuncs.showCurrentWindow();	//最前部のウィンドウのみ表示する
 				}
 
+					//ページの権限をクッキーへ設定する 2016.10.09 r.shibata 追加
+					commonFuncs.setPageAuthToCookie();
 				break;
 		}
 		

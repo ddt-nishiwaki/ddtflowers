@@ -60,11 +60,8 @@
 					//ユーザのブログ領域用のJSONに会員IDをセットする。
 					create_tag.json.myBlogTable.user_key.value = create_tag.json.accountHeader.user_key.value;
 
-					//ログイン状態をチェックした上でDBにアクセスする
-					create_tag.doGuestLoginProcedure(function() {
-						//記事を作成して表示する
-						create_tag.loadTableData('blogTable', 1, 4, 1, BLOG_SHOW_PAGES, '.blogArticles', 'create_tag.createMyBlogImages(\'.blogTable\')');
-					});
+					//記事を作成して表示する
+					create_tag.loadTableData('blogTable', 1, 4, 1, BLOG_SHOW_PAGES, '.blogArticles', 'create_tag.createMyBlogImages(\'.blogTable\')');
 					
 					//datepickerによるカレンダーのクラスを作成する。
 					var mbCalendar = new blogCalendar('.calendar', create_tag, create_tag.json.blogTable[TABLE_DATA_KEY]);

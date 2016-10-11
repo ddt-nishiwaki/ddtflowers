@@ -203,9 +203,12 @@ PATTERN_REPLACE = 1;
 USER_ID = 'userId';
 ADMIN_AUTHORITY = '80'; // 管理者権限のIDの定数
 ACCOUNT_HEADER = 'accountHeader'; // アカウント管理のJSONのキー
+// ページの権限用の名称 2016.10.09 r.shibata
+PAGE_AUTHORITY_NAME = 'pageAuth';
 EMPTY = ''; // 空文字
 SLASH = '/'; // スラッシュ記号
 DOT = '.'; // ドット
+EQUAL = '=';//イコール 2016.10.09 r.shibata 追加
 
 // ダイアログ固定幅
 DIALOG_FIXED_WIDTH = 300;

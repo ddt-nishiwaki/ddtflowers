@@ -46,11 +46,8 @@
 					create_tag.outputTag('numberingOuter', 'numberingOuter', '.galleryRightSide');
 					create_tag.outputTag('calendar','calendar','.galleryLeftSide');	//カレンダーを作る
 					
-					//ログイン状態をチェックした上でDBにアクセスする
-					create_tag.doGuestLoginProcedure(function() {
-						//ギャラリーの写真を作成して表示する
-						create_tag.loadTableData(GALLERY_TABLE, 1, 4, 1, MYGALLERY_SHOW_NUMBER, '.galleryArea', 'create_tag.createMyGalleryImages');
-					});
+					//ギャラリーの写真を作成して表示する
+					create_tag.loadTableData(GALLERY_TABLE, 1, 4, 1, MYGALLERY_SHOW_NUMBER, '.galleryArea', 'create_tag.createMyGalleryImages');
 	
 					//ギャラリーの画像を拡大できるようにする。
 					create_tag.useZoomImage('myPhotoImage');

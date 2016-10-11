@@ -205,25 +205,20 @@ function windowEx(url, argumentObj, returnObj, state){
 	 * 概要  :既存のコンテンツを消して、新たなコンテンツを書き出す。
 	 * 作成日:2015.03.09
 	 * 作成者:T.M
+	 * 変更日:2016.10.10
+	 * 変更者:R.Shibata
+	 * 内容  :対象のHTMLからlinkとscriptだけでなく、mainクラス以下の物を取得するように変更
 	 */
 	this.overwrightContent = function(target, data){
 		var dat = $(data);
 		//mainのタグを空にする。
 		$(target).empty();
-		//linkタグを収集する。
-		var links = $('link', data);
-		//コードが書かれているscriptタグを収集する。
-		var scripts = $('script:not(:empty)', data);
+		//main以下のタグを全て収集する。
+		var targettag = $(MAIN_TAG + SPACE + WILD_CARD, data);
 
-		//linkタグを展開する。
-		links.each(function(){
-			//headタグ内にlinkタグを順次追加していく。
-			$(target).append($(this));
-		});
-
-		//scriptタグを展開する。
-		scripts.each(function(){
-			//mainのタグの中にscriptタグを展開し、JavaScriptのコードを順次実行する。
+		//取得したタグを展開する。
+		targettag.each(function(){
+			//mainのタグの中に取得したタグを展開する。JavaScriptのコードがあれば順次実行する。
 			$(target).append($(this));
 		});
 	}

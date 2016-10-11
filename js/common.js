@@ -3274,6 +3274,24 @@ this.messageDialogDefaultOption = {
 			//代わりのメッセージを挿入する
 			$(targetTable).append($(HTML_PARAGRAPH).text(message).addClass('noArticle'));
 		}
+	}
+
+	/* 
+	 * 関数名:setPageAuthToCookie
+	 * 概要  :サーバ側で使用するためのページの権限をクッキーへセットする
+	 * 引数  :String : ページ権限を2進数で表したストリング
+	 * 返却値 :なし
+	 * 作成者:R.Shibata
+	 * 作成日:2016.10.09
+	 */	
+	this.setPageAuthToCookie = function (){
+		//ページ権限をカレントのウィンドウから取得する
+		var authority = $(PAGE_AUTHORITY_NAME, CURRENT_WINDOW).text();
+		//ページ権限が取得できれば
+		if (authority){
+			// ページ権限をクッキーへ格納する
+			document.cookie = PAGE_AUTHORITY_NAME + EQUAL + authority;
+		}
 	}	
 	
 	//ここまでクラス定義領域
