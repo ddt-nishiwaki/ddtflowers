@@ -217,9 +217,6 @@ class account extends JSONDBManager{
 			// ゲストユーザであるため、ゲスト用のユーザ権限を設定する
 			$authority = 0;
 		}
-		
-// 入ってくる想定のpageAuth（テスト用）
-$_COOKIE['pageAuth'] = 80;
 
 		// COOKIEにセットされている対象ページの権限を取得する
 		$pageAuth = $_COOKIE['pageAuth'];
