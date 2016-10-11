@@ -11,6 +11,8 @@ currentLocation = '';	//現在選択中のページの変数
  * 作成者:T.M
  */
 function overwrightContent(target, data){
+alert("controlPage.js line:near 13 overwrightContent used"); 		// 使用確認のためのアラート r.shibata 追加 表示されなければこの関数を削除する
+alert("使用されているため、この関数は削除できません。アラートを削除してください。"); 	// 使用確認のためのアラート r.shibata 追加 表示されなければこの関数を削除する
 	var dat = $(data);
 	//mainのタグを空にする。
 	$(target).empty();
@@ -44,6 +46,8 @@ function overwrightContent(target, data){
  * 内容　:戻るボタンに対応しました。
  */
 function callPage(url, state){
+alert("controlPage.js line:near 48 callPage used"); 				// 使用確認のためのアラート r.shibata 追加 表示されなければこの関数を削除する
+alert("使用されているため、この関数は削除できません。アラートを削除してください。"); 	// 使用確認のためのアラート r.shibata 追加 表示されなければこの関数を削除する
 	//urlから#を抜き取り、有効なURLを形成する。
 	url = url.replace(/#/g, '');
 	//cgiなら
@@ -505,6 +509,8 @@ $(window).on('load', function(){
  * 内容　　　:URLから#を抜く様に変更しました。
  */
 function callPageInTab(url, tabPanel){
+alert("controlPage.js line:near 511 callPageInTab used"); 			// 使用確認のためのアラート r.shibata 追加 表示されなければこの関数を削除する
+alert("使用されているため、この関数は削除できません。アラートを削除してください。"); 	// 使用確認のためのアラート r.shibata 追加 表示されなければこの関数を削除する
 	//urlから#を抜き取り、有効なURLを形成する。
 	url = url.replace(/#/g, '');
 	//ajax通信を行う
