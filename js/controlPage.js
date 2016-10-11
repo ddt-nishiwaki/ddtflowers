@@ -651,8 +651,6 @@ function addlogoutEvent(selector){
 				success:function(){	//通信成功時の処理
 					//cookieを消去する
 					document.cookie = 'userId=;expires=' + cookieLimit.toGMTString() + ';authority=;expires=' + cookieLimit.toGMTString() + ';';
-					//ページの権限をクッキーへ設定する 2016.10.09 r.shibata 追加
-					commonFuncs.setPageAuthToCookie();
 					$(self).closest('.window')[0].instance.destroy();	//先頭のウィンドウを消す
 					commonFuncs.showCurrentWindow();	//最前部のウィンドウのみ表示する
 					//画面遷移の履歴を追加する。
@@ -673,5 +671,7 @@ function addlogoutEvent(selector){
 			//ウィンドウの重なりを調整する
 			$(CURRENT_WINDOW)[0].instance.setWindowZIndex();	
 		}
+		//ページの権限をクッキーへ設定する 2016.10.11 r.shibata 追加
+		commonFuncs.setPageAuthToCookie();			
 	});
 }
