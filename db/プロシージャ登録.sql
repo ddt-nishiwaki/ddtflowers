@@ -4115,7 +4115,7 @@ ON
 #検索条件を指定する
 WHERE 
     # 販売状態が未承認の物を選択する
-    rec_status = 0;
+    commodity_sell.rec_status = 0;
 # ストアドプロシージャの処理を終える
 END $$
 
