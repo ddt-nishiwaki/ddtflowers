@@ -261,7 +261,7 @@
 		"db_setQuery": "CALL p_delete_approval_purchase('id', @result); SELECT @result AS result;"
 	},
 	"insertSellCommodityRecord": {
-		"db_setQuery": "CALL p_insert_approval_purchase('sell_number', 'pay_cash', 'use_point', 'user_key', 'purchase_status', 'purchase_id', @result); SELECT @result AS message;",
+		"db_setQuery": "CALL p_insert_approval_purchase('sell_number', 'pay_cash', 'use_point', 'user_key', 'rec_status', 'purchase_id', @result); SELECT @result AS message;",
 		"sell_number": {
 			"value": "1"
 		},
@@ -274,7 +274,7 @@
 		"user_key": {
 			"value": ""
 		},
-		"purchase_status": {
+		"rec_status": {
 			"value": "0"
 		},
 		"purchase_id": {

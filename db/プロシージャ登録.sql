@@ -813,15 +813,15 @@ SELECT
     #記事ID
     ui.id
     #記事ID
-    ,ui.photo_title AS myPhotoImage
+    ,ui.name AS myPhotoImage
     #投稿日時
     ,Date(ui.update_timestamp) AS date
     #記事タイトル
-    ,ui.article_title AS myPhotoTitle
+    ,ui.unique_name AS myPhotoTitle
     #ユーザ名
     ,uin.user_name AS myPhotoUser
     #記事のコメント
-    ,ui.photo_summary AS myPhotoComment 
+    ,ui.description AS myPhotoComment 
 #データ取得元のテーブルを指定する
 FROM
     #ギャラリーテーブル
@@ -860,15 +860,15 @@ SELECT
     #ユーザID
     ui.id
     #記事画像
-    ,ui.photo_title AS myPhotoImage
+    ,ui.name AS myPhotoImage
     #投稿日時
     ,Date(ui.update_timestamp) AS date
     #記事タイトル
-    ,ui.article_title AS myPhotoTitle
+    ,ui.unique_name AS myPhotoTitle
     #ユーザ名
     ,uin.user_name AS myPhotoUser
     #記事のコメント
-    ,ui.photo_summary AS myPhotoComment 
+    ,ui.description AS myPhotoComment 
 #データ取得元のテーブルを指定する
 FROM
     #ギャラリーテーブル
@@ -904,15 +904,15 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外�
 #出力対象の列を指定する
 SELECT
     #記事画像
-    ui.id, ui.photo_title AS myPhotoImage
+    ui.id, ui.name AS myPhotoImage
     #更新日付
     ,Date(ui.update_timestamp) AS date
     #記事タイトル
-    ,ui.article_title AS myPhotoTitle
+    ,ui.unique_name AS myPhotoTitle
     #ユーザ名
     ,uin.user_name AS myPhotoUser
     #記事のコメント
-    ,ui.photo_summary AS myPhotoComment 
+    ,ui.description AS myPhotoComment 
 #データ取得元のテーブルを指定する
 FROM
     #ギャラリーテーブル
@@ -956,7 +956,7 @@ INSERT INTO
         #ユーザID 
         user_key
         #画像パス
-        ,photo_title
+        ,name
         #更新日付
         ,update_timestamp
     ) 
@@ -1000,9 +1000,9 @@ UPDATE
 #更新対象の列と値を指定する
 SET
     #指定した記事コメント
-    photo_summary = photoSummary
+    description = photoSummary
     #指定した記事タイトル
-    ,article_title = articleTitle
+    ,unique_name = articleTitle
 #検索条件を指定する
 WHERE
     #指定した記事ID
@@ -3100,7 +3100,7 @@ CREATE PROCEDURE p_update_approval_purchase (
     ,IN in_pay_cash INT         # 支払額
     ,IN in_use_point INT        # 使用ポイント
     ,IN in_commodity_key INT    # 商品マスタテーブルキー
-    ,IN in_purchase_status INT  # 購入状況
+    ,IN in_rec_status INT       # 購入状況
     ,IN in_user_key INT         # ユーザマスタテーブルキー
     ,OUT result INT             # 出力リザルト
 )
@@ -3120,14 +3120,14 @@ SET
     ,pay_cash        = in_pay_cash          # 支払額
     ,use_point       = in_use_point         # 使用ポイント
     ,commodity_key   = in_commodity_key     # 商品マスタテーブルキー
-    ,purchase_status = in_purchase_status   # 購入状況
+    ,rec_status      = in_rec_status        # 購入状況
     ,update_datetime = NOW()                # 更新時刻
 # 更新条件を指定する
 WHERE
     # レコードIDが一致するレコードを更新対象とする
     id = in_id;
 # 購入状況が0より大きければ 
-IF 0 < in_purchase_status THEN
+IF 0 < in_rec_status THEN
     # テーブルを更新する
     UPDATE
         # ユーザ情報テーブルを更新する
@@ -3157,7 +3157,7 @@ CREATE PROCEDURE p_insert_approval_purchase (
     ,IN in_pay_cash INT
     ,IN in_use_point INT
     ,IN in_user_key INT
-    ,IN in_purchase_status INT
+    ,IN in_rec_status INT
     ,IN in_purchase_id INT
     ,OUT result INT
 )
@@ -3184,7 +3184,7 @@ INSERT INTO
         commodity_key
         ,school_key
         ,user_key
-        ,purchase_status
+        ,rec_status
         ,content
         ,sell_datetime
         ,sell_number
@@ -3197,7 +3197,7 @@ VALUES (
     in_purchase_id
     ,1
     ,in_user_key
-    ,in_purchase_status
+    ,in_rec_status
     ,''
     ,NOW()
     ,in_sell_number
@@ -3215,7 +3215,7 @@ INTO
     new_count;
 
 IF old_count < new_count THEN
-    IF in_purchase_status > 0 THEN
+    IF in_rec_status > 0 THEN
         SELECT
             MAX(update_datetime)
         FROM
@@ -3365,7 +3365,7 @@ ON
     #売上期間(終了日付)
     AND sell_datetime >= fromDate
     # 購入状況（承認済み）
-    AND purchase_status = 1
+    AND rec_status = 1
 #結合対象の列の値がnullのデータを排除して結合する 
 INNER JOIN
     #商品詳細情報テーブル
@@ -3733,8 +3733,8 @@ BEGIN
 DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END; # 2016.09.30 r.shibata 例外処理の追加
 SELECT 
     user_name AS name
-    ,CONCAT('uploadImage/flowerImage/' , photo_title) AS image
-    ,article_title AS title
+    ,CONCAT('uploadImage/flowerImage/' , name) AS image
+    ,unique_name AS title
     ,DATE_FORMAT(update_timestamp,GET_FORMAT(DATE,'JIS')) AS date
 FROM 
     `user_image`
@@ -4115,7 +4115,7 @@ ON
 #検索条件を指定する
 WHERE 
     # 販売状態が未承認の物を選択する
-    purchase_status = 0;
+    rec_status = 0;
 # ストアドプロシージャの処理を終える
 END $$
 
