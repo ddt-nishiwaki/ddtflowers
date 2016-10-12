@@ -3365,7 +3365,7 @@ ON
     #売上期間(終了日付)
     AND sell_datetime >= fromDate
     # 購入状況（承認済み）
-    AND rec_status = 1
+    AND commodity_sell.rec_status = 1
 #結合対象の列の値がnullのデータを排除して結合する 
 INNER JOIN
     #商品詳細情報テーブル
