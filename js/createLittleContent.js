@@ -2175,6 +2175,9 @@ function createLittleContents(){
 	 * 返却値  :userPlusPointRate 	:ユーザにプラスポイントの数
 	 * 作成者:T.Yamamoto
 	 * 作成日:2015.07.28
+	 * 変更者:k.urabe
+	 * 変更日:2016.10.13
+	 * 内容 :適切なポイントレートを算出できるように修正。また、取得したレートの配列を念のため、ソートする処理を追加
 	 */
 	this.getUserPlusPointRate = function(plusPointQueryKey, orderStudents, lessonKey) {
 		var retRate = 0;	//ポイントレート返却用の変数を用意する
@@ -2185,14 +2188,16 @@ function createLittleContents(){
 		this.getJsonFile(URL_GET_JSON_ARRAY_PHP, this.json[plusPointQueryKey], plusPointQueryKey);
 		//ポイントレートの配列を取得する
 		var rates = this.json[plusPointQueryKey][TABLE_DATA_KEY];
+		// 取得したポイントレートの配列を生徒数が少ない順に並び替える 2016.10.13 add k.urabe 念のため取得した配列を使用するプロパティで昇順ソートする処理を追加
+		commonFuncs.sortArray(rates, COLUMN_NAME_STUDENTS, true);
 		var ratesLength = rates.length;	//ポイントレートの数を取得する
 		
-		//ポイントレートを順次比較していく。ポイントレートは人数が少ない順から走査される
+		//ポイントレートを順次比較していく。ポイントレートは人数が少ない順から走査される 2016.10.13 mod k.urabe 演算子を修正（前：> → 後：<）
 		for (var i = 0; i < ratesLength; i++) {
 			//ポイントレートに対する人数を取り出す
 			var students = parseInt(rates[i].students);
 			//予約数がポイントレート当たりの人数以上でなければ
-			if ((orderStudents > rates[i].students)) {
+			if ((orderStudents < rates[i].students)) {
 				break;	//処理終了
 			}
 			

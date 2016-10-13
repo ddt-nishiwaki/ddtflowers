@@ -108,7 +108,7 @@
                     },
                     "pointUnit": {
                         "class":"pointUnit unitSpace",
-                        "text": "pt"
+                        "text": "%"
                     }
                 },
                 "addPoint__1": {
@@ -124,7 +124,7 @@
                     },
                     "pointUnit": {
                         "class":"pointUnit unitSpace",
-                        "text": "pt"
+                        "text": "%"
                     }
                 },
                 "addPoint__2": {
@@ -140,7 +140,7 @@
                     },
                     "pointUnit": {
                         "class":"pointUnit unitSpace",
-                        "text": "pt"
+                        "text": "%"
                     }
                 },
                 "addPoint__3": {
@@ -156,7 +156,7 @@
                     },
                     "pointUnit": {
                         "class":"pointUnit unitSpace",
-                        "text": "pt"
+                        "text": "%"
                     }
                 }
             }

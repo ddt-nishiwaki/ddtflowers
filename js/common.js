@@ -237,6 +237,9 @@ this.messageDialogDefaultOption = {
 	 * 返却値:なし
 	 * 作成者:k.urabe
 	 * 作成日:2016.09.27
+	 * 変更者:k.urabe
+	 * 変更日:2016.10.13
+	 * 内容 :数値比較のため、parseInt関数を追加
 	 */
 	this.sortArray = function(targetArray, targetProperty, sortType) {
 	 	// 昇順か降順か
@@ -244,11 +247,11 @@ this.messageDialogDefaultOption = {
 	 		// 昇順ソートを行う
 	 		targetArray.sort(function(val1, val2){
 			// 配列内の前要素が小さいか判定
-				if(val1[targetProperty] < val2[targetProperty]) {
+				if(parseInt(val1[targetProperty]) < parseInt(val2[targetProperty])) {
 					return -1;
 				}
 				// 配列要素の後要素が小さいか判定
-				if(val2[targetProperty] < val1[targetProperty]) {
+				if(parseInt(val2[targetProperty]) < parseInt(val1[targetProperty])) {
 					return 1;
 				}
 				// 2つの要素が等しいためそのまま
@@ -257,12 +260,12 @@ this.messageDialogDefaultOption = {
 	 	} else {
 	 		// 降順ソートを行う
 	 		targetArray.sort(function(val1, val2){
-			// 配列内の前要素が大きいか判定
-				if(val2[targetProperty　< val1[targetProperty]]) {
+			// 配列内の前要素が大きいか判定 2016.10.13 mod k.urabe ]の位置が誤っていたため修正
+				if(parseInt(val2[targetProperty])　< parseInt(val1[targetProperty])) {
 					return -1;
 				}
 				// 配列要素の後要素が大きいか判定
-				if(val1[targetProperty] < val2[targetProperty]) {
+				if(parseInt(val1[targetProperty]) < parseInt(val2[targetProperty])) {
 					return 1;
 				}
 				// 2つの要素が等しいためそのまま

@@ -405,6 +405,7 @@ COLUMN_NAME_START_TIME = 'start_time'; // 授業開始時間
 COLUMN_NAME_END_TIME = 'end_time'; // 授業終了時間
 COLUMN_NAME_ORDER_STUDENTS = 'order_students'; // 予約している生徒の数
 COLUMN_NAME_MAX_STUDENTS = 'max_students'; // 個別の予約できる最大の数
+COLUMN_NAME_STUDENTS = 'students';	// ポイントレートに紐付く生徒の数 2016.10.13 add k.urabe
 COLUMN_NAME_LESSON_DATE = 'lesson_date'; // 授業受講日
 COLUMN_NAME_USER_WORK_STATUS = 'user_work_status'; // ユーザ授業ステータス
 COLUMN_NAME_CLASSWORK_STATUS = 'classwork_status'; // 授業ステータス
