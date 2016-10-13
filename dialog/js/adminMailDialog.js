@@ -318,6 +318,8 @@ function adminMailDialog(dialog){
 		
 		//メールの送信に成功していたら
 		if(isSend){
+			//送信成功のメッセージを出力する 2016.10.14 r.shibata 追加
+			alert(MESSAGE_SEND_SUCCESS_SIMPLE_NOTICE)
 			//送信完了と共に入力ダイアログを消す
 			this.dialogClass.destroy();
 		//失敗していたら
