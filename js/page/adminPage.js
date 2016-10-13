@@ -1401,30 +1401,43 @@ var backCallbacks = {
 			if (buttonType == 0) {
 				//商品購入承認画面のcreateTagを取得する
 				var scpc = $('#sellCommodityPermit')[0].create_tag;
-				//レコードを走査する
-				$(records).each(function(){
-					//データ作成用のデータをレコードから抽出する
-					var recordData = createRecordFromDom(this);
-					//承認用データを作る
-					var permitData = creaetSellCommodityPermitData(recordData);
-					//商品購入承認のレコードをINSERTする準備を行う
-					//ユーザーキーを設定する
-					scpc.json.insertSellCommodityRecord.user_key.value = permitData.user_key;
-					//デフォルトの商品コードを設定する
-					scpc.json.insertSellCommodityRecord.purchase_id.value = COMMODITY_NOT_SELECTED_KEY_2;
-					//レコードの保存を行う
-					var result = scpc.getJsonFile(URL_SAVE_JSON_DATA_PHP, scpc.json.insertSellCommodityRecord, 'insertSellCommodityRecord');
-					//レコードの保存ができなかった
-					if (!parseInt(result.message)) {
-						//レコードの保存が出来なかった旨を伝達する
-						alert(COUNDNT_INSERT_SELLCOMMODITY_PERMIT_MESSAGE + permitData.user_name + ' 会員番号 : ' + permitData.user_key);
-					}
-				});
+				// 対象の行が選択されているか検証する 2016.10.13 r.shibata 追加
+				if(records.length > 0) {
+					//レコードを走査する
+					$(records).each(function(){
+						//データ作成用のデータをレコードから抽出する
+						var recordData = createRecordFromDom(this);
+						//承認用データを作る
+						var permitData = creaetSellCommodityPermitData(recordData);
+						//商品購入承認のレコードをINSERTする準備を行う
+						//ユーザーキーを設定する
+						scpc.json.insertSellCommodityRecord.user_key.value = permitData.user_key;
+						//デフォルトの商品コードを設定する
+						scpc.json.insertSellCommodityRecord.purchase_id.value = COMMODITY_NOT_SELECTED_KEY_2;
+						//レコードの保存を行う
+						var result = scpc.getJsonFile(URL_SAVE_JSON_DATA_PHP, scpc.json.insertSellCommodityRecord, 'insertSellCommodityRecord');
+						//レコードの保存ができなかった
+						if (!parseInt(result.message)) {
+							//レコードの保存が出来なかった旨を伝達する
+							alert(COUNDNT_INSERT_SELLCOMMODITY_PERMIT_MESSAGE + permitData.user_name + ' 会員番号 : ' + permitData.user_key);
+						}
+					});
+					//タブのインスタンスを取得する
+					var tabInstance = $(SELECTOR_ADMIN_TAB)[0].instance;
+					// 呼び出し元のテーブルに戻る
+					executeTagReturn(tabInstance, false, SELECTOR_ADMIN_TAB, SELECTOR_LECTURE_PERMIT);
+				// 選択されていなかった場合 2016.10.13 r.shibata 追加
+				} else {
+					// 1行以上選択する必要がある旨を出力する 2016.10.13 r.shibata 追加
+					alert(MESSAGE_NEED_SELECT_MORE_1_RECORD);
+				}
+			// 押されたボタンがキャンセルならば 2016.10.13 r.shibata 追加
+			} else {
+				//タブのインスタンスを取得する
+				var tabInstance = $(SELECTOR_ADMIN_TAB)[0].instance;
+				// 呼び出し元のテーブルに戻る 2016.09.30 mod k.urabe 呼び出し元画面に戻る関数を追加したことによる変更 2016.10.04 r.shibata タブ遷移後画面をリロードするように変更
+				executeTagReturn(tabInstance, false, SELECTOR_ADMIN_TAB, SELECTOR_LECTURE_PERMIT);
 			}
-			//タブのインスタンスを取得する
-			var tabInstance = $('#adminTab')[0].instance;
-			// 呼び出し元のテーブルに戻る 2016.09.30 mod k.urabe 呼び出し元画面に戻る関数を追加したことによる変更 2016.10.04 r.shibata タブ遷移後画面をリロードするように変更
-			executeTagReturn(tabInstance, false, SELECTOR_ADMIN_TAB, SELECTOR_LECTURE_PERMIT);
 		}
 }
 
