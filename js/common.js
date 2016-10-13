@@ -3282,7 +3282,7 @@ this.messageDialogDefaultOption = {
 	/* 
 	 * 関数名:setPageAuthToCookie
 	 * 概要  :サーバ側で使用するためのページの権限をクッキーへセットする
-	 * 引数  :String : ページ権限を2進数で表したストリング
+	 * 引数  :String : ページ権限を16進数で表したストリング
 	 * 返却値 :なし
 	 * 作成者:R.Shibata
 	 * 作成日:2016.10.09

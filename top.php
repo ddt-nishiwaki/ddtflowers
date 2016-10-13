@@ -23,11 +23,10 @@
 			
 				create_tag.outputTag('flowerBackground', 'createImage');	// トップページ背景を作る
 
-				//ログイン状態をチェックした上でDBにアクセスする
-				//create_tag.doGuestLoginProcedure(function() {
-					create_tag.getJsonFile(URL_GET_JSON_ARRAY_PHP, create_tag.json.getTopicGallery, 'getTopicGallery');
-					create_tag.getJsonFile(URL_GET_JSON_ARRAY_PHP, create_tag.json.getTopicBlog, 'getTopicBlog');
-				//});
+				//ギャラリーの新着情報を取得する
+				create_tag.getJsonFile(URL_GET_JSON_ARRAY_PHP, create_tag.json.getTopicGallery, 'getTopicGallery');
+				//ブログの新着情報を取得する
+				create_tag.getJsonFile(URL_GET_JSON_ARRAY_PHP, create_tag.json.getTopicBlog, 'getTopicBlog');
 
 				//ギャラリー、ブログの新着記事情報をセットする
 				commonFuncs.setDataToNoticeContents(create_tag.json.topicGallery, create_tag.json.getTopicGallery.tableData, commonFuncs.sampleNoticeDataOrganizeKeyArray, commonFuncs.sampleNoticeDataOrganizeSettingObj);

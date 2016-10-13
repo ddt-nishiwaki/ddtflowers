@@ -8,6 +8,7 @@
 <body>
 	<div id="container">
 		<div class="main">
+			<pageAuth style="display: none">0xFF</pageAuth>
 			<!-- コース案内のCSSファイルを読み込む。 -->
 			<link href="css/courseguide.css" rel="stylesheet" type="text/css">
 			<!-- ギャラリーページのCSSファイルを読み込む。 -->
@@ -17,6 +18,8 @@
 			<script>
 				//例外が発生したら処理する
 				try{
+					//ページの権限をクッキーへ設定する 2016.10.13 r.shibata 追加
+					commonFuncs.setPageAuthToCookie();
 					//カレントのウィンドウのDOMを取得する
 					var $currentWindow = $(CURRENT_WINDOW);
 					//カレントのウィンドウのコンテンツ領域を取得する
