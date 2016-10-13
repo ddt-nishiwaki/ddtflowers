@@ -650,33 +650,36 @@ function createLittleContents(){
 	 * 概要  :Myギャラリーの新規作成イベントの関数
 	 * 作成日:2015.04.23
 	 * 作成者:T.Masuda
+	 * 変更日:2016.10.13
+	 * 変更者:R.Shibata
+	 * 内容  :連続して同じファイルを選択した場合、changeイベントが発生しない問題に対応(チェック成功時に処理を実行し、チェックの結果に関わらずアップロードの値を初期化するよう変更)
 	 */
 	this.setMyGalleryChangeEvent = function (selector, imgWidth, imgHeight){
 		var thisElem = this;
 		$(selector).on('change', function(event){
 			
 			//選択したファイルをチェックする。
-			if(!commonFuncs.checkImageFile($(this).val(), INVALID_IMAGE_FILE_WARNING)){
-				return;
+			if(commonFuncs.checkImageFile($(this).val(), INVALID_IMAGE_FILE_WARNING)){
+				var $uploader = $(this);		//画像アップローダーの要素を取得する
+	    		canvasResize(this.files[0], {	//画像の縮小を行う
+	    			//横サイズを設定
+	    			width:imgWidth !== void(0)? imgWidth: DEFAULT_WIDTH,
+	    			//縦サイズを設定
+	    			height:imgHeight !== void(0)? imgHeight: DEFAULT_HEIGHT,
+	    			crop: false,	//画像を切り取るかを選択する
+	    			quality: IMG_QUALITY,	//画像の品質
+	    			//コールバック関数。画像パスを引数として受け取る。
+	    			callback: function(data) {
+	    				thisElem.uploadUserPhoto(data);	//画像をアップロードする
+	    				//テーブルをクリアする
+	    				$('.myGalleryTable').empty();
+	    				//ギャラリーのデータをリロードする
+						thisElem.loadTableData('myGalleryTable', 1, 4, 1, MY_GALLERY_SHOW_PHOTO_NUM, '.galleryArea', 'create_tag.createMyGalleryImages');
+	    			}
+	    		});
 			}
-			
-			var $uploader = $(this);		//画像アップローダーの要素を取得する
-    		canvasResize(this.files[0], {	//画像の縮小を行う
-    			//横サイズを設定
-    			width:imgWidth !== void(0)? imgWidth: DEFAULT_WIDTH,
-    			//縦サイズを設定
-    			height:imgHeight !== void(0)? imgHeight: DEFAULT_HEIGHT,
-    			crop: false,	//画像を切り取るかを選択する
-    			quality: IMG_QUALITY,	//画像の品質
-    			//コールバック関数。画像パスを引数として受け取る。
-    			callback: function(data) {
-    				thisElem.uploadUserPhoto(data);	//画像をアップロードする
-    				//テーブルをクリアする
-    				$('.myGalleryTable').empty();
-    				//ギャラリーのデータをリロードする
-					thisElem.loadTableData('myGalleryTable', 1, 4, 1, MY_GALLERY_SHOW_PHOTO_NUM, '.galleryArea', 'create_tag.createMyGalleryImages');
-    			}
-    		});
+			//アップロードボタンの値を初期化する。cloneで置き換えるため、引数をtrueとし、イベントもコピーする
+			$(selector).replaceWith($(selector).clone(true)); // 2016.10.13 r.shibata 追加
 		});
 	}
 	
