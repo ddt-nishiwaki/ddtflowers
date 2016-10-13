@@ -638,6 +638,9 @@ MARK_CIRCLE = 4;
 MARK_TRIANGLE = 1;
 MARK_CROSS = 0;
 
+// 予約済みの授業かつ、満席になっている授業を判別するための追加文字列 2016.10.13 add k.urabe
+LESSON_FULL_RESERVED = '(予約済み)';
+
 LESSON_DATA = 'lessonData';
 TEXT_LESSON_CREATE_BUTTON = '授業作成';
 TABLE_OUTER = 'tableArea'; // テーブルタグの外側を囲むdivタグクラス名
