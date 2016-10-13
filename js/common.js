@@ -551,6 +551,9 @@ this.messageDialogDefaultOption = {
 	 * 変更者:T.Masuda
 	 * 変更日:2015.10.12
 	 * 内容　:returnを1つにまとめました。コメントを追記しました
+	 * 変更者:k.urabe
+	 * 変更日:2016.10.13
+	 * 内容 :満席時の処理に、対象のユーザが予約している授業であれば視認しやすくなるよう文字列を追加
 	 */
 	this.getClassworkStatus = function(rowData, timeTableStudents) {
 		var retStr = EMPTY_STRING;	//返却用の変数を用意する
@@ -586,8 +589,15 @@ this.messageDialogDefaultOption = {
 					}
 				//満席であれば
 				} else if(this.isFull(rowData, timeTableStudents)) {
-					//満席のステータスの文字列を返すようにする
-					retStr = this.classworkStatuses[6];
+					// ユーザが対象の授業を予約、受付、受講済みであれば
+					if(userClassworkStatus && userClassworkStatus <= HAS_LECTURES) {
+						// 満席のステータスに加えて、予約済みである旨を追加する
+						retStr = this.classworkStatuses[6] + LESSON_FULL_RESERVED;
+					// 未予約もしくはキャンセルされた授業であれば
+					}　else {
+						//満席のステータスの文字列を返すようにする
+						retStr = this.classworkStatuses[6];
+					}
 				//予約可能であれば
 				} else if(this.isBookable(rowData)) {
 					if(userClassworkStatus) {	//予約ステータスが0でなければ
