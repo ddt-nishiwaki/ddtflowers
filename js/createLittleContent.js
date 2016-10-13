@@ -2341,8 +2341,8 @@ function createLittleContents(){
 					if(success){
 						//更新ができた旨を伝える
 						alert('写真のデータの更新を行いました。');
-						//ギャラリーのデータをロードし直して再描画する
-						this.loadTableData('myGalleryTable', 1, 4, 1, MYGALLERY_SHOW_NUMBER, '.memberMyGallery', 'create_tag.createMyGalleryImages');
+						//ギャラリーのデータをロードし直して再描画する　2016.10.13 mod k.urabe 参照オブジェクトおよび再描画のセレクタを修正
+						thisElem.loadTableData('myGalleryTable', 1, 4, 1, MYGALLERY_SHOW_NUMBER, GALLERY_AREA, 'create_tag.createMyGalleryImages');
 					//全件失敗であれば
 					} else {
 						//更新ができなかった旨を伝える

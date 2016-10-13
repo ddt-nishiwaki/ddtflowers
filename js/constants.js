@@ -929,6 +929,8 @@ DELETE_COOKIE_FRONT = 'userId=;expires=';
 DELETE_COOKIE_REAR = ';authority=;expires=';
 // ギャラリーのテーブル
 GALLERY_TABLE = 'galleryTable';
+// ギャラリーのテーブルエリアのセレクタ
+GALLERY_AREA = '.galleryArea';
 // ギャラリーのテーブルのセレクタ
 SELECTOR_GALLERY_TABLE = '.galleryTable';
 // マイギャラリーのテーブルのセレクタ
