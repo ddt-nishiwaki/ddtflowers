@@ -2192,11 +2192,11 @@ function createLittleContents(){
 		commonFuncs.sortArray(rates, COLUMN_NAME_STUDENTS, true);
 		var ratesLength = rates.length;	//ポイントレートの数を取得する
 		
-		//ポイントレートを順次比較していく。ポイントレートは人数が少ない順から走査される 2016.10.13 mod k.urabe 演算子を修正（前：> → 後：<）
+		//ポイントレートを順次比較していく。ポイントレートは人数が少ない順から走査される
 		for (var i = 0; i < ratesLength; i++) {
 			//ポイントレートに対する人数を取り出す
 			var students = parseInt(rates[i].students);
-			//予約数がポイントレート当たりの人数以上でなければ
+			// ポイントレート当たりの人数が予約者数を越えたか検証 2016.10.13 mod k.urabe 演算子を修正（前：> → 後：<）
 			if ((orderStudents < rates[i].students)) {
 				break;	//処理終了
 			}
