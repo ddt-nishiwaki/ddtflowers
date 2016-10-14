@@ -521,10 +521,9 @@ function loopUpdatePermitLesson() {
 						var lessonPlusPointRate = create_tag.getUserPlusPointRate('lecturePermitPlusPointRate', parseInt(sendReplaceArray.order_students), sendReplaceArray.lesson_key);
 						// ユーザの所持ポイント退避
 						var userGetPoint = sendReplaceArray['get_point'];
-						// 受講料から加算ポイントを求める
+						// 受講料を待避
 						var userClassworkCost = sendReplaceArray['user_classwork_cost'];
-						var get_point = create_tag.getUserPlusPoint(userClassworkCost, lessonPlusPointRate);
-						sendReplaceArray['get_point'] = get_point;
+						
 						// 支払い金額、使用ポイント計算(ポイントは授業料、備品代の双方に対して消費できる)
 						var usePoint = sendReplaceArray['use_point'];
 						if (userGetPoint * 1 < usePoint * 1) {
@@ -538,6 +537,10 @@ function loopUpdatePermitLesson() {
 							commodityUsePoint = 0;
 						}
 						sendReplaceArray['pay_price'] = userClassworkCost - classworkUsePoint;
+						// 使用ptを差し引いた最終支払額に対して、付与ポイントを算出する 2016.10.14 add k.urabe
+						var get_point = create_tag.getUserPlusPoint(sendReplaceArray['pay_price'], lessonPlusPointRate);
+						// 算出した付与ポイントを登録用の連想配列にセットする 2016.10.14 add k.urabe
+						sendReplaceArray['get_point'] = get_point;		
 						sendReplaceArray['pay_cash'] = sendReplaceArray['pay_price'] - commodityUsePoint;
 						
 						sendReplaceArray['classwork_use_point'] = classworkUsePoint;
