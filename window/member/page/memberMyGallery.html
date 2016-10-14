@@ -91,7 +91,7 @@
 					//更新ボタンが押されたらチェックが入った写真のデータの更新を行う
 					create_tag.updateMyGalleryPhotoData('.myGalleryEditButtons');
 					
-					var mgCalendar = new myGalleryCalendar('.calendar', create_tag, create_tag.json.myGalleryTable[TABLE_DATA_KEY]);
+					var mgCalendar = new myGalleryCalendar(CURRENT_WINDOW_CALENDAR, create_tag, create_tag.json.myGalleryTable[TABLE_DATA_KEY]);// セレクタの指定をカレントウィンドウのカレンダー指すように指定 2016.10.14 r.shibata
 					mgCalendar.create();	//カレンダーを実際に作成する
 					
 					//ダブルクリックで記事の文字を編集できるようにする

@@ -55,7 +55,7 @@
 					//ギャラリーの画像を拡大できるようにする。
 					create_tag.useZoomImage('myPhotoImage');
 					
-					var gCalendar = new galleryCalendar('.calendar', create_tag, create_tag.json.galleryTable[TABLE_DATA_KEY]);
+					var gCalendar = new galleryCalendar(CURRENT_WINDOW_CALENDAR, create_tag, create_tag.json.galleryTable[TABLE_DATA_KEY]);// セレクタの指定をカレントウィンドウのカレンダー指すように指定 2016.10.14 r.shibata
 					gCalendar.create();	//カレンダーを実際に作成する
 					
 				//例外処理

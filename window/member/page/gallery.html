@@ -70,7 +70,7 @@
 					create_tag.useZoomImage('myPhotoImage');
 					
 					//ギャラリー用のカレンダーを作成する
-					var gCalendar = new galleryCalendar('.calendar', create_tag, create_tag.json.galleryTable[TABLE_DATA_KEY]);
+					var gCalendar = new galleryCalendar(CURRENT_WINDOW_CALENDAR, create_tag, create_tag.json.galleryTable[TABLE_DATA_KEY]); // セレクタの指定をカレントウィンドウのカレンダー指すように指定 2016.10.14 r.shibata
 					gCalendar.create();	//カレンダーを実際に作成する
 					
 					addlogoutEvent('.logoutLink');	//ログアウトボタンのイベントを登録する。

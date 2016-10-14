@@ -82,7 +82,7 @@
 					create_tag.useZoomImage('blogImage');
 					
 					//datepickerによるカレンダーのクラスを作成する。
-					var mbCalendar = new myBlogCalendar('.calendar', create_tag, create_tag.json.myBlogTable[TABLE_DATA_KEY]);
+					var mbCalendar = new myBlogCalendar(CURRENT_WINDOW_CALENDAR, create_tag, create_tag.json.myBlogTable[TABLE_DATA_KEY]);// セレクタの指定をカレントウィンドウのカレンダー指すように指定 2016.10.14 r.shibata
 					mbCalendar.create();	//カレンダーを実際に作成する
 					//ボタンの領域を作る
 					create_tag.outputTag('myPageBlogButtons','myPageBlogButtons','.blogLeftContent');

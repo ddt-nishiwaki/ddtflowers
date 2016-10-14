@@ -67,7 +67,7 @@
 					create_tag.loadTableData('blogTable', 1, 4, 1, BLOG_SHOW_PAGES, '.blogArticles', 'create_tag.createMyBlogImages(\'.blogTable\')');
 					
 					//datepickerによるカレンダーのクラスを作成する。
-					var mbCalendar = new blogCalendar('.calendar', create_tag, create_tag.json.blogTable[TABLE_DATA_KEY]);
+					var mbCalendar = new blogCalendar(CURRENT_WINDOW_CALENDAR, create_tag, create_tag.json.blogTable[TABLE_DATA_KEY]);// セレクタの指定をカレントウィンドウのカレンダー指すように指定 2016.10.14 r.shibata
 					mbCalendar.create();	//カレンダーを実際に作成する
 
 					create_tag.createNewArticleList();	//最新記事一覧を作る

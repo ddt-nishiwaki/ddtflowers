@@ -825,6 +825,8 @@ WINDOW_URLS = {
 // カレントのウィンドウ
 CURRENT_WINDOW = '.window:last';
 CURRENT_WINDOW_MAIN = CURRENT_WINDOW + ' .main';
+//カレントウィンドウのカレンダー 2016.10.14 r.shibata 追加
+CURRENT_WINDOW_CALENDAR = CURRENT_WINDOW + ' .calendar';
 DIR_ADMIN_PAGE = 'window/admin/page/';
 DIR_MEMBER_PAGE = 'window/member/page/';
 
