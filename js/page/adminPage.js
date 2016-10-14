@@ -542,6 +542,8 @@ function loopUpdatePermitLesson() {
 						
 						sendReplaceArray['classwork_use_point'] = classworkUsePoint;
 						sendReplaceArray['commodity_use_point'] = commodityUsePoint;
+						// 当該授業のポイント算出に使用したポイントレートを登録用の連想配列にセットする 2016.10.14 add k.urabe
+						sendReplaceArray['lesson_plus_point_rate'] = lessonPlusPointRate;
 						//備品代から加算ポイントを求める
 						//受講承認データを更新する
 						var processedNum = permitDataUpdate(sendReplaceArray, isBuyCommodity(sendReplaceArray), 'permitLessonUpdate', 'permitLessonUpdate');

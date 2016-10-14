@@ -3011,13 +3011,14 @@ END$$
 DROP PROCEDURE IF EXISTS p_update_approval_lesson $$
 # 受講情報テーブルの更新を行うためのプロシージャを登録する
 CREATE PROCEDURE p_update_approval_lesson (
-    IN in_user_classwork_cost INT  # 受講料
-    ,IN in_use_point INT           # 使用ポイント
-    ,IN in_get_point INT           # 取得ポイント
-    ,IN in_pay_price INT           # 支払額
-    ,IN in_user_key INT            # ユーザキー
-    ,IN in_user_classwork_key INT  # 受講情報テーブルユーザID
-    ,OUT result INT                # 出力リザルト
+    IN in_user_classwork_cost INT      # 受講料
+    ,IN in_use_point INT               # 使用ポイント
+    ,IN in_get_point INT               # 取得ポイント
+    ,IN in_pay_price INT               # 支払額
+    ,IN in_user_key INT                # ユーザキー
+    ,IN in_user_classwork_key INT      # 受講情報テーブルユーザID
+    ,IN in_lesson_plus_point_rate INT  # ポイントレート 
+    ,OUT result INT                    # 出力リザルト
 )
 #ストアドプロシージャの記載を開始する
 BEGIN
@@ -3032,12 +3033,13 @@ UPDATE
     user_classwork
 # 値をセットする
 SET
-    user_classwork_cost = in_user_classwork_cost # 受講料
-    ,use_point          = in_use_point           # 使用ポイント
-    ,get_point          = in_get_point           # 取得ポイント
-    ,update_datetime    = NOW()                  # 更新時刻
-    ,user_work_status   = 3                      # 受講状態
-    ,pay_price          = in_pay_price           # 支払額
+    user_classwork_cost = in_user_classwork_cost    # 受講料
+    ,use_point          = in_use_point              # 使用ポイント
+    ,get_point          = in_get_point              # 取得ポイント
+    ,update_datetime    = NOW()                     # 更新時刻
+    ,user_work_status   = 3                         # 受講状態
+    ,pay_price          = in_pay_price              # 支払額
+    ,point_rate         = in_lesson_plus_point_rate # ポイントレート
 # 更新条件を指定する
 WHERE
     # ユーザIDが一致するレコードを更新する
