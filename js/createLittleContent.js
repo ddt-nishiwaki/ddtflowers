@@ -3795,10 +3795,10 @@ function blogCalendar(selector, create_tag, tableData) {
 		return;
 	}
 	
-	this.calendarName = 'blog';				//カレンダー名をセットする
-	this.dom = $(selector)[0];				//クラスインスタンスにDOMへの参照を持たせる
-	this.dom.instance = this;				//クラスインスタンスへの参照をDOMに持たせる
-	this.create_tag = create_tag;					//createLittleContentsクラスインスタンスの参照をメンバに入れる
+	this.calendarName = 'blog';					//カレンダー名をセットする
+	this.dom = $(selector, CURRENT_WINDOW)[0];	//クラスインスタンスにDOMへの参照を持たせる 2016.10.14 r.shibata カレンダーが複数開いている際、正しく取れなかったため、カレントウィンドウの物を取るように指定
+	this.dom.instance = this;					//クラスインスタンスへの参照をDOMに持たせる
+	this.create_tag = create_tag;				//createLittleContentsクラスインスタンスの参照をメンバに入れる
 	
 	//create_tagが読み込んだブログ記事のJSONから、カレンダーの有効日付を割り出す
 	if (tableData !== void(0)) {
