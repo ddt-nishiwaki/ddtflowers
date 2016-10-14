@@ -110,7 +110,7 @@
 		"db_getQuery": "SELECT id FROM commodity_sell AS commodity_sell_key ORDER BY create_datetime DESC LIMIT 1;"
 	},
 	"permitLessonUpdate": {
-		"db_setQuery": "CALL p_update_approval_lesson('user_classwork_cost', 'classwork_use_point', 'get_point', 'pay_price', 'user_key', 'user_classwork_key', @result); SELECT @result as row_count;"
+		"db_setQuery": "CALL p_update_approval_lesson('user_classwork_cost', 'classwork_use_point', 'get_point', 'pay_price', 'user_key', 'user_classwork_key', 'lesson_plus_point_rate', @result); SELECT @result as row_count;"
 	},
 	"getPoinRate": {
 		"db_getQuery": "CALL getPointRate(@result,'lesson_key'); SELECT @result AS 'result';",
