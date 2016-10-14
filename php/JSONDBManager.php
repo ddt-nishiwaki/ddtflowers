@@ -136,8 +136,10 @@ class JSONDBManager extends dbConnect{
 						$childObject = $value;
 						//子オブジェクトがvalueを持っていたら
 						if (array_key_exists(KEY_VALUE, $childObject)) {
-							//子オブジェクトのkey文字列と一致するqueryの文字列を置換する
-							$query = str_replace("'". $key . "'", "'". $childObject[KEY_VALUE] . "'", $query);
+							//SQL実行できなくなるため、置換対象の値のうち、シングルクォートをエスケープする。 2016.10.14 r.shibata 追加
+							$replaceValue = str_replace("'", "\'", $childObject[KEY_VALUE]);
+							//子オブジェクトのkey文字列と一致するqueryの文字列を置換する 置換するvalueの値を置換後の変数に変更 2016.10.14 r.shibata
+							$query = str_replace("'". $key . "'", "'". $replaceValue . "'", $query);
 						}
 					}
 				}
@@ -230,9 +232,11 @@ class JSONDBManager extends dbConnect{
 					$strLine .= ",";
 				}
 				
-				//改行文字、円マークをエスケープ文字に置き換える。
+				//改行文字、￥マークをエスケープ文字に置き換える。
 				$value =  str_replace("\\", "\\\¥", $value);
  				$value =  str_replace(array("\r\n", "\r", "\n"), "\\n", $value);
+ 				// ダブルクォートをエスケープする 2016.10.14 r.shiabta 追加
+ 				$value =  str_replace("\"", "\\\"", $value);
 								
 				//1列分のデータを文字列に追加する。改行文字はエスケープする。
 				$strLine .= '"' . $sColName  . '":"' .  $value . '"' ;
