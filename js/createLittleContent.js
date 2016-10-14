@@ -1358,6 +1358,8 @@ function createLittleContents(){
 		resultValueCost = recordData[KEY_COST];
 		//DBから取得した使用ptの値を取得する
 		resultValueUsePoint = recordData[KEY_USE_POINT];
+		//DBから取得した販売個数の値を取得する 2016.10.14 r.shibata 追加
+		resultValueSellNumber = recordData[KEY_SELL_NUMBER];
 		//テーブルの料金のテキストボックスに対してデフォルトでDBから読込んだ値を入れる
 		$(SELECTOR_TR_INDEX_FRONT + rowNumber + SELECTOR_TR_INDEX_USER_CLASSWORK_COST, $(targetParent)).attr({
 				value : resultValueCost,
@@ -1366,6 +1368,11 @@ function createLittleContents(){
 		//テーブルの料金の使用ptに対してデフォルトでDBから読込んだ値を入れる
 		$(SELECTOR_TR_INDEX_FRONT + rowNumber + SELECTOR_TR_INDEX_USE_POINT, $(targetParent)).attr({
 				value : resultValueUsePoint,
+				min   : 0
+			});
+		//テーブルの料金の使用ptに対してデフォルトでDBから読込んだ値を入れる 2016.10.14 r.shibata 追加
+		$(SELECTOR_TR_INDEX_FRONT + rowNumber + SELECTOR_TR_INDEX_SELL_NUMBER, $(targetParent)).attr({
+				value : resultValueSellNumber,
 				min   : 0
 			});
 		//授業データでなく備品データのとき備品データをデフォルトでセットする
