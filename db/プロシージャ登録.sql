@@ -2924,6 +2924,7 @@ UPDATE
     commodity_sell
 SET
     pay_cash = in_pay_cash            # 支払額
+    ,sell_number = in_sell_number     # 販売個数  2016.10.14 r.shibata 追加
     ,use_point = in_use_point         # 使用ポイント
     ,update_datetime = NOW()          # 更新時刻
     ,commodity_key = in_commodity_key # 商品マスタテーブルキー
