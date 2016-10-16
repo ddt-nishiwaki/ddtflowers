@@ -1185,19 +1185,28 @@ function permitSellCommodity() {
 					VALIDATOR.validate(validateSettings, sendReplaceArray);
 					// ユーザの所持ポイント退避
 					var userGetPoint = sendReplaceArray[KEY_GET_POINT];
-					//商品購入時のポイントレート
-					var commodityPointrate = 1;
-					// 商品代から加算ポイントを求める
-					var get_point = Math.ceil(Number(sendReplaceArray.pay_price) * commodityPointrate / 100);
-					sendReplaceArray[KEY_GET_POINT] = get_point;
+	
 					// 支払い金額、使用ポイント計算(ポイントは授業料、備品代の双方に対して消費できる)
 					var usePoint = sendReplaceArray[KEY_USE_POINT];
 					if (userGetPoint * 1 < usePoint * 1) {
 						throw new Error("使用ポイント(" + usePoint + ")が所持ポイント(" + userGetPoint + ")を超えています");
 					}
-					
+
+					// 使用ポイントが購入金額を超えていないか検証する 2016.10.16 add k.urabe
+					if((sendReplaceArray[KEY_PAY_PRICE] - usePoint) < 0) {
+						// 使用ポイントが購入金額を上回っているため、使用ポイントを購入金額と同ポイントにする 2016.10.16 add k.urabe
+						usePoint = sendReplaceArray[KEY_PAY_PRICE];
+					}
+
 					//実際の支配額をセットする
 					sendReplaceArray[KEY_PAY_CASH] = sendReplaceArray[KEY_PAY_PRICE] - usePoint;
+
+					// 最終的に算出された使用ポイントをセットする 2016.10.16 add k.urabe
+					sendReplaceArray[KEY_USE_POINT] = usePoint;
+					// 商品に紐付くポイントレートを取得する 2016.10.16 add k.urabe
+					sendReplaceArray[COLUMN_NAME_POINT_RATE] = scpc.getCommodityPlusPointRate('commodityPlusPoint' , sendReplaceArray[COMMODITY_KEY]);
+					// 最終確定額とポイントレートから加算されるポイントを算出する 2016.10.16 add k.urabe
+					sendReplaceArray[KEY_GET_POINT] = scpc.getUserPlusPoint(sendReplaceArray[KEY_PAY_CASH], sendReplaceArray[COLUMN_NAME_POINT_RATE]);
 
 					//商品購入承認データを更新する
 					var processedNum = permitDataUpdate(sendReplaceArray, isBuyCommodity(sendReplaceArray), 'permitLessonContainCommodity', 'permitLessonContainCommodity');

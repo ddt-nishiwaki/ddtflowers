@@ -3104,6 +3104,8 @@ CREATE PROCEDURE p_update_approval_purchase (
     ,IN in_commodity_key INT    # 商品マスタテーブルキー
     ,IN in_rec_status INT       # 購入状況
     ,IN in_user_key INT         # ユーザマスタテーブルキー
+    ,IN in_get_point INT        # 取得ポイント 2016.10.16 add
+    ,IN in_point_rate INT       # ポイントレート 2016.10.16 add
     ,OUT result INT             # 出力リザルト
 )
 #ストアドプロシージャの記載を開始する
@@ -3123,6 +3125,8 @@ SET
     ,use_point       = in_use_point         # 使用ポイント
     ,commodity_key   = in_commodity_key     # 商品マスタテーブルキー
     ,rec_status      = in_rec_status        # 購入状況
+    ,get_point       = in_get_point         # 取得ポイント 2016.10.16 add
+    ,point_rate      = in_point_rate        # ポイントレート 2016.10.16 add
     ,update_datetime = NOW()                # 更新時刻
 # 更新条件を指定する
 WHERE
@@ -3136,9 +3140,9 @@ IF 0 < in_rec_status THEN
         user_inf
     # 値をセットする
     SET
-        use_point  = use_point + in_use_point # 使用ポイント
-        ,get_point = get_point - in_use_point # 所持ポイント
-        ,update_datetime = NOW()              # 更新時刻
+        use_point  = use_point + in_use_point                # 使用ポイント
+        ,get_point = get_point + in_get_point - in_use_point # 所持ポイント 2016.10.16 mod 取得ポイントを算出式内に追加
+        ,update_datetime = NOW()                             # 更新時刻
     # 更新条件を指定する
     WHERE
         # ユーザIDが一致するレコードを更新対象とする
@@ -4250,5 +4254,35 @@ AND
 ;
 #ストアドプロシージャの処理を終える
 END $$
+
+# 商品に紐付くポイントレート取得
+# 当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
+DROP PROCEDURE IF EXISTS `getCommodityPointRate` $$
+# 商品のポイントレート取得用プロシージャの登録を行う
+CREATE PROCEDURE getCommodityPointRate
+    (
+        OUT result text
+        ,IN in_commodity_key int
+    )
+#以降にストアドプロシージャの処理を記述する
+BEGIN
+# エラーハンドラーの設定 エラーが発生したら終了(EXIT)する
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN END;
+# 出力対象の列を指定する
+SELECT
+    # ポイントレート
+    point_rate
+# データ取得元のテーブルを指定する
+FROM
+    # 商品マスタテーブル
+    commodity_inf
+# 検索条件を指定する
+WHERE
+    # 商品ID
+    id = in_commodity_key
+;
+# ストアドプロシージャの処理を終える
+END $$
+
 #区切り文字をセミコロンに戻す
 delimiter ;

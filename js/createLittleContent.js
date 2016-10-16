@@ -2210,6 +2210,29 @@ function createLittleContents(){
 		
 		return retRate;		//算出したポイントレートを返す
 	}
+
+	/* 
+	 * 関数名:getCommodityPlusPointRate
+	 * 概要  :管理者　受講承認画面で商品に紐付くポイントレートを取得する
+	 * 引数  :plusPointQueryKey	:ポイントレートを取得するためのクエリが入ったkey
+	 		:commodityKey		:商品のID
+	 * 返却値  :retRate 			:使用するレート
+	 * 作成者:k.urabe
+	 * 作成日:2016.10.14
+	 */
+	this.getCommodityPlusPointRate = function(plusPointQueryKey, commodityKey) {
+		var retRate = 0;	// 返却用のレートを用意し初期化する
+
+		// DBからポイントレポートを取得するために商品IDをリクエスト用のJSONにセットする
+		this.json[plusPointQueryKey].commodity_key.value = commodityKey;
+		// DBから商品IDに対応するポイントレートを取得する
+		this.getJsonFile(URL_GET_JSON_STRING_PHP, this.json[plusPointQueryKey], plusPointQueryKey);
+		// 商品のポイントレートを返却用変数に入れる
+		retRate = this.json[plusPointQueryKey].point_rate.text;
+
+		//加算ポイントを返す
+		return retRate;
+	}
 	
 	/* 
 	 * 関数名:getUserPlusPoint

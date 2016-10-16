@@ -104,7 +104,7 @@
 		"noRecordMessage" : "この日の予約者はいません。"
 	},
 	"permitLessonContainCommodity": {
-		"db_setQuery": "CALL p_update_approval_purchase('commodity_sell_key', 'sell_number' ,'pay_cash' ,'use_point' ,'commodity_key', '1', 'user_key', @result); SELECT @result AS result;"
+		"db_setQuery": "CALL p_update_approval_purchase('commodity_sell_key', 'sell_number' ,'pay_cash' ,'use_point' ,'commodity_key', '1', 'user_key', 'get_point', 'point_rate', @result); SELECT @result AS result;"
 	},
 	"getCommoditySellId": {
 		"db_getQuery": "SELECT id FROM commodity_sell AS commodity_sell_key ORDER BY create_datetime DESC LIMIT 1;"
@@ -282,11 +282,11 @@
 		}
 	},
 	"commodityPlusPoint": {
-		"db_getQuery": "SELECT get_point FROM commodity_inf WHERE id = 'commodity_key'",
+		"db_getQuery": "CALL getCommodityPointRate(@result,'commodity_key'); SELECT @result AS 'result';",
 		"commodity_key": {
 			"value": ""
 		},
-		"get_point": {
+		"point_rate": {
 			"text": ""
 		}
 	},
