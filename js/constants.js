@@ -991,6 +991,10 @@ REPLACE_TEXTBOX_COST_CELL = 'replaceTextboxCostCell';
 REPLACE_TEXTBOX_USE_POINT = 'replaceTextboxUsePoint';
 // 受講・商品テーブルで使用される使用ポイントカラムの追加先名 2016.10.07 add k.urabe
 REPLACE_TEXTBOX_USE_POINT_CELL = 'replaceTextboxUsePointCell';
+// 受講・商品テーブルで使用される販売個数の追加名 2016.10.14 add r.shibata
+REPLACE_TEXTBOX_SELL_NUMBER = 'replaceTextboxSellNumber';
+// 受講・商品テーブルで使用される販売個数の追加先名 2016.10.14 add r.shibata
+REPLACE_TEXTBOX_SELL_NUMBER_CELL = 'replaceTextboxSellNumberCell';
 // 商品テーブルでセレクトメニューのキー 2016.10.07 add k.urabe
 COMMODITY_KEY = 'commodity_key';
 // 商品テーブルでセレクトメニュー内にIDセットするためのキー 2016.10.07 add k.urabe
@@ -1200,6 +1204,8 @@ KEY_GET_POINT = 'get_point';
 KEY_USE_POINT = 'use_point';
 // 料金のキー 2016.10.07 add k.urabe
 KEY_COST = 'cost';
+// 料金のキー 2016.10.14 add r.shibata
+KEY_SELL_NUMBER = 'sell_number';
 // コンテンツ（内容）のキー 2016.10.07 add k.urabe
 KEY_CONTENT = 'content';
 // テーブル内のindex検索に用いるセレクタ（前半） 2016.10.07 add k.urabe
@@ -1210,6 +1216,8 @@ SELECTOR_TR_INDEX_USER_CLASSWORK_COST = ') [name=user_classwork_cost]';
 SELECTOR_TR_INDEX_USE_POINT = ') [name=use_point]';
 // テーブル内のindex検索に用いるセレクタ（後半：name要素がcontent） 2016.10.07 add k.urabe
 SELECTOR_TR_INDEX_CONTENT = ') [name="content"]';
+// テーブル内のindex検索に用いるセレクタ（後半：name要素がcontent） 2016.10.14 add r.shibata
+SELECTOR_TR_INDEX_SELL_NUMBER = ') [name="sell_number"]';
 // 商品購入承認タブのセレクタ
 SELECTOR_SELL_COMMODITY_PERMIT_TAB = '#sellCommodityPermit';
 // 合計額のキー

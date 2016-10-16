@@ -532,8 +532,15 @@
 					"columnName": "名前",
 					"className": "user_name"
 				},
+				"sell_datetime": {
+					"columnName": "購入日"
+				},
 				"lesson_name": {
 					"columnName": "内容"
+				},
+				"sell_number": {
+					"columnName": "個数",
+					"className": "replaceTextboxSellNumberCell replaceTextboxTypeNumber sell_number"
 				},
 				"cost": {
 					"columnName": "入金(円)",
@@ -550,9 +557,6 @@
 					"style": "display:none;"
 				},
 				"level_no": {
-					"style": "display:none;"
-				},
-				"sell_number": {
 					"style": "display:none;"
 				},
 				"content": {
@@ -791,6 +795,10 @@
 		"name": "use_point",
 		"data-diff_point": "0",
 		"data-base_point": "0"
+	},
+	"replaceTextboxSellNumber": {
+		"type": "number",
+		"name": "sell_number"
 	},
 	"mailMagaAndAnnounce": {
 		"class": "mailMagaAndAnnounce tabPanel",

@@ -1275,6 +1275,8 @@ function afterReloadSellCommodityPermitListInfoTable() {
 	sellCommodityPermitList.insertTextboxToTable(SELLCOMMODITY_PERMIT_LIST_INFO_TABLE, REPLACE_TEXTBOX_COST, REPLACE_TEXTBOX_COST_CELL);
 	//受講承認一覧テーブルの使用pt列をテキストボックスにする
 	sellCommodityPermitList.insertTextboxToTable(SELLCOMMODITY_PERMIT_LIST_INFO_TABLE, REPLACE_TEXTBOX_USE_POINT, REPLACE_TEXTBOX_USE_POINT_CELL);
+	//受講承認一覧テーブルの販売個数列をテキストボックスにする
+	sellCommodityPermitList.insertTextboxToTable(SELLCOMMODITY_PERMIT_LIST_INFO_TABLE, REPLACE_TEXTBOX_SELL_NUMBER, REPLACE_TEXTBOX_SELL_NUMBER_CELL);
 	//セレクトメニューを列にアウトプットする
 	sellCommodityPermitList.outputTag(CONTENT_SELECT, CONTENT_SELECT, SELECTOR_APPEND_SELECTBOX);
 	//受講承認のアコーディオンの備品名にセレクトボックスの値をDBから取り出した値で追加する

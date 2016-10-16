@@ -2924,6 +2924,7 @@ UPDATE
     commodity_sell
 SET
     pay_cash = in_pay_cash            # 支払額
+    ,sell_number = in_sell_number     # 販売個数  2016.10.14 r.shibata 追加
     ,use_point = in_use_point         # 使用ポイント
     ,update_datetime = NOW()          # 更新時刻
     ,commodity_key = in_commodity_key # 商品マスタテーブルキー
@@ -3316,7 +3317,7 @@ END IF;
     
 END$$
 
-#商品購入承認一覧のデータ取得  抽出条件に承認済みデータであることを追加 2016.09.28
+#商品購入承認一覧のデータ取得  抽出条件に承認済みデータであることを追加 2016.09.28  項目の取得位置、(売上個数)の変更 2016.10.14 r.shibata
 #コード記述のため区切り文字を一時的に変更する
 DELIMITER $$
 #当該プロシージャが既に登録されていた場合、登録し直すため一旦削除する
@@ -3334,6 +3335,8 @@ SELECT
     ,user_name
     #授業名(一覧出力後入る)
     ,'' AS lesson_name
+    #売上個数
+    ,sell_number
     #購入額
     ,pay_cash AS cost
     #商品購入での使用ポイント
@@ -3342,10 +3345,10 @@ SELECT
     ,1 AS stage_no 
     #レベル番号(デフォルト値)
     ,1 AS level_no
-    #売上個数
-    ,sell_number
     #商品名
     ,content
+    #購入日(日時) 2016.10.14 r.shibata 追加
+    ,DATE(sell_datetime) AS sell_datetime
     #ユーザID
     ,user_inf.id AS user_key
     #校舎情報テーブルID
