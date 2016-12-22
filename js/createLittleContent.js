@@ -1894,6 +1894,12 @@ function createLittleContents(){
 			if (sendReplaceArray.diff_point && Number(sendReplaceArray.get_point) < Number(sendReplaceArray.diff_point)) { // 比較が文字列で行われ、比較が不正だったため、数値で比較するよう修正 2016.12.22 r.shibata 
 				throw new Error("使用ポイントが所持ポイントを上回っています。 所持:" + sendReplaceArray.get_point + " 使用ポイント: " + sendReplaceArray.data-diff_point);	//例外を発生させる
 			}
+			//チェック用に、ポイント未反映の支払額を取得する 2016.12.22 r.shibata 追加
+			var temp_pay_price = sendReplaceArray.user_classwork_cost ? sendReplaceArray.user_classwork_cost : sendReplaceArray.pay_price
+			//使用ポイントが支払額を上回っていれば 2016.12.22 r.shibata 追加
+			if (Number(temp_pay_price) < Number(sendReplaceArray.diff_point)) {
+				throw new Error("使用ポイントが支払額を上回っています。 使用ポイント: " + sendReplaceArray.data-diff_point);	//例外を発生させる
+			}
 			
 			//実費の支払額をセットする
 			sendReplaceArray.pay_price = sendReplaceArray.user_classwork_cost ? sendReplaceArray.user_classwork_cost - sendReplaceArray.use_point : sendReplaceArray.pay_price;

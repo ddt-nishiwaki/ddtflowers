@@ -2923,7 +2923,7 @@ UPDATE
     # 商品売り上げ情報テーブルを更新する
     commodity_sell
 SET
-    pay_cash = in_pay_cash            # 支払額
+    pay_cash = in_pay_cash + in_diff_point # 支払額 2016.12.22 r.shibata 支払額は、差分を加算するように修正
     ,sell_number = in_sell_number     # 販売個数  2016.10.14 r.shibata 追加
     ,use_point = in_use_point         # 使用ポイント
     ,update_datetime = NOW()          # 更新時刻
