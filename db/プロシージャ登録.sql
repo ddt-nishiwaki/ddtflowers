@@ -2941,6 +2941,7 @@ IF in_diff_point <> 0 THEN
     # 値をセットする
     SET
         get_point        = get_point + in_diff_point # 所持ポイント
+        ,use_point        = use_point - in_diff_point # 使用ポイント 2016.12.22 r.shibata 追加
         ,update_datetime = NOW()                     # 更新時刻
     # 更新条件を指定する
     WHERE

@@ -1891,7 +1891,7 @@ function createLittleContents(){
 			//取得した連想配列を結合する
 			var sendReplaceArray = $.extend(true, {}, resultTableArray, inputDataArray);
 			//使用ポイントが所持ポイントを上回っていれば
-			if (sendReplaceArray.diff_point && sendReplaceArray.get_point < sendReplaceArray.diff_point) {
+			if (sendReplaceArray.diff_point && Number(sendReplaceArray.get_point) < Number(sendReplaceArray.diff_point)) { // 比較が文字列で行われ、比較が不正だったため、数値で比較するよう修正 2016.12.22 r.shibata 
 				throw new Error("使用ポイントが所持ポイントを上回っています。 所持:" + sendReplaceArray.get_point + " 使用ポイント: " + sendReplaceArray.data-diff_point);	//例外を発生させる
 			}
 			

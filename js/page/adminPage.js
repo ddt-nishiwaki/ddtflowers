@@ -631,7 +631,7 @@ function loopUpdatePermitLessonList(button, targetTab, rowSelector, targetTable,
 			//受講承認一覧テーブルの対象となる行の数だけループしてデータを更新していく
 			$(rowSelector).each(function(i) {
 					//DBを更新するための値を取得するために置換する連想配列を取得する
-					var diffPoint = $('input[name="use_point"]', this).attr('data-diff_point');	// 元の値からの増減値
+					var diffPoint = create_tag.json[targetTable][TABLE_DATA_KEY][counter].use_point - $('input[name="use_point"]', this).val();	// 元の値からの増減値 2016.12.22 r.shibata > 保持しているjsonのテーブルデータと比較して差分を取得するよう変更 
 					var sendReplaceArray = 
 						create_tag.getSendReplaceArray(
 							targetTable, 
