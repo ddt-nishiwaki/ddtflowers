@@ -2965,6 +2965,7 @@ CREATE PROCEDURE p_update_approval_list_lesson (
     ,IN in_diff_point INT         # ポイントの差
     ,IN in_user_key INT           # ユーザーキー
     ,IN in_user_classwork_key INT # 受講情報テーブルユーザID
+    ,IN in_pay_price INT          # 実費 2016.12.22 k.urabe 追加
     ,OUT result INT               # 出力リザルト
 )
 #ストアドプロシージャの記載を開始する
@@ -2981,6 +2982,7 @@ UPDATE
 SET
     user_classwork_cost = in_user_classwork_cost # 受講料
     ,use_point          = in_use_point           # 使用ポイント
+    ,pay_price          = in_pay_price           # 実費（受講料-使用ポイント） 2016.12.22 k.urabe 追加
     ,update_datetime    = NOW()                  # 更新時刻
 # 更新条件を指定する
 WHERE
@@ -2994,7 +2996,8 @@ IF in_diff_point <> 0 THEN
         user_inf
     # 値をセットする
     SET
-        get_point        = get_point + in_diff_point # 使用ポイント
+        get_point        = get_point + in_diff_point # 所持ポイント
+        ,use_point       = use_point - in_diff_point # 使用ポイント 2016.12.22 k.urabe 追加
         ,update_datetime = NOW()                     # 更新時刻
     # 更新条件を指定する
     WHERE
