@@ -603,7 +603,7 @@
 		"db_setQuery": "CALL p_update_approval_list_purchase('sell_number', 'user_classwork_cost', 'use_point', 'id', 'user_key', 'diff_point', 'commodity_key', @result);"
 	},
 	"updatePermitListLesson": {
-		"db_setQuery": "CALL p_update_approval_list_lesson('user_classwork_cost', 'use_point', 'diff_point', 'user_key', 'id', @result); SELECT @result AS result;"
+		"db_setQuery": "CALL p_update_approval_list_lesson('user_classwork_cost', 'use_point', 'diff_point', 'user_key', 'id', 'pay_price', @result); SELECT @result AS result;"
 	},
 	"searchUserList": {},
 	"lecturePermitListUpdateButton": {
