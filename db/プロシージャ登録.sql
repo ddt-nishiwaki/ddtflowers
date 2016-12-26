@@ -643,6 +643,8 @@ SET
     ,image_3 = blogImage3
     #公開設定
     ,disclosure_range = blogPublication 
+    #日付を明示的に更新
+    ,post_timestamp = post_timestamp
 #検索条件を指定する
 WHERE
     #指定した記事IDの記事を対象にする
@@ -1003,6 +1005,8 @@ SET
     description = photoSummary
     #指定した記事タイトル
     ,unique_name = articleTitle
+    #明示的に更新日付を更新
+    ,update_timestamp = update_timestamp
 #検索条件を指定する
 WHERE
     #指定した記事ID
