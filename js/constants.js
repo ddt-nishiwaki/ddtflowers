@@ -1134,6 +1134,8 @@ SELECTOR_USER_LIST_TABLE_OUTSIDE = '.userListTableOutside';
 FUNC_AFTER_RELOAD_USER_LIST_INFO_TABLE = 'afterReloadUserListInfoTable';
 // ユーザ一覧テーブルのセレクタ(id)
 SELECTOR_USER_LIST = '#userList';
+//ユーザ一覧テーブルのキー
+KEY_USER_LIST = 'userList';
 // ユーザ一覧テーブルの中のボタン群のセレクタ
 SELECTOR_USER_LIST_UNDER_BUTTONS = '#userList .userListButtons';
 // ユーザ一覧の共通ボタンのクラス名（フル） 2016.10.07 add k.urabe

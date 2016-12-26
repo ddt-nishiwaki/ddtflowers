@@ -129,6 +129,12 @@ function tabEx(url, argumentObj, returnObj){
 				//falseに戻す
 				thisElem.cache = false;
 			}
+
+			// ユーザ一覧画面に他画面から遷移していないか、かつ遷移先がユーザ一覧画面でないか検証する	// 2016.12.26 k.urabe add
+			if(thisElem.beforePanel && !($($($targetPanel)[0]).hasClass(KEY_USER_LIST))) {
+				// 他画面からの記録を初期化する
+				thisElem.beforePanel = null;
+			}
 		});
 	}
 	
