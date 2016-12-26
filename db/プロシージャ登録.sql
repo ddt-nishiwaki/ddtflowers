@@ -272,6 +272,8 @@ SET
     ,update_datetime = NOW()
     #キャンセル料をレコードにセットする  classworkテーブルに移動 2016.09.26 k.urabe
     ,cancel_charge = in_cancel_charge
+    #現在時刻をキャンセル時刻としてセットする 2016.12/27 k.urabe
+    ,cancel_datetime = NOW()
 #検索条件を指定する
 WHERE
     #プロシージャの引数で指定したIDのレコードを更新対象とする
