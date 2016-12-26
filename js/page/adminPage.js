@@ -1138,7 +1138,7 @@ function permitSellCommodity() {
 		
 		//チェックが入っているレコードがなければ
 		if (!$('.sellCommodityPermitInfoTable tr.selectRecord').length) {
-			alert(ALERT_NEED_SELECT_LECTUREPERMIT_RECORD);
+			alert(ALERT_NEED_SELECT_SELLCOMMODITYPERMIT_RECORD);
 			return;	//処理を終える
 		}
 
