@@ -2781,7 +2781,7 @@ function createLittleContents(){
 			//ユーザ名を取り出す
 			var updatedUserName = this.json.accountHeader.memberStatus.memberName.user_name.text;
 			//ヘッダー内のユーザ名を更新する
-			$('.memberName > .user_name').text(updatedUserName);
+			$('.memberName > .user_name', CURRENT_WINDOW_MAIN).text(updatedUserName);
 		}
 		
 		/*
