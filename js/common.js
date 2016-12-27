@@ -2407,30 +2407,15 @@ this.messageDialogDefaultOption = {
 		var cancelCharge = 0;			//受講料
 		var today = new Date();			//本日の日付を取得する
 		var lessonDay = new Date(date);	//受講日を取得する
-		var rate = 0;					// キャンセル料のレート 2016.12.27 k.urabe
-		var maxDay = 0;					// 予約キャンセルの○日前の最も遠い日付を取得 2016.12.27 k.urabe
 		
 		//受講日までの日数を計算する
 		var dateDiff = this.getDateDiff(today, lessonDay) + 1;
 		
-		// rate用の連想配列を走査し、受講日までの日付からキャンセル料のレートを取得する 2016.12.27 add k.urabe
-		for(var key in cancelRate) {
-			// keyの日付と受講日までの日付を比較する
-			if(parseInt(key) <= dateDiff) {
-				//keyに設定される日付が 同値もしくは小さいため、当該キーにセットされているレートをセットする
-				rate = cancelRate[key];
-			}
-			// key（○日前）の値が最も離れていれば取得する
-			maxDay = maxDay <= parseInt(key) ? parseInt(key) : maxDay;
+		//キャンセル料が発生するなら
+		if(dateDiff < cancelRate.length) {
+			//キャンセル料を算出する
+			cancelCharge = Math.floor(cost * cancelRate[dateDiff] / 100);
 		}
-		// キャンセル料が発生する最も離れた日付よりも受講日までの日数が離れているか検証する
-		if(maxDay < dateDiff) {
-			// キャンセル料は発生しないのでレートに0をセットする
-			rate = 0;
-		}
-
-		//キャンセル料を算出する
-		cancelCharge = Math.floor(cost * rate / 100);
 		
 		return cancelCharge;	//キャンセル料を返す
 	}
