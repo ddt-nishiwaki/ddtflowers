@@ -130,7 +130,16 @@ function memberReserveCancelDialog(dialog){
 		var cancelRateNodes = this.create_tag.json.lessonConfirmContent.attention.cancelRateValue;
 		
 		//ノードからキャンセル料のレートの配列を作成する
-		var rate = [parseInt(cancelRateNodes.cancel__0.cancel_rate.text), parseInt(cancelRateNodes.cancel__1.cancel_rate.text), parseInt(cancelRateNodes.cancel__2.cancel_rate.text)];
+		//var rate = [parseInt(cancelRateNodes.cancel__0.cancel_rate.text), parseInt(cancelRateNodes.cancel__1.cancel_rate.text), parseInt(cancelRateNodes.cancel__2.cancel_rate.text)];
+		// キャンセル料のノードからキャンセル料算出用の連想配列を作成する
+		var rate = {};
+		// 最も日付が近いレートをセットする
+		rate[cancelRateNodes.cancel__0.cancel_days.text] = parseInt(cancelRateNodes.cancel__0.cancel_rate.text);
+		// 中央のレートをセットする
+		rate[cancelRateNodes.cancel__1.cancel_days.text] = parseInt(cancelRateNodes.cancel__1.cancel_rate.text);
+		// 最も日付が離れているレートをセットする
+		rate[cancelRateNodes.cancel__2.cancel_days.text] = parseInt(cancelRateNodes.cancel__2.cancel_rate.text);
+
 		//キャンセル料を算出する
 		var cancelCharge = commonFuncs.calcCancelCharge(lessonDate, cost, rate); //キャンセル料を算出する
 		this.create_tag.cancel_charge = cancelCharge;	//キャンセル料をcreateTagにセットする
