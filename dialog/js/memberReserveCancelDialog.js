@@ -141,7 +141,7 @@ function memberReserveCancelDialog(dialog){
 		commonFuncs.sortArray(rate, KEY_CANCEL_DAYS, false);
 
 		//キャンセル料を算出する
-		var cancelCharge = commonFuncs.calcCancelCharge(lessonDate, cost, rate, cancelRateNodes); //キャンセル料を算出する
+		var cancelCharge = commonFuncs.calcCancelCharge(lessonDate, cost, rate); //キャンセル料を算出する
 		this.create_tag.cancel_charge = cancelCharge;	//キャンセル料をcreateTagにセットする
 	}
 	
