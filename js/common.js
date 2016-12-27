@@ -2791,8 +2791,8 @@ this.messageDialogDefaultOption = {
 			//通信成功時のコールバック
 			,success : function(json, status){
 				for (objKey in json) {
-					//更新の成功件数0でなかった場合は(現状2016-04-09時点では対象のkeyはmessage。何でも対応できるように1つめのキーを対象にした)
-					if(!json[objKey] == "0") {
+					//更新の成功件数0でなかった場合は(現状2016-04-09時点では対象のkeyはmessage。何でも対応できるように1つめのキーを対象にした) // 2016.12.27 mod k.urabe 条件判定の記述が正しくなかったため、修正
+					if(!(json[objKey] == "0")) {
 						isSuccess = true;
 					}
 					

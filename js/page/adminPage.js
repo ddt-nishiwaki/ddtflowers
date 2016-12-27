@@ -1796,7 +1796,7 @@ function deleteRecords (targetTable, targetClass, queryObj, callback, createTagD
 	//例外発生時
 	} catch (e) {
 		//エラーメッセージをセットする
-		resultMessage = e + '\n' + processedRecords + '件のレコードを削除しました。';
+		resultMessage = e.message + '\n' + processedRecords + '件のレコードを削除しました。';
 	//最後の処理
 	} finally {
 		//コールバックが指定されていたら
