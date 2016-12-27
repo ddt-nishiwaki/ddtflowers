@@ -393,7 +393,7 @@ $(document).ajaxStart( function(){
 
 
 /*
- * イベント名:ajaxStop
+ * イベント名:ajaxStop -> ajaxSuccess 2016.12.28 r.shibata 変更
  * 引数  　 :なし
  * 戻り値　 :なし
  * 概要  　 :Ajax通信を終えた後の処理。
@@ -401,7 +401,7 @@ $(document).ajaxStart( function(){
  * 作成者　　:T.Masuda
  */
 //Ajax通信が全て終了したら
-$(document).ajaxStop( function(){
+$(document).ajaxSuccess( function(){
 	//ローディング画面を隠す。
 	commonFuncs.hideLoadingScreen();
 	//選択されたトップメニューの色を変える。
