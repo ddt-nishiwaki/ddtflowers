@@ -182,8 +182,9 @@ function loginDialog(dialog){
 	 * 作成者　:T.Masuda
 	 */
 	this.getLoginInformation = function(){
-		//入力されたユーザID、パスワードをオブジェクトにまとめて返す
-		return {userId: $(USERNAME_SELECTOR).val(), password:$(PASSWORD_SELECTOR).val()}
+		//入力されたユーザID、パスワードをオブジェクトにまとめて返す 2016.12.27 r.shibata 指定されているセレクタが不足していたため、入力エリアを追加指定
+		return {userId: $(CHAR_DOT + INPUT_AREA + SPACE + USERNAME_SELECTOR).val(),
+			    password:$(CHAR_DOT + INPUT_AREA + SPACE +PASSWORD_SELECTOR).val()}
 	}
 	
 	/* 関数名:getLoginProcedureResult
