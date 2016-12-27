@@ -136,8 +136,8 @@ class JSONDBManager extends dbConnect{
 						$childObject = $value;
 						//子オブジェクトがvalueを持っていたら
 						if (array_key_exists(KEY_VALUE, $childObject)) {
-							//SQL実行できなくなるため、置換対象の値のうち、シングルクォートをエスケープする。 2016.10.14 r.shibata 追加
-							$replaceValue = str_replace("'", "\'", $childObject[KEY_VALUE]);
+							//SQL実行できなくなるため、置換対象の値のうち、シングルクォートをエスケープする。 2016.10.14 r.shibata 追加 2016.12.27 clientから置換文字として配列が来るため処理を追加
+							$replaceValue = $this->createReplaceValue($childObject[KEY_VALUE]);
 							//子オブジェクトのkey文字列と一致するqueryの文字列を置換する 置換するvalueの値を置換後の変数に変更 2016.10.14 r.shibata
 							$query = str_replace("'". $key . "'", "'". $replaceValue . "'", $query);
 						}
@@ -156,6 +156,40 @@ class JSONDBManager extends dbConnect{
 		// 結果セットを返す
 		return $retRS;
 	}
+
+	/*
+	* 関数名：createReplaceValue
+	* 概要  :クライアントより受け取った置換対象の値を、置換可能文字列に変換する
+	* 引数  :Object childObjectValue:クライアントより受け取った置換対象の値、StringとArrayが存在する
+	* 返却値:String:作成した返却用の文字列
+	* 作成日:2016.12.27
+	* 作成者:R.Shibata
+	*/
+	function createReplaceValue($childObjectValue) {
+		//受け取ったオブジェクトにより、返却する文字列を作成するための変数を宣言する
+		$retReplaceString = "";
+		//データ作成のための文字列配列を用意する
+		$childObjectArray = array();
+		//取得した引数が配列であれば
+		if (is_array($childObjectValue)) {
+			//走査用文字列配列に引数をそのままセットする
+			$childObjectArray = $childObjectValue;
+		//配列以外であれば
+		} else {
+			//走査用文字列配列に引数の値を追加する
+			array_push($childObjectArray, $childObjectValue);
+		}
+		//取得、作成した配列を走査する
+		foreach($childObjectArray as $value) {
+			//置換文字列が空白であれば何もしない、値があれば区切り文字を付与する
+			$retReplaceString .= $retReplaceString == "" ? "" : "','";
+			//配列の文字列を、エスケープ処理を行い置換文字列に付与する
+			$retReplaceString .= str_replace("'", "\'", $value);
+		}
+		//作成した文字列を返却する
+		return $retReplaceString;
+	}
+
 
 	/*
 	 * Fig2

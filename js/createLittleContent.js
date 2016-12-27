@@ -1551,8 +1551,8 @@ function createLittleContents(){
 		var replaceValue = $(replaceTableOption[queryArrayKey]['replaceValueDom']).val();
 		//置換する値がテーマ選択のセレクトボックスである場合 2016.09.09 r.shibata 置換する値が配列でない場合、joinが使用できない問題の対応
 		if(replaceValue == null || $.isArray(replaceValue)){//未選択時はnull、選択時は配列
-			//全選択(何も選択されていない)なら「全て」、そうでなければテーマをひとまとめにして置換用変数にセットする
-			replaceValue = replaceValue != null && replaceValue.length? replaceValue.join(SIMBOLE_SINGLQUATE_COMMA) : KEY_ALL_JP;  
+			//全選択(何も選択されていない)なら「全て」、そうでなければテーマをひとまとめにして置換用変数にセットする  2016.12.27、取得する値を変数そのままに変更(配列の場合は配列そのまま)
+			replaceValue = replaceValue != null && replaceValue.length ? replaceValue : KEY_ALL_JP;  
 		}
 		//取得する授業の日時の範囲を取得する
 		var fromDate = $('.finishedLessonFromDate').val();
