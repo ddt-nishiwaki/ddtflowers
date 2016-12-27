@@ -822,6 +822,9 @@ WINDOW_URLS = {
 	admin : "window/admin/adminPage.html",
 	test : "window/test/testWindow.html"
 };
+// フラワートップウィンドウを示すセレクタ 2016.12.27 r.shibata 追加
+USUALL_WINDOW = '.window[name="usuall"]'
+
 // カレントのウィンドウ
 CURRENT_WINDOW = '.window:last';
 CURRENT_WINDOW_MAIN = CURRENT_WINDOW + ' .main';

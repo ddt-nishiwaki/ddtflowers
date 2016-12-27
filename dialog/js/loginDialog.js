@@ -123,6 +123,8 @@ function loginDialog(dialog){
 				$('.inputArea').addClass('valid');
 				//元々移動しようとしていた画面に遷移する
 				$(CURRENT_WINDOW)[0].instance.callPage(history.state.url);
+				//ログインした時点でtop画面のdomを削除する 2016.12.27 r.shibata 追加
+				$(USUALL_WINDOW + SPACE + MAIN_TAG).empty();
 				break;
 			//閉じるボタン、クローズボックスが押されていたら
 			default:

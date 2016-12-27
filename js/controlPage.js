@@ -658,6 +658,8 @@ function addlogoutEvent(selector){
 					//cookieを消去する
 					document.cookie = 'userId=;expires=' + cookieLimit.toGMTString() + ';authority=;expires=' + cookieLimit.toGMTString() + ';';
 					$(self).closest('.window')[0].instance.destroy();	//先頭のウィンドウを消す
+					// ログアウトでフラワートップへ遷移する場合は、必ずtopへ遷移する 2016.12.27 r.shibata追加
+					$(CURRENT_WINDOW)[0].instance.callPage(TOP_LOCATION);
 					commonFuncs.showCurrentWindow();	//最前部のウィンドウのみ表示する
 					//画面遷移の履歴を追加する。
 					history.pushState({'url':'#' + TOPPAGE_NAME}, '', location.href);
