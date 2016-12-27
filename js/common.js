@@ -2403,7 +2403,7 @@ this.messageDialogDefaultOption = {
 	 * 作成日　:2015.1212
 	 * 作成者　:T.Masuda
 	 */
-	this.calcCancelCharge = function(date, cost, cancelRate, dummy) {
+	this.calcCancelCharge = function(date, cost, cancelRate) {
 		var cancelCharge = 0;			//受講料
 		var today = new Date();			//本日の日付を取得する
 		var lessonDay = new Date(date);	//受講日を取得する
