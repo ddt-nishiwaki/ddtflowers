@@ -21,7 +21,7 @@
 			
 				create_tag.createNormalHeaderContent();	//ヘッダー内のタグが作成済みでなければ作る。
 			
-				create_tag.outputTag('flowerBackground', 'createImage');	// トップページ背景を作る
+				create_tag.outputTag('flowerBackground', 'createImage', CURRENT_WINDOW_MAIN);	// トップページ背景を作る 2016.12.28 r.shibata 出力セレクターをカレントウィンドウのmainに出力するよう変更
 
 				//ギャラリーの新着情報を取得する
 				create_tag.getJsonFile(URL_GET_JSON_ARRAY_PHP, create_tag.json.getTopicGallery, 'getTopicGallery');
