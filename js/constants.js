@@ -1371,6 +1371,8 @@ SELECTOR_SET_TIME_TABLE_LIST = SELECTOR_SET_TIME_TABLE_LIST_INNER + SPACE + SELE
 // 授業予約キャンセルの判定に用いる
 KEY_CANCEL_DAYS = 'cancel_days';
 KEY_CANCEL_RATE = 'cancel_rate';
+KEY_DATE_MIN_SECOND = ' 00:00:00';
+
 
 // 授業一覧タブのセレクタ
 SELECTOR_LESSON_LIST_TAB = '#lessonList';

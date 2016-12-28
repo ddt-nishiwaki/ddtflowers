@@ -2404,13 +2404,16 @@ this.messageDialogDefaultOption = {
 	 * 作成者　:T.Masuda
 	 */
 	this.calcCancelCharge = function(date, cost, cancelRate) {
-		var cancelCharge = 0;			//受講料
-		var today = new Date();			//本日の日付を取得する
-		var lessonDay = new Date(date);	//受講日を取得する
-		var rate = 0;					// キャンセル料のレート 2016.12.27 k.urabe
+		var cancelCharge = 0;									//受講料
+		var today = new Date();									//本日の日付を取得する
+		var lessonDay = new Date(date + KEY_DATE_MIN_SECOND);	//受講日を取得する（00:00:00） 2016.12.28 mod k.urabe
+		var rate = 0;											// キャンセル料のレート 2016.12.27 k.urabe
+
+		// 取得した現在日付の時分秒を予約日と比較するために、00：00：00にセットし直す　2016.12.28 add k.urabe
+		today = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
 		
-		//受講日までの日数を計算する
-		var dateDiff = this.getDateDiff(today, lessonDay) + 1;
+		//受講日までの日数を計算する　2016.12.28 mod k.urabe +1の処理を削除（現在日付と予約日の時分秒を揃えた上で差分をとる仕様に変更したため）
+		var dateDiff = this.getDateDiff(today, lessonDay);
 
 		// rate用の連想配列を走査し、受講日までの日付からキャンセル料のレートを取得する 2016.12.27 add k.urabe
 		for(var key in cancelRate) {

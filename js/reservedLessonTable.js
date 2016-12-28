@@ -99,7 +99,7 @@ function reservedLessonTable() {
 		// キャンセルのノード情報を渡して、キャンセル料のレートをまとめる 2016.12.27 add k.urabe キャンセル料を計算する処理を追加
 		var rate = dialogBuilder.getRateArray(dialogBuilder.create_tag.json.lessonConfirmContent.attention.cancelRateValue);
 		//キャンセル料をセットする 2016.12.27 mod k.urabe キャンセル料を算出し、セットする処理に変更
-		retObj.cancel_charge = commonFuncs.calcCancelCharge(retObj[LESSON_DATE], retObj[COLUMN_USER_CLASSWORK_COST], rate);
+		retObj.cancel_charge = commonFuncs.calcCancelCharge(retObj[COLUMN_NAME_LESSON_DATE], retObj[COLUMN_USER_CLASSWORK_COST], rate);
 		// キャンセルがユーザか管理者かの判定の値をセットする 2016.10.04 add k.urabe
 		retObj.cancel_user = !dialogBuilder.create_tag.isAdminLoginToMemberPage() ? VALUE_USER_CANCEL : VALUE_ADMIN_CANCEL;
 		//ダイアログ専用クラスインスタンスがdialogExクラスインスタンスを通じてデータを取り出す
