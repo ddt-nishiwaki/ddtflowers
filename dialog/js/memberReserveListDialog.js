@@ -312,8 +312,8 @@ function memberReserveListDialog(dialog){
 	 * 内容　 :全体的に改修しました。行番号はtrタグを基準に取得します
 	 */
 	this.getClickTableRecordData = function(clickTarget, tableName, clickRecordClassName) {
-		//クリックされた行番号を取得する。見出しの行は除外する
-		var rowNum = $(DOT + tableName + TAG_CHILD_TR).filter(SEL_NO_TABLE_FIRST_ROW).index(clickTarget);
+		//クリックされた行番号を取得する。見出しの行は除外する　2016.12.28 r.shibata クリックされたテーブルは、クリックされた行の親を取得するように変更
+		var rowNum = $(clickTarget).parents(DOT + tableName).find(STR_TR).filter(SEL_NO_TABLE_FIRST_ROW).index(clickTarget);
 		//次のダイアログに渡すデータを変数に入れる
 		var recordObject = this[VAR_CREATE_TAG].json[tableName][TABLE_DATA_KEY][rowNum];
 		//取得したデータを返却する
