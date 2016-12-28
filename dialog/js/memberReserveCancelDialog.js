@@ -129,21 +129,36 @@ function memberReserveCancelDialog(dialog){
 		//createTagからキャンセル料のレートをまとめたノードを取り出す
 		var cancelRateNodes = this.create_tag.json.lessonConfirmContent.attention.cancelRateValue;
 
-		// キャンセル料のノードからキャンセル料算出用の連想配列を作成する
-		var rate = [];
-		// 最も日付が近いレートをセットする
-		rate.push({cancel_days : parseInt(cancelRateNodes.cancel__0.cancel_days.text), cancel_rate : parseInt(cancelRateNodes.cancel__0.cancel_rate.text)});
-		// 中央のレートをセットする
-		rate.push({cancel_days : parseInt(cancelRateNodes.cancel__1.cancel_days.text), cancel_rate : parseInt(cancelRateNodes.cancel__1.cancel_rate.text)});
-		// 最も日付が離れているレートをセットする
-		rate.push({cancel_days : parseInt(cancelRateNodes.cancel__2.cancel_days.text), cancel_rate : parseInt(cancelRateNodes.cancel__2.cancel_rate.text)});
-		// 完成したレート用連想配列をcancel_daysの降順にソートする
-		commonFuncs.sortArray(rate, KEY_CANCEL_DAYS, false);
+		// キャンセルのノード情報を渡して、キャンセル料のレートをまとめる
+		var rate = this.getRateArray(cancelRateNodes);
 
 		//キャンセル料を算出する
 		var cancelCharge = commonFuncs.calcCancelCharge(lessonDate, cost, rate); //キャンセル料を算出する
 		this.create_tag.cancel_charge = cancelCharge;	//キャンセル料をcreateTagにセットする
 	}
+
+	/* 関数名:getRateArray
+	 * 概要　:キャンセル情報のノードの中から、キャンセル料算出に必要な情報を抜き出して連想配列を作る。
+	 * 引数　:object cancelRateNodes　キャンセルのレート情報をまとめたオブジェクト
+	 * 返却値:object retObj
+	 * 作成日　:2016.12.27
+	 * 作成者　:k.urabe
+	 */
+	 this.getRateArray = function(cancelRateNodes) {
+		// キャンセル料のノードからキャンセル料算出用の連想配列を作成する
+		var retObj = [];
+		// 最も日付が近いレートをセットする
+		retObj.push({cancel_days : parseInt(cancelRateNodes.cancel__0.cancel_days.text), cancel_rate : parseInt(cancelRateNodes.cancel__0.cancel_rate.text)});
+		// 中央のレートをセットする
+		retObj.push({cancel_days : parseInt(cancelRateNodes.cancel__1.cancel_days.text), cancel_rate : parseInt(cancelRateNodes.cancel__1.cancel_rate.text)});
+		// 最も日付が離れているレートをセットする
+		retObj.push({cancel_days : parseInt(cancelRateNodes.cancel__2.cancel_days.text), cancel_rate : parseInt(cancelRateNodes.cancel__2.cancel_rate.text)});
+		// 完成したレート用連想配列をcancel_daysの降順にソートする
+		commonFuncs.sortArray(retObj, KEY_CANCEL_DAYS, false);	 
+		
+		// 完成した連想配列を返す。
+		return retObj
+	 }
 	
 }
 
