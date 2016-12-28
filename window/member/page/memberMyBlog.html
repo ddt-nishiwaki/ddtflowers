@@ -89,10 +89,10 @@
 					//新規作成ボタンを作る
 					commonFuncs.putCommonButton('.myPageBlogButtons', 'createArticleButton', 'createNew', true, true, true, {"type": "submit","data-role": "0","value": "記事作成"}, false);
 
-					create_tag.sendButtonRole($('form'));	//押されたsubmitボタンを検出する関数。
-					//submitイベントを登録する。
-					$('form').validate(articleSubmitHandler);
-					create_tag.deleteRowData('form', 'deleteMyBlog');	//行の削除イベントを登録する。
+					create_tag.sendButtonRole($(CURRENT_WINDOW + SPACE + FORM));	//押されたsubmitボタンを検出する関数。 2016.12.28 r.shibata セレクタ指定がformのみの物を、カレントウィンドウのformを指定するように修正
+					//submitイベントを登録する。2016.12.28 r.shibata セレクタ指定がformのみの物を、カレントウィンドウのformを指定するように修正
+					$(CURRENT_WINDOW + SPACE + FORM).validate(articleSubmitHandler);
+					create_tag.deleteRowData(CURRENT_WINDOW + SPACE + FORM, 'deleteMyBlog');	//行の削除イベントを登録する。
 					addlogoutEvent('.logoutLink');	//ログアウトボタンのイベントを登録する。
 				} catch (e) {
 					console.log(e);

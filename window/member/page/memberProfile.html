@@ -107,8 +107,8 @@
 					//テキストボックスなどのvalue属性にDBから読込んだ値を入れる
 					commonFuncs.setValueDBdata(create_tag.json['getUserInf']['memberInfoValue'], '.userInf', EMPTY_STRING);
 
-					//入力値をチェックする
-					$('form').validate(profileValidation);
+					//入力値をチェックする 2016.12.28 r.shibata セレクタ指定がformのみの物を、カレントウィンドウのformを指定するように修正
+					$(CURRENT_WINDOW + SPACE + FORM).validate(profileValidation);
 					
 					addlogoutEvent('.logoutLink');	//ログアウトボタンのイベントを登録する。
 				} catch(e) {

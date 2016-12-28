@@ -82,8 +82,8 @@
 				$('.blogEdit')[0].create_tag = create_tag;
 				
 				clickButtonToFile('.blogEditImagesSection', '.blogEditImagesSectionAddButton', '.blogEditImageUploader', create_tag.uploadImage, '.blogEditImagesSectionImage,.blogEditImagesSectionImagePath');
-				$('form').validate(articleCreateHandler);
 				commonFuncs.getScriptFile("js/page/createBlog.js");
+				$(CURRENT_WINDOW + SPACE + FORM).validate(articleCreateHandler); // セレクタの指定を修正 2016.12.28 r.shibata
 				addlogoutEvent('.logoutLink');
 			</script>
 		</div>
