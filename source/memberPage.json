@@ -690,5 +690,17 @@
 		"user_key": {
 			"value": ""
 		}
-	}
+	},
+    "getPointRate": {
+        "db_getQuery": "CALL getPointRate(@result,'lesson_key'); SELECT @result AS 'result';",
+        "lesson_key": {
+            "value": ""
+        },
+        "config": {
+            "columns": {
+                "point_rate": {},
+                "students": {}
+            }
+        }
+    }
 }
