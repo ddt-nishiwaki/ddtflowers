@@ -97,7 +97,7 @@
                     "columnName": "料金(円)"
                 },
                 "lessonPoint":{
-                    "columnName": "ポイント(pt)"
+                    "columnName": "獲得予定ポイント(pt)"
                 },
                 "start_time": {
                     "style":"display:none"
@@ -207,7 +207,7 @@
                     "columnName": "料金(円)"
                 },
                 "lessonPoint":{
-                    "columnName": "ポイント(pt)"
+                    "columnName": "獲得ポイント(pt)"
                 },
                 "start_time": {
                     "style":"display:none"
