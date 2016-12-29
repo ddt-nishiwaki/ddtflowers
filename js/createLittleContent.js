@@ -2258,7 +2258,7 @@ function createLittleContents(){
 	 */
 	this.getUserPlusPoint = function(cost, pointRate) {
 		//加算ポイントを計算式で求める(授業料×レート÷100を小数点切り捨て)
-		var userPlusPoint = Math.ceil(Number(cost) * pointRate / 100);
+		var userPlusPoint = Math.floor(Number(cost) * pointRate / 100);
 		//加算ポイントを返す
 		return userPlusPoint;
 	}
