@@ -3380,7 +3380,7 @@ ON
     #ユーザID
     user_inf.id = commodity_sell.user_key 
     #売上期間(開始日付)
-    AND sell_datetime <= toDate
+    AND sell_datetime <= CONCAT(toDate, ' 23:59:59')
     #売上期間(終了日付)
     AND sell_datetime >= fromDate
     # 購入状況（承認済み）
