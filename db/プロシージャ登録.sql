@@ -4234,7 +4234,7 @@ AND
     (in_date_from <= update_datetime OR in_date_from ='')
 AND
     #期間Toが更新日以上、又は未入力
-    (update_datetime <= in_date_to OR in_date_to ='')
+    (update_datetime <= CONCAT(in_date_to, ' 23:59:59') OR in_date_to ='')
 AND
     #idが以下の値と一致する、
     (id 
