@@ -71,8 +71,8 @@
 	//日付のテキストボックスに初期値をセットする
 	commonFuncs.setDateToFromToBox('.lessonListSearch:first', threeMonthBeforeStr, todayStr);
 	
-	//受講済み授業一覧のデータを取り出して一覧テーブルを作成して表示する
-	create_tag.loadTableData('finishedLessonTable', NUMBERING_START, NUMBERING_PAGE, NUMBERING_DEFAULT, NUMBERING_DISPLAY, '.finishedLessonTableOutside', 'finshedLessonTableAfterPaging', "$('#finishedLesson')[0].");
+	//受講済み授業一覧のデータを取り出して一覧テーブルを作成して表示する 2016.12.28 r.shibata 1ページに出力する定数を正しい定数へ修正
+	create_tag.loadTableData('finishedLessonTable', NUMBERING_START, NUMBERING_PAGE, NUMBERING_DEFAULT, NUMBERING_DISPLAY_FINISHEDLESSON_TABLE, '.finishedLessonTableOutside', 'finshedLessonTableAfterPaging', "$('#finishedLesson')[0].");
 	
 	//授業の絞り込み機能を実装する
 	setConfigFinishedLesson();
