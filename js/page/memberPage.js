@@ -63,8 +63,8 @@ function finshedLessonTableAfterPaging() {
 	$('.finishedLessonTable').hide();
 	//時間差で表現するためにsetTimeOutを使う
 	setTimeout(function(){
-		//ページングの処理を行う件数を取得するためにページングの現在のページを取得する
-		var nowPageNumber = Number($('.select').text() - 1);
+		//ページングの処理を行う件数を取得するためにページングの現在のページを取得する 2016.12.29 mod k.urabe セレクタの指定が不足していたため指定範囲を限定するよう修正
+		var nowPageNumber = Number($(SELECTOR_FINISHED_LESSONTABLE_NUMBERING).text() - 1);
 		//ページャがなければページ番号を1とする
 		nowPageNumber = nowPageNumber > -1 ? nowPageNumber : 0;
 		//テーブルのデータを取得する
