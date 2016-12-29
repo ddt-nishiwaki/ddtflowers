@@ -2580,15 +2580,15 @@ function createLittleContents(){
 	this.sendButtonRole = function(form){
 		//submitボタンのクリックイベントを設定する。
 		$(form).on('click', 'input:submit, button[type="submit"]', function(){
-			//次に来るvalueHolderクラスのhiddenのinputタグにdata-role属性を渡す。
-			$('.valueHolder:first').attr('data-role', $(this).attr('data-role'));
+			//次に来るvalueHolderクラスのhiddenのinputタグにdata-role属性を渡す。 2016.12.29 r.shibata セレクタ指定をカレントを示すよう修正
+			$(CURRENT_WINDOW + SPACE + SELECTOR_VALUE_HOLDER).attr('data-role', $(this).attr('data-role'));
 			
 			//ボタンのクラス名を取得する
 			var buttonClass = $(this).attr('class');
 			//編集ボタン、または削除ボタンなら
 			if (buttonClass.indexOf('edit') != -1 || buttonClass.indexOf('delete') != -1 ) {
-				//記事番号をセットする
-				$('.valueHolder:first').attr('data-number', $(this).parent().parent().children('.number').text());
+				//記事番号をセットする 2016.12.29 r.shibata セレクタ指定をカレントを示すよう修正
+				$(CURRENT_WINDOW + SPACE + SELECTOR_VALUE_HOLDER).attr('data-number', $(this).parent().parent().children('.number').text());
 			}
 		});
 	}

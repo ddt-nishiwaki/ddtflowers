@@ -904,6 +904,8 @@ SETTING_CURRENT_ARTICLE_CODE = {
 	callBack : "create_tag.createMyBlogImages('.blogTable')",
 	createTagSelector : void (0)
 };
+// 記事番号保持用のタグを示すセレクタ 2016.12.29 r.shibata 追加
+SELECTOR_VALUE_HOLDER = '.valueHolder';
 
 // outputNumberingTagで一件だけ表示する場合の数
 SHOW_ONLY_ONE_ARTICLE_NUM = 1;
