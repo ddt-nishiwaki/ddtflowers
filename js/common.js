@@ -2202,7 +2202,18 @@ this.messageDialogDefaultOption = {
 		// ポイントを求める
 		var point = 0;
 		if(cost) {
-			point = this.getPoint(recordData, cost);
+			// 対象の授業が受講済みのものであるか判定する 2016.12.29 add k.urabe
+			if(recordData[COLUMN_NAME_USER_WORK_STATUS] == HAS_LECTURES) {
+				// 既に確定した獲得ポイントをセットする 2016.12.29 add k.urabe
+				point = recordData[KEY_GET_POINT];
+			// 対象の授業が予約済みのものであるか判定する 2016.12.29 add k.urabe
+			} else if(recordData[COLUMN_NAME_USER_WORK_STATUS] == HAS_RESERVED_1) {
+				// 現在の授業に対する予約人数に対応するポイントレートを取得する 2016.12.29 add k.urabe
+				var rate = this.create_tag.getUserPlusPointRate(KEY_GET_POINT_RATE, parseInt(recordData[COLUMN_NAME_ORDER_STUDENTS]), recordData[COLUMN_LESSON_LEY]);
+				// 取得した授業料とレートから獲得予定のポイントを算出する 2016.12.29 add k.urabe
+				point = this.create_tag.getUserPlusPoint(cost, rate);
+			}
+			
 		}
 		// 開始日時と終了時間を合わせてテーブルの最初のカラムに値を入れる
 		$(tableName + ' tr:eq(' + rowNumber + ') td').eq(0).text(allDay);

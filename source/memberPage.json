@@ -97,7 +97,7 @@
                     "columnName": "料金(円)"
                 },
                 "lessonPoint":{
-                    "columnName": "ポイント(pt)"
+                    "columnName": "獲得予定ポイント(pt)"
                 },
                 "start_time": {
                     "style":"display:none"
@@ -207,7 +207,7 @@
                     "columnName": "料金(円)"
                 },
                 "lessonPoint":{
-                    "columnName": "ポイント(pt)"
+                    "columnName": "獲得ポイント(pt)"
                 },
                 "start_time": {
                     "style":"display:none"
@@ -690,5 +690,17 @@
 		"user_key": {
 			"value": ""
 		}
-	}
+	},
+    "getPointRate": {
+        "db_getQuery": "CALL getPointRate(@result,'lesson_key'); SELECT @result AS 'result';",
+        "lesson_key": {
+            "value": ""
+        },
+        "config": {
+            "columns": {
+                "point_rate": {},
+                "students": {}
+            }
+        }
+    }
 }
