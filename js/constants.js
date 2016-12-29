@@ -1266,7 +1266,7 @@ SELECOR_MAILMAGA_SEARCH_AREA = '.mailMagaSearchArea'
 // メルマガテーブルに対する選択済みナンバリング
 SELECTOR_MAILMAGA_NUMBERING = '.mailMagaPagingArea .numbering .select';
 // 会員、受講済み授業テーブルに対する選択済みナンバリング 2016.12.29
-SELECTOR_FINISHED_LESSONTABLE_NUMBERING = '.finishedLessonTable .select';
+SELECTOR_FINISHED_LESSONTABLE_NUMBERING = '.finishedLessonPagingArea .select';
 // メルマガ編集フォームのセレクタ
 SELECTOR_MAILMAGA_EDIT_AREA = '.mailMagaAndAnnounceArea';
 // メルマガ編集フォーム内部のタイトルエリアのセレクタ 2016.09.09 r.shibata 追加
