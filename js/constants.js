@@ -854,6 +854,8 @@ RESERVE_AFTER_DEADLINE = '予約締切';
 ALERT_EMPTY_CONTENTS = '空欄があります。タイトル、お問い合わせ内容の記入をお願いします。';
 // デフォルトの最大表示行数
 DEFAULT_SHOW_MAX_ROW = 15;
+// 選択されているタブのセレクタ 2016.12.29 r.shibata
+SELECTOR_SELECT_TAB = '.tabPanel.active'
 // 選択されているページャのセレクタ 2016.10.06 add k.urabe
 SELECTOR_SELECT_PAGE = '.numbering .select:visible';
 // 記事投稿選択前のメッセージ

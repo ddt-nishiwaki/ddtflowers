@@ -1127,10 +1127,10 @@ this.messageDialogDefaultOption = {
 		//最大表示行数が入力されていなければ初期化する
 		showMaxRow = this.checkEmpty(showMaxRow) ? showMaxRow : DEFAULT_SHOW_MAX_ROW;
 		
-		//ナンバリングがあれば
-		if($('.numbering .select:visible').length){
-			//途中からスタートする
-			counter = (showMaxRow) * (parseInt($('.numbering .select:visible').text()) - 1);
+		//ナンバリングがあれば 2016.12.29 タブを現在選択されているタブに指定
+		if($(SELECTOR_SELECT_TAB + SELECTOR_LAST + SPACE + SELECTOR_SELECT_PAGE).length){
+			//途中からスタートする 2016.12.29 タブを現在選択されているタブに指定
+			counter = (showMaxRow) * (parseInt($(SELECTOR_SELECT_TAB + SELECTOR_LAST + SPACE + SELECTOR_SELECT_PAGE).text()) - 1);
 		}
 		
 		// テーブルのすべての行に対してループで値を入れる

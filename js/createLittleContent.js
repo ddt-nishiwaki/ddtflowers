@@ -1406,10 +1406,10 @@ function createLittleContents(){
 		// DBから取得した値の件数を保存する
 		var tableArrayNum = tableArray.length;
 
-		// ページャが存在するか確認
-		if($(SELECTOR_SELECT_PAGE).length){
-			// ページ分数、DBから取得したレコードのカウンターを調整する
-			counter = (showMaxRow) * (parseInt($(SELECTOR_SELECT_PAGE).text()) - 1);
+		// ページャが存在するか確認 2016.12.29 タブを現在選択されているタブに指定
+		if($(SELECTOR_SELECT_TAB + SELECTOR_LAST + SPACE + SELECTOR_SELECT_PAGE).length){
+			// ページ分数、DBから取得したレコードのカウンターを調整する 2016.12.29 タブを現在選択されているタブに指定
+			counter = (showMaxRow) * (parseInt($(SELECTOR_SELECT_TAB + SELECTOR_LAST + SPACE + SELECTOR_SELECT_PAGE).text()) - 1);
 		}
 
 		//DBから取り出したテーブルの行数分ループしてテキストボックスにデフォルト値をセットする
