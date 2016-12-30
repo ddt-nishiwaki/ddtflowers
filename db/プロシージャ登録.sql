@@ -3966,7 +3966,14 @@ END$$
 # 受講承認への追加対象一覧を取得
 DROP PROCEDURE IF EXISTS getLecturePermitReseveList $$
 CREATE PROCEDURE getLecturePermitReseveList (
-    OUT `result` TEXT
+    IN in_user_key varchar(11)
+    ,IN in_user_name varchar(40)
+    ,IN in_name_kana varchar(40)
+    ,IN in_telephone varchar(20)
+    ,IN in_mail_address varchar(255)
+    ,IN in_date_from varchar(10)
+    ,IN in_date_to varchar(10)
+    ,IN in_lesson_name varchar(40)
 )
 # 以降にストアドプロシージャの処理を記述する
 BEGIN
@@ -4042,6 +4049,30 @@ ON
 AND
     # 受講状態が「予約済み」になっているレコードのみ取り出す
     user_classwork.user_work_status = 1
+WHERE
+    #ユーザIDが一致、又は未入力
+    (user_inf.id = in_user_key OR in_user_key ='')
+AND
+    #ユーザ名が部分一致、又は未入力
+    (user_inf.user_name LIKE concat('%', in_user_name, '%') OR in_user_name ='')
+AND
+    #ユーザ名(カナ)が部分一致、又は未入力
+    (user_inf.name_kana LIKE concat('%', in_name_kana, '%') OR in_name_kana ='')
+AND
+    #電話番号が部分一致、又は未入力
+    (user_inf.telephone LIKE concat('%', in_telephone, '%') OR in_telephone ='')
+AND
+    #メールアドレスが部分一致、又は未入力
+    (user_inf.mail_address LIKE concat('%', in_mail_address, '%') OR in_mail_address ='')
+AND
+    #期間Fromが授業日以下、又は未入力
+    (time_table_day.lesson_date >= in_date_from OR in_date_from ='')
+AND
+    #期間Toが授業日以上、又は未入力
+    (time_table_day.lesson_date <= in_date_to OR in_date_to ='')
+AND
+    #レッスン名称が部分一致、又は未入力
+    (lesson_inf.lesson_name LIKE CONCAT('%', in_lesson_name, '%') OR in_lesson_name ='')
 ;
 # ストアドプロシージャの処理を終える
 END $$

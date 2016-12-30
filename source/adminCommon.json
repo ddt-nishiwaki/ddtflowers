@@ -625,7 +625,7 @@
 	"userListInfoTable": {
 		"class": "userListInfoTable commonTable",
         "db_getQuery": "CALL p_user_inf_conditional('user_key', 'user_name', 'name_kana', 'telephone', 'mail_address', 'lesson_date_from', 'lesson_date_to', 'lesson_key')",
-		"queryForDoLecturePermit": "CALL getLecturePermitReseveList(@result); SELECT @result AS 'result';",
+		"queryForDoLecturePermit": "CALL getLecturePermitReseveList('user_key', 'user_name', 'name_kana', 'telephone', 'mail_address', 'lesson_date_from', 'lesson_date_to', 'lesson_key')",
 		"user_key": {
 			"value": ""
 		},
@@ -679,7 +679,7 @@
 					"columnName": "入会状況"
 				},
 				"lesson_date": {
-					"columnName": "日時"
+					"columnName": "授業日付"
 				},
 				"lesson_name": {
 					"columnName": "内容"
