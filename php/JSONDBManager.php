@@ -112,10 +112,13 @@ class JSONDBManager extends dbConnect{
 	* 設計者:H.Kaneko
 	* 作成者:T.Yamamoto
 	* 作成日:2015.06.01
+	* 変更者:R.Shibata
+	* 変更日:2016.12.30
+	* 内容  :PDOが使用出来ない場合の、使用しないパターンの処理を追加（定数を一つ変更するだけで対応できるよう作成）
 	*/
 	function executeQuery($json, $queryKey) {
 		// 返却する結果セットの変数を作成する
-		$retRS = null;
+		$retRS = array();
 		//ユーザ情報を保護するためパスワードがkeyにあればハッシュ化する
 		if (array_key_exists('password', $json)) {
 			//ハッシュ化する
@@ -143,13 +146,30 @@ class JSONDBManager extends dbConnect{
 						}
 					}
 				}
-				// ステートメントを生成する
-				$stmt = $this->dbh->prepare($query);
-				// クエリを実行する
-				$stmt->execute();
-				// 結果セットを返す
-				$retRS = $stmt->fetchALL(PDO::FETCH_ASSOC);  //結果セット
-				//処理を行ったレコード数を結果セットより取得してメンバに保存する 
+				// クエリにセミコロンが含まれている場合
+				if(strpos($query,";") !== false){
+					// SQL1行に2種類以上含まれている場合動作しないため、後半のSQLを削除する
+					$query = substr($query, 0, strpos($query,";") + 1);
+				}
+				// PDOを使用する設定の場合
+				if (USE_PDO) {
+					// ステートメントを生成する
+					$stmt = $this->dbh->prepare($query);
+					// クエリを実行する
+					$stmt->execute();
+					// 結果セットを返す
+					$retRS = $stmt->fetchALL(PDO::FETCH_ASSOC);  //結果セット
+				//PDOを使用しない設定の場合
+				} else {
+					// クエリを実行する
+					$result = mysql_query($query);
+					//取得したデータをを1件ずつ取得する
+					while ($recordData = mysql_fetch_array($result, MYSQL_ASSOC)) {
+						// 取得したレコードを結果セットに対して追加する
+						$retRS[] = $recordData;
+					}
+				}					
+				//処理を行ったレコード数を結果セットより取得してメンバに保存する
 				$this->processedRecords = count($retRS); // 2016.09.20 r.shibata rowCountから取得していたものを修正(指示:金子)
 			}
 		}
