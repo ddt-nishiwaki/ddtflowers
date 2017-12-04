@@ -151,9 +151,11 @@
 <script type="text/javascript" src="js/exceptionHandling.js"></script>
 <script>
 	//トップページ用ウィンドウを準備する
+   // top.html
 	windowElem = new windowEx(TOP_LOCATION, {config:{firstExec:true}});	//初回実行フラグオン
 	//トップページ用ウィンドウを生成して表示する
 	windowElem.run();
+   //# sourceURL=http://localhost/foobar.js
 </script>
 </body>
 </html>
