@@ -282,3 +282,27 @@ uploadImage/flowerImage/3720161012060220.jpeg
 uploadImage/flowerImage/3720161012060316.jpeg
 uploadImage/flowerImage/3720161012060322.jpeg
 uploadImage/flowerImage/3720161012060453.jpeg
+.DS_Store
+/build/
+# add ignore
+*.class
+*.war
+*.ear
+.project
+.classpath
+.settings
+.cvsignore
+.tomcatplugin
+hello.html
+phpinfo.php
+.lock
+.log
+version.ini
+repositories.xml.zip
+properties.index
+GitProjectData.properties
+2.tree
+history.version
+.metadata/
+db_resultTree
+JSONDBManager - createJSON().asta
