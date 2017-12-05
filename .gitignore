@@ -305,3 +305,5 @@ GitProjectData.properties
 history.version
 .metadata/
 db_resultTree
+JSONDBManager - createJSON().asta
+test.txt
