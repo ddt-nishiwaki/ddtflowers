@@ -74,23 +74,12 @@ public class DbConnect {
      * 設計者:H.Kaneko
      * @author S.Nishiwaki
      * @since 20171205
-     * @throws SQLException
-     * @return void
-     * @param
      * @return void
      */
     public void disconnect() {
-        // 切断処理時の例外を監視する
-        try {
-            // コネクションがガベージコレクトされていない場合の処理を行う
-            if( this.mDbConnect != null ) {
-                // DBとのコネクションを切断する
-                mDbConnect.close();
-            }
-        // 切断処理時に例外が発生した場合の処理を行う
-        } catch ( SQLException exception ) {
-            // エラーメッセージを出力する
-            System.out.println("Connection failed. : " + exception.toString() );
+        if( this.mDbConnect != null ) {
+            // DBとのコネクションを切断する
+            mDbConnect.close();
         }
     }
 }
