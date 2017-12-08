@@ -33,7 +33,7 @@ public class DbConnect {
     // member
     //////////////////////////////////////
     // コネクションを保持するためのメンバーです。
-    private Connection m_dbConnection = null;
+    private Connection mDbConnect = null;
     //////////////////////////////////////
     // getter
     //////////////////////////////////////
@@ -46,7 +46,7 @@ public class DbConnect {
      * @return Connection
      */
     public Connection getConnect () {
-        return m_dbConnection;
+        return mDbConnect;
     }
     //////////////////////////////////////
     // method
@@ -69,7 +69,7 @@ public class DbConnect {
             // JDBCドライバで扱うDBを設定する(今回はmysql)
             Class.forName("com.mysql.jdbc.Driver");
             // DBとの接続を取得する
-            m_dbConnection =  DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            mDbConnect =  DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
         // SQLException 発生時の処理を行う
         } catch (SQLException exception) {
             // エラーメッセージを出力する
@@ -96,9 +96,9 @@ public class DbConnect {
         // 切断処理時の例外を監視する
         try {
             // コネクションがガベージコレクトされていない場合の処理を行う
-            if( this.m_dbConnection != null ) {
+            if( this.mDbConnect != null ) {
                 // DBとのコネクションを切断する
-                m_dbConnection.close();
+                mDbConnect.close();
             }
         // 切断処理時に例外が発生した場合の処理を行う
         } catch ( SQLException exception ) {
