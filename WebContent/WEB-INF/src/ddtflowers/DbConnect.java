@@ -74,12 +74,13 @@ public class DbConnect {
      * 設計者:H.Kaneko
      * @author S.Nishiwaki
      * @since 20171205
+     * @throws SQLException
      * @return void
      */
-    public void disconnect() {
-        if( this.mDbConnect != null ) {
-            // DBとのコネクションを切断する
-            mDbConnect.close();
-        }
+    public void disconnect() throws SQLException {
+        // DBとのコネクションを切断する
+        mDbConnect.close();
+        // DBとのコネクション情報を破棄する
+        mDbConnect = null;
     }
 }
