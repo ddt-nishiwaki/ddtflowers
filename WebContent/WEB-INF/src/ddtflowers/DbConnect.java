@@ -1,5 +1,6 @@
 package ddtflowers;
 import java.sql.Connection;
+import java.sql.Statement;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 /**
@@ -35,6 +36,11 @@ public class DbConnect {
     // コネクションを保持するためのメンバーです。
     private Connection mDbConnect = null;
     //////////////////////////////////////
+    // class variable
+    //////////////////////////////////////
+    // データベースハンドラを保持するためのクラス変数です。
+    public Statement sDbh = null;
+    //////////////////////////////////////
     // getter
     //////////////////////////////////////
     /**
@@ -66,6 +72,10 @@ public class DbConnect {
         Class.forName("com.mysql.jdbc.Driver");
         // DBとの接続を取得する
         mDbConnect =  DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        // 文字コード設定を行うクエリ発行のため、ステートメントを取得する
+        sDbh = mDbConnect.createStatement();
+        // クエリの文字コード設定をUTF8に設定する
+        sDbh.executeQuery("SET NAMES utf8");
     }
     /**
      * DB接続を切断する
