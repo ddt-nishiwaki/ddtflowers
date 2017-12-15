@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * クラス名:dbConnect
+ * クラス名:DbConnect
  * 概要  :DBに接続する関数を持つクラス。
  * 設計者:H.Kaneko
  * 作成者:S.Nihsiwaki
@@ -55,6 +55,7 @@ public class DbConnect {
      * 戻り値:Connection
      */
     public Connection getConnect() {
+        // DBとの接続を返します。
         return mDbConnect;
     }
 
@@ -74,7 +75,7 @@ public class DbConnect {
     public void connect() throws Exception {
         // JDBCドライバで扱うDBを設定する(今回はmysql)
         Class.forName("com.mysql.jdbc.Driver");
-        // DBとの接続を取得する
+        // DBとの接続を試みる
         mDbConnect = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
         // 文字コード設定を行うクエリ発行のため、ステートメントを取得する
         mDbHandler = mDbConnect.createStatement();
