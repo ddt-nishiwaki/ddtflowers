@@ -7,8 +7,8 @@ import java.sql.SQLException;
  * クラス名:dbConnect
  * 概要  :DBに接続する関数を持つクラス。
  * 設計者:H.Kaneko
- * @author S.Nihsiwaki
- * @since 20171205
+ * 作成者:S.Nihsiwaki
+ * 作成日:20171205
  */
 public class DbConnect {
     //////////////////////////////////////
@@ -44,12 +44,12 @@ public class DbConnect {
     // getter
     //////////////////////////////////////
     /**
-     * 関数名：getConnect
+     * 関数名:getConnect
      * 概要  :DBとの接続を返す
      * 引数  :なし
-     * @author S.Nihsiwaki
-     * @since 20171205
-     * @return Connection
+     * 作成者:S.Nihsiwaki
+     * 作成日:20171205
+     * 戻り値:Connection
      */
     public Connection getConnect () {
         return mDbConnect;
@@ -58,14 +58,14 @@ public class DbConnect {
     // method
     //////////////////////////////////////
     /**
-     * 関数名：connect
+     * 関数名:connect
      * 概要  :DBとの接続をメンバーに保持する
      * 引数  :なし
      * 戻り値:なし
      * 設計者:H.Kaneko
-     * @author S.Nishiwaki
-     * @since 20171205
-     * @return void
+     * 作成者:S.Nishiwaki
+     * 作成日:20171205
+     * 戻り値:void
      */
     public void connect() throws Exception{
         // JDBCドライバで扱うDBを設定する(今回はmysql)
@@ -79,13 +79,13 @@ public class DbConnect {
     }
     /**
      * DB接続を切断する
-     * 関数名：disconnect
+     * 関数名:disconnect
      * 概要  :メンバに保持した接続を破棄する
      * 設計者:H.Kaneko
-     * @author S.Nishiwaki
-     * @since 20171205
-     * @throws SQLException
-     * @return void
+     * 作成者:S.Nishiwaki
+     * 作成日:20171205
+     * 例外:SQLException
+     * 戻り値:void
      */
     public void disconnect() throws SQLException {
         // DBとのコネクションを切断する
