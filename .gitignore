@@ -307,3 +307,4 @@ history.version
 db_resultTree
 JSONDBManager - createJSON().asta
 test.txt
+/WebContent/WEB-INF/classes/

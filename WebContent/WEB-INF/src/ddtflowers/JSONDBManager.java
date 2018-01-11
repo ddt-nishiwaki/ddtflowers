@@ -1,5 +1,6 @@
 package ddtflowers;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -35,6 +36,10 @@ public class JSONDBManager {
     private static final String[] KEY_LIST             = { KEY_TEXT, KEY_HTML, KEY_SRC };
     // 会員番号列を定数に入れる
     private static final String   COLUMN_NAME_USER_KEY = "user_key";
+    // 辞書型ではないことを示す値を設定する
+    private static final boolean  NOT_HASH             = false;
+    // 辞書型であることを示す値を設定する
+    private static final boolean  EXISTS_HASH          = true;
 
     //////////////////////////////////////
     // member
@@ -59,8 +64,8 @@ public class JSONDBManager {
      * 作成者 :S.Nishiwaki
      * 作成日 :2017.12.xx
      */
-    public void createJSON(JSONArray jsonArray, String keyString, DbResultTree parentTree) {
-    }
+    // public void createJSON(JSONArray jsonArray, String keyString, DbResultTree parentTree) {
+    // }
 
     /**
      * fig :Fig1
@@ -102,10 +107,10 @@ public class JSONDBManager {
      * 作成者 :S.Nishiwaki
      * 作成日 :2017.12.xx
      */
-    public String getDBColumn(String key, DbResultTree dbResultTree) {
-        String column = "";
-        return column;
-    }
+    // public String getDBColumn(String key, DbResultTree dbResultTree) {
+    //    String column = "";
+    //    return column;
+    // }
 
     /*
      * Fig3
@@ -167,17 +172,32 @@ public class JSONDBManager {
 
     /*
      * Fig9
-     * 関数名：is_hash
+     * 関数名：isHash
      * 概要  :引数を配列であるか連想配列であるか判定する
-     * 引数  :JSONObject jsonObject:判定するJSONデータ
+     * 引数  :Object jsonObject:判定するJSONデータ
      * 返却値:boolean:列の型を判定して返す。trueが連想配列、falseが配列
      * 設計者:http://kihon-no-ki.com/is-hash-or-associative-array
      * 作成者 :S.Nishiwaki
-     * 作成日 :2017.12.xx
+     * 作成日 :2018.01.25
      */
-    public boolean is_hash(JSONObject jsonObject) {
-        boolean isHash = false;
-        return isHash;
+    public boolean isHash(Object valueObject) {
+        // 文字列が辞書形式かどうかを判定する
+        if (valueObject instanceof JSONObject) {
+            // カウンター変数を0で初期化する
+            int i = 0;
+            // 引数の配列についてループする
+            for (Object keyObject : ((JSONObject) valueObject).keySet()) {
+                // データを取り出すためのkey文字列を取得する
+                String keyString = keyObject.toString();
+                // 配列のキーが数字でないとき
+                if (!NumberUtils.isNumber(keyString) || Integer.parseInt(keyString) != i++) {
+                    // 連想配列なのでtrueを返す
+                    return EXISTS_HASH;
+                }
+            }
+        }
+        //連想配列ではないのでfalseを返す
+        return NOT_HASH;
     }
 
     /*
