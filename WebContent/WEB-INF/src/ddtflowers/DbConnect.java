@@ -31,12 +31,13 @@ public class DbConnect {
     // データベース接続に使用するドライバー名です。
     private static final String DB_DRIVER   = "jdbc";
     // JDBCドライバーで接続するためのURL設定です。
-    private static final String DB_URL      = DB_DRIVER + ":" + DB_TYPE + "://" + DB_HOST + "/" + DB_NAME;
+    private static final String DB_URL      = DB_DRIVER + ":" + DB_TYPE + "://" + DB_HOST + "/" + DB_NAME
+            + "?zeroDateTimeBehavior=round";
     //////////////////////////////////////
     // member
     //////////////////////////////////////
     // コネクションを保持するためのメンバーです。
-    private Connection          mDbConnect  = null;
+    protected Connection           mDbConnect  = null;
     //////////////////////////////////////
     // class variable
     //////////////////////////////////////

@@ -9,6 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.mysql.jdbc.ResultSetMetaData;
+import com.mysql.jdbc.Statement;
 
 /**
  * クラス名 :JSONDBManager
@@ -17,47 +18,57 @@ import com.mysql.jdbc.ResultSetMetaData;
  * 作成者 :S.Nihsiwaki
  * 作成日 :2017.12.xx
  */
-public class JSONDBManager {
+public class JSONDBManager extends DbConnect {
 
     //////////////////////////////////////
     // constants
     //////////////////////////////////////
     // JSONのdb_getQueryキーの文字列を定数にセットする
-    private static final String   DB_GETQUERY          = "db_getQuery";
+    private static final String   DB_GETQUERY             = "db_getQuery";
     // JSONのdb_setQueryキーの文字列を定数にセットする
-    private static final String   DB_SETQUERY          = "db_setQuery";
+    private static final String   DB_SETQUERY             = "db_setQuery";
     // JSONのdb_columnキーの文字列を定数にセットする
-    private static final String   DB_COLUMN            = "db_column";
+    private static final String   DB_COLUMN               = "db_column";
     // JSONのtextキーの文字列を定数にセットする
-    private static final String   KEY_TEXT             = "text";
+    private static final String   KEY_TEXT                = "text";
     // JSONのhtmlキーの文字列を定数にセットする
-    private static final String   KEY_HTML             = "html";
+    private static final String   KEY_HTML                = "html";
     // JSONのsrcキーの文字列を定数にセットする
-    private static final String   KEY_SRC              = "src";
+    private static final String   KEY_SRC                 = "src";
     // JSONのvalueキーの文字列を定数にセットする
-    private static final String   KEY_VALUE            = "value";
+    private static final String   KEY_VALUE               = "value";
+    // JSONのpasswordキーの文字列を定数にセットする
+    private static final String   KEY_PASSWORD            = "password";
     // アンダーバー二つを定数に入れる
-    private static final String   STR_TWO_UNDERBAR     = "__";
+    private static final String   STR_TWO_UNDERBAR        = "__";
+    // クエリー文字列で使用するシングルクォートを定数にセットする
+    private static final String   QUERY_SINGLE_QUOTES     = "'";
+    // 文字列からセミコロンを探す為の正規表現です
+    private static final String   REGEXP_SEARCH_SEMICOLON = ".*;.*";
+    // セミコロンを示す文字列を定数にセットする
+    private static final String   STRING_SEMICOLON        = ";";
+    // 次のインデックスを指定する為の値を設定する
+    private static final int      SHIFT_NEXT_INDEX        = 1;
     // JSONの値を入れるノードのキーの文字列リストを配列にセットする
-    private static final String[] KEY_LIST             = { KEY_TEXT, KEY_HTML, KEY_SRC };
+    private static final String[] KEY_LIST                = { KEY_TEXT, KEY_HTML, KEY_SRC };
     // 会員番号列を定数に入れる
-    private static final String   COLUMN_NAME_USER_KEY = "user_key";
+    private static final String   COLUMN_NAME_USER_KEY    = "user_key";
     // 辞書型ではないことを示す値を設定する
-    private static final boolean  NOT_HASH             = false;
+    private static final boolean  NOT_HASH                = false;
     // 辞書型であることを示す値を設定する
-    private static final boolean  EXISTS_HASH          = true;
+    private static final boolean  EXISTS_HASH             = true;
     // 検索した値が存在しないことを示す値を設定する
-    private static final boolean  NOT_MATCH            = false;
+    private static final boolean  NOT_MATCH               = false;
     // 検索した値が存在することを示す値を設定する
-    private static final boolean  EXISTS_MATCH         = true;
+    private static final boolean  EXISTS_MATCH            = true;
 
     //////////////////////////////////////
     // member
     //////////////////////////////////////
     // DBへの追加、更新処理を行ったときに帰ってくる処理レコード数の数値を格納するメンバ
-    public int                    processedRecords     = 0;
+    public int                    processedRecords        = 0;
     // JSONを変換した連想配列を格納する
-    public JSONArray              jsonArray            = null;
+    public JSONArray              jsonArray               = null;
 
     //////////////////////////////////////
     // public method
@@ -66,9 +77,9 @@ public class JSONDBManager {
      * fig :Fig0
      * 関数名 :createJSON
      * 概要 :DBからデータを取得してJSONを作る
-     * 引数 :jsonArray:カレントのJSON
+     * 引数 :jsonObject:カレントのJSON
      * 引数 :String key:JSONのキー
-     * 引数 :DBResultTree:parentTree:DBから取得したデータを格納してツリー構造を作るためのクラスのインスタンス
+     * 引数 :DbResultTree:parentTree:DBから取得したデータを格納してツリー構造を作るためのクラスのインスタンス
      * 返り値 :void
      * 設計者:H.Kaneko
      * 作成者 :S.Nishiwaki
@@ -81,16 +92,65 @@ public class JSONDBManager {
      * fig :Fig1
      * 関数名 :executeQuery
      * 概要 :クエリを実行してDBから結果セットを取得する。
-     * 引数 :JSONArray jsonArray :カレントのJSON連想配列
+     * 引数 :JSONObject jsonObject :カレントのJSON連想配列
      * 引数 :String queryKey :実行するクエリのベースとなる文字列
      * 返り値 :JSONArray resultSetArray :DBから取得した結果セットを返す。
      * 設計者 :H.Kaneko
      * 作成者 :S.Nishiwaki
      * 作成日 :2017.12.xx
+     * @throws SQLException
      */
-    public JSONArray executeQuery(JSONArray jsonArray, String queryKey) {
-        JSONArray resultSetArray = jsonArray;
-        return resultSetArray;
+    public ResultSet executeQuery(JSONObject jsonObject, String queryKey) throws SQLException {
+        // 返却する結果セットの変数を作成する
+        ResultSet resultSet = null;
+        //ユーザ情報を保護するためパスワードがkeyにあればハッシュ化する
+        if (jsonObject.containsKey(KEY_PASSWORD)) {
+            // パスワードをハッシュ化したデータで上書きする
+            ((JSONObject) jsonObject.get(KEY_PASSWORD)).put(KEY_PASSWORD, jsonObject.get(KEY_PASSWORD).hashCode());
+        }
+        // $queryKeyが$jsonに存在していれば$queryに値を入れる
+        if (jsonObject.containsKey(queryKey)) {
+            // カレントjsonから"queryKey"を持つキーを取得する
+            String query = jsonObject.get(queryKey).toString();
+            // queryに正しい値が入っていれば
+            if (query != null && query.length() >= 1) {
+                // jsonについて最下層の要素にたどり着くまでループしてデータを取り出す
+                for (Object keyObject : jsonObject.keySet()) {
+                    // 現在のvalueデータを扱うためにキャッシュする
+                    Object valueObject = jsonObject.get(keyObject);
+                    // $valueに子供がある時の処理($valueの型がオブジェクトの時の処理)
+                    if (valueObject instanceof JSONObject && isHash(valueObject)) {
+                        // 子オブジェクトを取得する
+                        JSONObject childObject = (JSONObject) valueObject;
+                        //子オブジェクトがvalueを持っていたら
+                        if (childObject.containsKey(KEY_VALUE)) {
+                            //SQL実行できなくなるため、置換対象の値のうち、シングルクォートをエスケープする。 2016.10.14 r.shibata 追加 2016.12.27 clientから置換文字として配列が来るため処理を追加
+                            String replaceValue = createReplaceValue(childObject.get(KEY_VALUE));
+                            //子オブジェクトのkey文字列と一致するqueryの文字列を置換する 置換するvalueの値を置換後の変数に変更 2016.10.14 r.shibata
+                            query = query.replace(QUERY_SINGLE_QUOTES + keyObject + QUERY_SINGLE_QUOTES,
+                                    QUERY_SINGLE_QUOTES + replaceValue + QUERY_SINGLE_QUOTES);
+                        }
+                    }
+                }
+                // クエリにセミコロンが含まれている場合
+                if (query.matches(REGEXP_SEARCH_SEMICOLON) != false) {
+                    // SQL1行に2種類以上含まれている場合動作しないため、後半のSQLを削除する
+                    query = query.substring(0, query.lastIndexOf(STRING_SEMICOLON) + SHIFT_NEXT_INDEX);
+                }
+                // ステートメントを取得する
+                Statement statement = (Statement) mDbConnect.createStatement();
+                // クエリを実行する
+                resultSet = statement.executeQuery(query);
+                // 件数を取得するために結果セットを最後の行に移動させる
+                resultSet.last();
+                // 処理を行ったレコード数を結果セットより取得してメンバに保存する
+                processedRecords = resultSet.getRow(); // 2016.09.20 r.shibata rowCountから取得していたものを修正(指示:金子)
+                // 結果セットを最初の行に戻す
+                resultSet.first();
+            }
+        }
+        // 結果セットを返す
+        return resultSet;
     }
 
     /*
