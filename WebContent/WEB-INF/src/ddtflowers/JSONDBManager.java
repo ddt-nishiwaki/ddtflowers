@@ -1,8 +1,13 @@
 package ddtflowers;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.apache.commons.lang.math.NumberUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import com.mysql.jdbc.ResultSetMetaData;
 
 /**
  * クラス名 :JSONDBManager
@@ -40,6 +45,10 @@ public class JSONDBManager {
     private static final boolean  NOT_HASH             = false;
     // 辞書型であることを示す値を設定する
     private static final boolean  EXISTS_HASH          = true;
+    // 検索した値が存在しないことを示す値を設定する
+    private static final boolean  NOT_MATCH            = false;
+    // 検索した値が存在することを示す値を設定する
+    private static final boolean  EXISTS_MATCH         = true;
 
     //////////////////////////////////////
     // member
@@ -158,15 +167,34 @@ public class JSONDBManager {
      * Fig8
      * 関数名:checkColumn
      * 概要  :結果セットに指定した列名を持つ列があるかをチェックする
-     * 引数  :JSONArray resultSet:指定した列があるかをチェックする対象の結果セット
+     * 引数  :ResultSet resultSet:指定した列があるかをチェックする対象の結果セット
      * 引数  :String columnName:チェック対象の列名
      * 返却値:boolean:列の存在を判定して返す
      * 設計者:H.Kaneko
      * 作成者 :S.Nishiwaki
-     * 作成日 :2017.12.xx
+     * 作成日 :2017.01.28
      */
-    public boolean checkColumn(JSONArray resultSet, String columnName) {
-        boolean isColumn = false;
+    public boolean checkColumn(ResultSet resultSet, String columnName) throws SQLException {
+        // 返却用の真理値の変数を宣言、falseで初期化する
+        boolean isColumn = NOT_MATCH;
+        // 結果セットがnullでない時の処理
+        if (resultSet != null) {
+            // 検索対象の列名に関するデータを取得する
+            ResultSetMetaData columnData = (ResultSetMetaData) resultSet.getMetaData();
+            // 検索のために列名の数を取得する
+            int columnLength = columnData.getColumnCount();
+            // 列名データから検索列名を探す
+            for (int columnCount = 1; columnCount < columnLength; columnCount++) {
+                // 検索列名が結果セットにあった場合の処理を行う
+                if (columnData.getColumnName(columnCount).equals(columnName)) {
+                    // 存在することを示す値を設定する
+                    isColumn = EXISTS_MATCH;
+                    // 検索を終了する
+                    break;
+                }
+            }
+        }
+        // 指定した列の存在判定を返す
         return isColumn;
     }
 
