@@ -197,10 +197,37 @@ public class JSONDBManager extends DbConnect {
      * 作成者 :S.Nishiwaki
      * 作成日 :2017.12.xx
      */
-    // public String getDBColumn(String key, DbResultTree dbResultTree) {
-    //    String column = "";
-    //    return column;
-    // }
+    public String getDBColumn(String keyString, DbResultTree dbResultTree) {
+        // 返却値を格納する変数を初期化する
+        String column = null;
+        // 取得対象が列の何行目かをセットする
+        int columnNumber = 0;
+        // dbrTreeの親のキーが、これが配列の要素であるということを示す~の文字を含んでいれば
+        if (dbResultTree.parentTree != null && dbResultTree.parentTree.keyData.indexOf(STR_TWO_UNDERBAR) != -1) {
+            //keyを~を境に分離する
+            String[] keyStringArray = dbResultTree.parentTree.keyData.split(STR_TWO_UNDERBAR);
+            //デミリタを元に行数のトークンに分ける
+            columnNumber = Integer.parseInt(keyStringArray[1]); //行数をセットする
+        }
+        // 親がなくなるまでDBレコードツリーを走査する
+        while (dbResultTree != null) {
+            // dbrTreeに結果セットが登録されていれば
+            if (checkColumn(dbResultTree.dbResultObject, keyString)) {
+                //カラムデータを取得する
+                JSONObject columnObject = (JSONObject) dbResultTree.dbResultObject.get(columnNumber);
+                //カラムの値を取得する
+                column = columnObject.get(keyString).toString();
+                //ループを抜ける
+                break;
+                // dbrTreeに結果セットが登録されていない場合は
+            } else {
+                // 親をセットする
+                dbResultTree = dbResultTree.parentTree;
+            }
+        }
+        //カラムの値を返す
+        return column;
+    }
 
     /*
      * Fig3
