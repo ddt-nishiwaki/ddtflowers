@@ -2,6 +2,7 @@ package ddtflowers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.json.simple.JSONArray;
@@ -100,8 +101,28 @@ public class JSONDBManager {
      * 作成者 :S.Nishiwaki
      * 作成日 :2017.12.xx
      */
-    public static String createReplaceValue(JSONArray childJsonObject) {
+    public static String createReplaceValue(Object childJsonObject) {
+        // 受け取ったオブジェクトにより、返却する文字列を作成するための変数を宣言する
         String returnReplaceString = "";
+        // データ作成のための文字列配列を用意する
+        ArrayList<String> childObjectArray = new ArrayList<String>();
+        //取得した引数が配列であれば
+        if (childJsonObject instanceof JSONArray) {
+            //走査用文字列配列として引数をセットする
+            childObjectArray = (JSONArray) childJsonObject;
+            //配列以外であれば
+        } else {
+            //査用文字列配列に引数の値を追加する
+            childObjectArray.add(childJsonObject.toString());
+        }
+        //取得、作成した配列を走査する
+        for (String value : childObjectArray) {
+            //置換文字列が空白であれば何もしない、値があれば区切り文字を付与する
+            returnReplaceString += returnReplaceString == "" ? "" : "','";
+            //配列の文字列を、エスケープ処理を行い置換文字列に付与する
+            returnReplaceString += value.replace("'", "\\\'");
+        }
+        //作成した文字列を返却する
         return returnReplaceString;
     }
 
