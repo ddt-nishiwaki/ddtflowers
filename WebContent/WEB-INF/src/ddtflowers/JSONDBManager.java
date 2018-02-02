@@ -1,5 +1,6 @@
 package ddtflowers;
 
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,6 +24,38 @@ public class JSONDBManager extends DbConnect {
     //////////////////////////////////////
     // constants
     //////////////////////////////////////
+    // データベースのホスト設定です。
+    private static final String   DB_HOST                 = "localhost";
+    // 使用するデータベースの設定です。
+    private static final String   DB_NAME                 = "ddthink-com00006";
+    // データベースのユーザー設定です。
+    private static final String   DB_USER                 = "root";
+    // データベースのパスワード設定です。
+    private static final String   DB_PASSWORD             = "";
+    // データベースの文字コード設定です。
+    private static final String   DB_CHARSET              = "UTF-8";
+    // 使用するデータベースの種類です。
+    private static final String   DB_TYPE                 = "mysql";
+    // データベース接続に使用するドライバー名です。
+    private static final String   DB_DRIVER               = "jdbc";
+    // JDBCドライバーで接続するためのURL設定です。
+    private static final String   DB_URL                  = DB_DRIVER + ":" + DB_TYPE + "://" + DB_HOST + "/" + DB_NAME;
+    // 初期化用の空文字を設定する
+    private static final String   NULL_STRING             = "";
+    // JSONのデータの区切り文字を定数にセットする
+    private static final String   JSON_DELIMITER          = ",";
+    // 文字列としてのバックスラッシュを定数にセットする
+    private static final String   STRING_BACKSLASH        = "\\\\";
+    // Unix系改行コードです
+    private static final String   LINE_FEED               = "\n";
+    // 旧Mac系改行コードです
+    private static final String   CARRIAGE_RETURN         = "\r";
+    // DOS系改行コードです
+    private static final String   DOS_RETURN              = "\r\n";
+    // LINE_FEEDを示す文字列を定数にセットする
+    private static final String   STRING_LINE_FEED        = "\\\\n";
+    // LINE_FEEDを示す文字列を定数にセットする
+    private static final String   STRING_DOUBLE_QUOTES    = "\"";
     // JSONのdb_getQueryキーの文字列を定数にセットする
     private static final String   DB_GETQUERY             = "db_getQuery";
     // JSONのdb_setQueryキーの文字列を定数にセットする
@@ -43,12 +76,23 @@ public class JSONDBManager extends DbConnect {
     private static final String   STR_TWO_UNDERBAR        = "__";
     // クエリー文字列で使用するシングルクォートを定数にセットする
     private static final String   QUERY_SINGLE_QUOTES     = "'";
-    // 文字列からセミコロンを探す為の正規表現です
+    // 文字列からセミコロンを探す為の正規表現をセットする
     private static final String   REGEXP_SEARCH_SEMICOLON = ".*;.*";
+    // 文字列からセミコロンを探す為の正規表現をセットする
+    private static final String   REGEXP_OR               = "|";
     // セミコロンを示す文字列を定数にセットする
     private static final String   STRING_SEMICOLON        = ";";
-    // 次のインデックスを指定する為の値を設定する
+    // 次のインデックスを指定する為の値をセットする
     private static final int      SHIFT_NEXT_INDEX        = 1;
+    // データのブロック開始を示す文字列をセットする
+    private static final String   START_BLOCK             = "{";
+    // データのブロック狩猟を示す文字列をセットする
+    private static final String   END_BLOCK               = "}";
+    // データのブロック狩猟を示す文字列をセットする
+    private static final String   START_DATA              = "[";
+    // データのブロック狩猟を示す文字列をセットする
+    private static final String   END_DATA                = "]";
+
     // JSONの値を入れるノードのキーの文字列リストを配列にセットする
     private static final String[] KEY_LIST                = { KEY_TEXT, KEY_HTML, KEY_SRC };
     // 会員番号列を定数に入れる
@@ -61,14 +105,16 @@ public class JSONDBManager extends DbConnect {
     private static final boolean  NOT_MATCH               = false;
     // 検索した値が存在することを示す値を設定する
     private static final boolean  EXISTS_MATCH            = true;
+    // 処理に異常が発生した場合のエラーコードです
+    private static final int      ERROR_CODE              = 1;
 
     //////////////////////////////////////
     // member
     //////////////////////////////////////
     // DBへの追加、更新処理を行ったときに帰ってくる処理レコード数の数値を格納するメンバ
-    public int                    processedRecords        = 0;
+    public int                    mProcessedRecords       = 0;
     // JSONを変換した連想配列を格納する
-    public JSONArray              jsonArray               = null;
+    public JSONObject             mJsonObject             = null;
 
     //////////////////////////////////////
     // public method
@@ -77,16 +123,45 @@ public class JSONDBManager extends DbConnect {
      * fig :Fig0
      * 関数名 :createJSON
      * 概要 :DBからデータを取得してJSONを作る
-     * 引数 :jsonObject:カレントのJSON
+     * 引数 :JSONObject jsonObject:カレントのJSON
      * 引数 :String key:JSONのキー
      * 引数 :DbResultTree:parentTree:DBから取得したデータを格納してツリー構造を作るためのクラスのインスタンス
      * 返り値 :void
      * 設計者:H.Kaneko
      * 作成者 :S.Nishiwaki
      * 作成日 :2017.12.xx
+     * @throws SQLException
      */
-    // public void createJSON(JSONArray jsonArray, String keyString, DbResultTree parentTree) {
-    // }
+    public void createJSON(JSONObject jsonObject, String key, DbResultTree parentTree) throws SQLException {
+        // DBの結果から構築したツリーを構成するクラスのインスタンスを生成する
+        DbResultTree dbResultTree = new DbResultTree();
+        // ステートメントを作成する
+        dbResultTree.dbResultSet = executeQuery(jsonObject, DB_GETQUERY);
+        // DB_ResultTreeの親子関係を構築する
+        dbResultTree.parentTree = parentTree;
+        //カレントのJSONを保存する
+        dbResultTree.jsonObject = jsonObject;
+        //カレントのキーを保存する
+        dbResultTree.keyData = key;
+
+        // fig2 db_resultTreeから”key”に該当するデータを取得する
+        String column = getDBColumn(key, parentTree);
+        // jsonについて最下層の要素にたどり着くまでループしてデータを取得する
+        for (Object keyObject : jsonObject.keySet()) {
+            // データを取り出すためのkey文字列を取得する
+            String keyString = keyObject.toString();
+            // key文字列に対するデータを取得する
+            JSONObject valueObject = (JSONObject) jsonObject.get(keyString);
+            // valueに子供がある時の処理($valueの型がオブジェクトの時の処理)
+            if (valueObject.isEmpty() && isHash(valueObject)) {
+                // fig0 再帰的にcreateJSONメソッドをコールする
+                createJSON(valueObject, keyString, dbResultTree);
+            } else if (column != null && (keyString == KEY_TEXT || keyString == KEY_SRC)) {
+                // jsonObject.get(keyString)
+                jsonObject.put(keyString, column);
+            }
+        }
+    }
 
     /**
      * fig :Fig1
@@ -144,7 +219,7 @@ public class JSONDBManager extends DbConnect {
                 // 件数を取得するために結果セットを最後の行に移動させる
                 resultSet.last();
                 // 処理を行ったレコード数を結果セットより取得してメンバに保存する
-                processedRecords = resultSet.getRow(); // 2016.09.20 r.shibata rowCountから取得していたものを修正(指示:金子)
+                mProcessedRecords = resultSet.getRow(); // 2016.09.20 r.shibata rowCountから取得していたものを修正(指示:金子)
                 // 結果セットを最初の行に戻す
                 resultSet.first();
             }
@@ -197,26 +272,26 @@ public class JSONDBManager extends DbConnect {
      * 作成者 :S.Nishiwaki
      * 作成日 :2017.12.xx
      */
-    public String getDBColumn(String keyString, DbResultTree dbResultTree) {
+    public String getDBColumn(String keyString, DbResultTree dbResultTree) throws SQLException {
         // 返却値を格納する変数を初期化する
         String column = null;
         // 取得対象が列の何行目かをセットする
-        int columnNumber = 0;
+        int rowNumber = 0;
         // dbrTreeの親のキーが、これが配列の要素であるということを示す~の文字を含んでいれば
         if (dbResultTree.parentTree != null && dbResultTree.parentTree.keyData.indexOf(STR_TWO_UNDERBAR) != -1) {
             //keyを~を境に分離する
             String[] keyStringArray = dbResultTree.parentTree.keyData.split(STR_TWO_UNDERBAR);
             //デミリタを元に行数のトークンに分ける
-            columnNumber = Integer.parseInt(keyStringArray[1]); //行数をセットする
+            rowNumber = Integer.parseInt(keyStringArray[1]); //行数をセットする
         }
         // 親がなくなるまでDBレコードツリーを走査する
         while (dbResultTree != null) {
             // dbrTreeに結果セットが登録されていれば
-            if (checkColumn(dbResultTree.dbResultObject, keyString)) {
+            if (checkColumn(dbResultTree.dbResultSet, keyString)) {
                 //カラムデータを取得する
-                JSONObject columnObject = (JSONObject) dbResultTree.dbResultObject.get(columnNumber);
+                dbResultTree.dbResultSet.absolute(rowNumber);
                 //カラムの値を取得する
-                column = columnObject.get(keyString).toString();
+                column = dbResultTree.dbResultSet.getString(keyString);
                 //ループを抜ける
                 break;
                 // dbrTreeに結果セットが登録されていない場合は
@@ -239,8 +314,57 @@ public class JSONDBManager extends DbConnect {
      * 作成者 :S.Nishiwaki
      * 作成日 :2017.12.xx
      */
-    public String getListJSON(JSONObject jsonObject) {
-        String stringAll = "";
+    public String getListJSON(JSONObject jsonObject) throws SQLException {
+        // 返却値としてJSON文字列を作成するための変数を設定する
+        String stringAll = NULL_STRING;
+        // 各レコードのデータ設定用変数を設定する
+        String stringBlock = NULL_STRING;
+        // 各フィールドのデータ設定用変数を設定する
+        String stringLine = NULL_STRING;
+        // JSONに格納されているクエリー文字列の結果セットを取得する fig 2-2 executeQuery
+        ResultSet resultSet = executeQuery(jsonObject, DB_GETQUERY);
+        // 結果セットのレコード数を取得する
+        int resultCount = mProcessedRecords;
+        // 取得したカラムの数を確認する為のデータを取得します
+        ResultSetMetaData resultSetMetaData = (ResultSetMetaData) resultSet.getMetaData();
+        // クエリ結果出力の為、取得したカラムの数を取得します
+        int columnLength = resultSetMetaData.getColumnCount();
+
+        // 結果セットのレコード(行)を走査する
+        while (resultSet.next()) {
+            // レコード文字列を空文字で初期化する
+            stringLine = NULL_STRING;
+            // 結果セットのフィールド(列)を走査する
+            for (int columnCount = 1; columnCount < columnLength; columnCount++) {
+                // 列名を取得する
+                String columnName = resultSetMetaData.getColumnName(columnCount);
+                // 列のデータを取得する
+                String columnValue = resultSet.getString(columnCount);
+                // フィールドデータ設定用の変数が空文字以外の場合
+                if (stringLine != NULL_STRING) {
+                    // JSONデータの区切り文字としてカンマを追加する
+                    stringLine += JSON_DELIMITER;
+                }
+                // 出力時、バックスラッシュによる誤作動を防ぐための置換を行う
+                columnValue = columnValue.replace(STRING_BACKSLASH, STRING_BACKSLASH + STRING_BACKSLASH);
+                // JSONデータに改行コードを保持するための置換を行う
+                columnValue = columnValue.replaceAll(DOS_RETURN + REGEXP_OR + CARRIAGE_RETURN + REGEXP_OR + LINE_FEED,
+                        STRING_LINE_FEED);
+                // JSONデータが壊れないようにダブルクォートをエスケープする
+                columnValue = columnValue.replace(STRING_DOUBLE_QUOTES, STRING_BACKSLASH + STRING_DOUBLE_QUOTES);
+                // フィールドデータ設定用変数にエスケープした文字列を対応するキーで設定して追加する
+                stringLine += STRING_DOUBLE_QUOTES + columnName + STRING_DOUBLE_QUOTES + STRING_SEMICOLON
+                        + STRING_DOUBLE_QUOTES + columnValue + STRING_DOUBLE_QUOTES;
+            }
+            // レコードデータ設定用変数が空文字の場合はカンマで区切る
+            stringBlock += (stringBlock != NULL_STRING) ? JSON_DELIMITER : NULL_STRING;
+            // レコードに対する各フィールドデータをブロックで囲む
+            stringBlock += START_BLOCK + stringLine + END_BLOCK;
+        }
+        // 作成した各レコードのデータをJSONオブジェクトの形にまとめる
+        stringAll = START_DATA + stringBlock + END_DATA;
+        // 作成した書くレコードのデータをJSON文字列の形にまとめる
+        // 作成したJSON文字列を返す
         return stringAll;
     }
 
@@ -255,7 +379,26 @@ public class JSONDBManager extends DbConnect {
      * 作成者 :S.Nishiwaki
      * 作成日 :2017.12.xx
      */
-    public void outputJSON(String jsonString, String key) {
+    public void outputJSON(String jsonString, String keyString) {
+        // JSON文字列をJSONオブジェクトに変換する fig2-7 getJSONMap
+        getJSONMap(jsonString);
+        // DBとの接続を試みる
+        try {
+            mDbConnect = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            // 文字コード設定を行うクエリ発行のため、ステートメントを取得する
+            mDbHandler = mDbConnect.createStatement();
+            // クエリの文字コード設定をUTF8に設定する
+            mDbHandler.executeQuery("SET NAMES utf8");
+            // JSONオブジェクトの各キーに値を設定する fig2-1 createJSON
+            createJSON(mJsonObject, keyString, null);
+            // DBとの接続を切る
+            mDbConnect = null;
+        } catch (SQLException e) {
+            // エラーメッセージを表示する
+            e.printStackTrace();
+            // 最後に必ず行う
+            System.exit(ERROR_CODE);
+        }
     }
 
     /*
