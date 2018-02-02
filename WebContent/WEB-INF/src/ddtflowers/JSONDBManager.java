@@ -381,7 +381,7 @@ public class JSONDBManager extends DbConnect {
      * 作成者 :S.Nishiwaki
      * 作成日 :2017.12.xx
      */
-    public void outputJSON(String jsonString, String keyString) {
+    public void outputJSON(String jsonString, String keyString) throws ParseException {
         // JSON文字列をJSONオブジェクトに変換する fig2-7 getJSONMap
         getJSONMap(jsonString);
         // DBとの接続を試みる
@@ -498,8 +498,16 @@ public class JSONDBManager extends DbConnect {
      * 作成者 :S.Nishiwaki
      * 作成日 :2017.12.xx
      */
-    public String getListJSONPlusKey(JSONObject jsonObject, String key) {
-        String jsonStringPlusKey = "";
-        return jsonStringPlusKey;
+    public String getListJSONPlusKey(JSONObject jsonObject, String keyString) throws ParseException, SQLException {
+        // 文字列をデコードするためのパーサーを作成する
+        JSONParser parser = new JSONParser();
+        // JSONに設定されたクエリーからテーブルデータを取得する fig2-5 getListJSON
+        String tableJsonString = getListJSON(jsonObject);
+        // 取得したデータをJSONに追加する
+        mJsonObject.put(keyString, parser.parse(tableJsonString));
+        //追加を行った引数のJSONを文字列に変換する
+        tableJsonString = mJsonObject.toJSONString(mJsonObject);
+        // 追加したJSONを文字列として返す
+        return tableJsonString;
     }
 }
