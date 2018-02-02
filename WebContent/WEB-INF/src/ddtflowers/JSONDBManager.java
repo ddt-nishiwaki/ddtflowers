@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import org.apache.commons.lang.math.NumberUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.mysql.jdbc.ResultSetMetaData;
 import com.mysql.jdbc.Statement;
@@ -411,7 +413,13 @@ public class JSONDBManager extends DbConnect {
      * 作成者 :S.Nishiwaki
      * 作成日 :2017.12.xx
      */
-    public void getJSONMap(String jsonString) {
+    public void getJSONMap(String jsonString) throws ParseException {
+        // JSON文字列をJSONオブジェクトに変換する為のオブジェクトを作成する
+        JSONParser parser = new JSONParser();
+        // JSON文字列をJSONオブジェクトに変換する
+        JSONObject jsonObject = (JSONObject) parser.parse(jsonString);
+        // 変換したJSONオブジェクトをJSONDBManagerクラスのメンバに格納する
+        mJsonObject = jsonObject;
     }
 
     /*
