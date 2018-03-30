@@ -1,12 +1,15 @@
 package ddtflowers;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /*
  * クラス名:HttpRequestController
- * 
+ *
  * 概要　:HttpRequestのコントローラです。
  * 　　　 JavaでSessionやCookieを利用するためにはサーブレットクラスを設定して
  * 　　　 HttpServletRequest,HttpServletResponseオブジェクトを受け取る必要があるため
@@ -31,7 +34,6 @@ public class HttpRequestController extends HttpServlet {
     private static HttpServletRequest mRequest;
     // HttpResponseオブジェクトを保持するメンバです
     private static HttpServletResponse mResponse;
-
     ///////////////////////////////////////////////////////////////////////////
     // メソッド
     ///////////////////////////////////////////////////////////////////////////
@@ -44,9 +46,10 @@ public class HttpRequestController extends HttpServlet {
      * 設計者:S.Nishiwaki
      * 作成者:S.Nishiwaki
      * 作成日:2018.03.14
+     * @throws IOException
      */
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // requestオブジェクトを保持する
         mRequest = request;
         // responseオブジェクトを保持する
@@ -71,9 +74,9 @@ public class HttpRequestController extends HttpServlet {
      * 設計者:S.Nishiwaki
      * 作成者:S.Nishiwaki
      * 作成日:2018.03.14
-     * @throws ClassNotFoundException 
-     * @throws IllegalAccessException 
-     * @throws InstantiationException 
+     * @throws ClassNotFoundException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
      */
     private void doRouting(HttpServletRequest request)
             throws ClassNotFoundException, InstantiationException, IllegalAccessException {
@@ -122,4 +125,40 @@ public class HttpRequestController extends HttpServlet {
         // メンバに保持したHttpServletResponsを返します
         return mResponse;
     }
+
+    /**
+     * 関数名:getPostValue
+     * 概要　:POSTされたデータから指定した値を取得します
+     * 引数　:String keyName
+     * 戻り値:String keyValue
+     * 設計者:S.Nishiwaki
+     * 作成者:S.Nishiwaki
+     * 作成日:2018.03.26
+     */
+    public String getPostValue(String keyString) {
+        // POSTされたデータから指定された値の取得を試みる
+        String keyValue = mRequest.getParameter(keyString);
+        // 取得結果を返す
+        return keyValue;
+    }
+
+    /**
+     * 関数名:sendJsonData
+     * 概要　:リクエストに対してデータを返します
+     * 引数　:String responseData
+     * 戻り値:void
+     * 設計者:S.Nishiwaki
+     * 作成者:S.Nishiwaki
+     * 作成日:2018.03.26
+     * @throws IOException
+     */
+    public void sendJsonData(String responseData) throws IOException {
+        // JSONデータを返すようにレスポンスを設定する
+        mResponse.setContentType("application/json;charset=UTF-8");
+        // データ返却のためのオブジェクトを取得して保持する
+        PrintWriter printWriter = mResponse.getWriter();
+        // リクエストに対してデータを返す
+        printWriter.print(responseData);
+    }
+
 }

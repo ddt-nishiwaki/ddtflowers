@@ -133,7 +133,43 @@ public class JSONDBManager extends DbConnect {
     // public method
     //////////////////////////////////////
     /**
-     * fig :Fig0
+     * fig :Fig0-0
+     * 関数名:createJSON
+     * 概要　:DBからデータを取得してJSONを作る
+     * 　　　:引数に指定のキーがなければnull文字列として引数を設定する
+     * 引数　:JSONObject jsonObject:カレントのJSON
+     * 返り値:void
+     * 設計者:S.Nishiwaki
+     * 作成者:S.Nishiwaki
+     * 作成日:2018.02.03
+     */
+    public void createJSON(JSONObject jsonObject) throws SQLException {
+        // 引数に指定のキーがなければnull文字列として引数を設定する
+        String nullString = NULL_STRING;
+        // 親のリザルトツリーの型だけ設定したものを引数に渡して実行する
+        createJSON(jsonObject, nullString);
+    }
+    /**
+     * fig :Fig0-1
+     * 関数名:createJSON
+     * 概要　:DBからデータを取得してJSONを作る
+     * 　　　:初回実行時は親のリザルトツリーがないものとして実行させる
+     * 引数　:JSONObject jsonObject:カレントのJSON
+     * 引数　:String key:JSONのキー
+     * 返り値:void
+     * 設計者:S.Nishiwaki
+     * 作成者:S.Nishiwaki
+     * 作成日:2018.02.03
+     */
+    public void createJSON(JSONObject jsonObject, String key) throws SQLException {
+        // 引数に親のリザルトツリーがなければnullとして引数を設定する
+        DbResultTree notExistTree = null;
+        // 親のリザルトツリーの型だけ設定したものを引数に渡して実行する
+        createJSON(jsonObject, key, notExistTree);
+    }
+
+    /**
+     * fig :Fig0-2
      * 関数名 :createJSON
      * 概要 :DBからデータを取得してJSONを作る
      * 引数 :JSONObject jsonObject:カレントのJSON
@@ -143,7 +179,6 @@ public class JSONDBManager extends DbConnect {
      * 設計者:H.Kaneko
      * 作成者 :S.Nishiwaki
      * 作成日 :2018.02.03
-     * @throws SQLException
      */
     public void createJSON(JSONObject jsonObject, String key, DbResultTree parentTree) throws SQLException {
         // DBの結果から構築したツリーを構成するクラスのインスタンスを生成する

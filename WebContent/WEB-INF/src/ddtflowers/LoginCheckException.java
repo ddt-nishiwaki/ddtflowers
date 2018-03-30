@@ -1,7 +1,6 @@
 package ddtflowers;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 
 public class LoginCheckException extends Exception {
     // タイムアウト状態を示す値です
@@ -18,11 +17,11 @@ public class LoginCheckException extends Exception {
      * 作成者 :S.Nishiwaki
      * 作成日 :2018.02.03
      */
-    public int checkLoginState(HttpServletRequest request) {
+    public int checkLoginState(HttpRequestController httpRequestController) {
         //返却値の変数に初回ログインの値0をセットする
         int loginStateCode = LOGIN_STATE;
         // クッキー情報を取得します
-        Cookie[] cookies = request.getCookies();
+        Cookie[] cookies = (httpRequestController.getRequest()).getCookies();
         // クッキーがない場合は返却地の変更を行わないようにする
         if (cookies != null) {
             // クッキー情報を検索する
