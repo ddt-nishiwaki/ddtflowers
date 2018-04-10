@@ -9,3 +9,5 @@ SetEnv DDT_FLOWER_ENV dev
 ④apacheを再起動  
 これで②のphp/DbDefine_dev.phpの定義が適用される。  
 ※環境変数にDDT_FLOWER_ENVが定義されてなければ本番としてsuffixなしの「php/DbDefine.php」が適用される。
+
+
