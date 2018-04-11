@@ -78,17 +78,18 @@ public class Account extends JSONDBManager{
      * 作成日:2018.03.14
      * @throws ParseException
      */
-    public Account(HttpRequestController controller, SessionManager sessionManager, CookieManager cookieManager) throws ParseException {
+    public Account(HttpRequestController controller) throws ParseException {
         // ポストデータを参照するためにコントローラーをメンバに保持する
         mHttpRequestController = controller;
         // セッションIDを再生成するためにSessionManagerオブジェクトを保持する
-        mSessionManager = sessionManager;
+        mSessionManager = controller.getSessionManager();
         // requestからセッションを取得して、これを保持する
-        mCookieManager = cookieManager;
+        mCookieManager = controller.getCookieManager();
         // ページ権限確認用の権限取得用のJSON文字列をオブジェクト化するパーサーを作成する
         JSONParser parser = new JSONParser();
         // ページ権限確認用のJSONオブジェクトを作成してメンバに保持する
         mPageAuthorityCheck = (JSONObject) parser.parse(mPageAuthorityCheckJson);
+
     }
 
     /*
@@ -99,8 +100,11 @@ public class Account extends JSONDBManager{
      * 設計者:H.Kaneko
      * 作成者:S.Nishiwaki
      * 作成日:2018.03.14
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws IOException
      */
-    public void init() throws Exception{
+    public void init() throws ClassNotFoundException, SQLException, IOException {
         // ログイン状態を確認するためにクッキーから userId の値を取得する
         String userIdStatus = mCookieManager.getCookieValue(USER_ID_KEY);
         // COOKIE内のuserIdがnullもしくは初期値（0）であるか検証する（ゲストもしくは未ログイン状態であるか）
