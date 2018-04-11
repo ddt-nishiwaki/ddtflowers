@@ -72,8 +72,10 @@ public class DbConnect {
      * 作成者:S.Nishiwaki
      * 作成日:20171205
      * 戻り値:void
+     * @throws ClassNotFoundException
+     * @throws SQLException
      */
-    public void connect() throws Exception {
+    public void connect() throws ClassNotFoundException, SQLException {
         // JDBCドライバで扱うDBを設定する(今回はmysql)
         Class.forName("com.mysql.jdbc.Driver");
         // DBとの接続を試みる
