@@ -2,10 +2,13 @@ package ddtflowers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 /*
  * クラス名:HttpRequestController
@@ -77,19 +80,25 @@ public class HttpRequestController extends HttpServlet {
      * @throws ClassNotFoundException
      * @throws IllegalAccessException
      * @throws InstantiationException
+     * @throws SecurityException
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws IllegalArgumentException
      */
     private void doRouting(HttpServletRequest request)
-            throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+            throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
         // requestのURL情報からリクエストされた処理を示すパラメータを取得して保持する
         String procedureName = request.getParameter(PARAMETER_KEY);
-        // プロシージャクラスのロードを試みる
+        // アプリの処理クラスのロードを試みる
         try {
-            // パラメータに対応した処理を行うプロシージャクラスをロードする
-            Class<?> procedureClass = Class.forName(PATH_TO_PROCEDURE + procedureName);
-            // ロードしたプロシージャクラスを実行するためにインスタンス化する
-            ProcedureBase procedure = (ProcedureBase) procedureClass.newInstance();
-            // リクエストされたプロシージャクラスを実行する
-            procedure.run(this);
+            // パラメータに対応した処理を行うクラスをロードする
+            Class<?> applicationServiceClass = Class.forName(PATH_TO_PROCEDURE + procedureName);
+            // ロードしたクラスのコンストラクタを取得する
+            Constructor<?> constructor = applicationServiceClass.getConstructor(HttpRequestController.class);
+            // POSTされたJSON文字列を渡してプロシージャを呼び出すインスタンスを作成する
+            ApplicationService applicationService = (ApplicationService) constructor.newInstance(this);
+            // アプリのロジックに自信を渡して実行する
+            applicationService.doProcedure();
         // クラスのロードに失敗した場合の処理を行う
         } catch (ClassNotFoundException ex) {
             // エラーログを出力する
