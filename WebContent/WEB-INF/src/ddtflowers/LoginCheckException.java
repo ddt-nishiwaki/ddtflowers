@@ -13,7 +13,7 @@ public class LoginCheckException extends Exception {
     /**
      * 関数名 :checkLoginState
      * 概要  :ログイン状態を調べて数値で返す。
-     * 返り値 :void
+     * 返り値 :int
      * 作成者 :S.Nishiwaki
      * 作成日 :2018.02.03
      */
