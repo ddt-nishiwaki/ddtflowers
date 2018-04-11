@@ -161,4 +161,31 @@ public class HttpRequestController extends HttpServlet {
         printWriter.print(responseData);
     }
 
+    /**
+     * 関数名:getSessionManager
+     * 概要　:セッション管理オブジェクトを生成して返す
+     * 引数　:void
+     * 戻り値:SessionManager
+     * 設計者:S.Nishiwaki
+     * 作成者:S.Nishiwaki
+     * 作成日:2018.04.06
+     */
+    public SessionManager getSessionManager() {
+        // セッション管理オブジェクトを生成して返します
+        return new SessionManager(mRequest);
+    }
+
+    /**
+     * 関数名:getCookieManager
+     * 概要　:クッキー管理オブジェクトを生成して返す
+     * 引数　:void
+     * 戻り値:CookieManager
+     * 設計者:S.Nishiwaki
+     * 作成者:S.Nishiwaki
+     * 作成日:2018.04.06
+     */
+    public CookieManager getCookieManager() {
+        // クッキー管理オブジェクトを生成して返します
+        return new CookieManager(mRequest, mResponse);
+    }
 }
