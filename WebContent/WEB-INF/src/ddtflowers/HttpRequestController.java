@@ -62,7 +62,7 @@ public class HttpRequestController extends HttpServlet {
             // ルーティングを行う
             doRouting(request);
             // ルーティングに失敗した時の処理を行う
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
             // エラー内容を出力する
             e.printStackTrace();
         }
