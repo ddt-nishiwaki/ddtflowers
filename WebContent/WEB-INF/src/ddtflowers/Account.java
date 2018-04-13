@@ -44,6 +44,8 @@ public class Account extends JSONDBManager{
     private static final String ID_VALUE_KEY = "value";
     // ページの閲覧権限を取得するためのキーです
     private static final String PAGE_AUTHORITY_KEY = "pageAuth";
+    // 権限がないことを示すビットフラグです
+    private static final int PERMISSION_DENIED_BIT_FLAG = 0;
 
     ///////////////////////////////////////////////////////////////////////////
     // メンバ
@@ -270,7 +272,7 @@ public class Account extends JSONDBManager{
         pageAuthority = Integer.parseInt(mCookieManager.getCookieValue(PAGE_AUTHORITY_KEY), 10);
 
         // 当該ユーザで開けるページなのか検証する
-        if(0 == (userAuthority & pageAuthority)) {
+        if(PERMISSION_DENIED_BIT_FLAG == (userAuthority & pageAuthority)) {
             //ログインチェックエラーの例外を投げる
             throw new LoginCheckException();
         }
