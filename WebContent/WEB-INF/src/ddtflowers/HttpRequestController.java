@@ -161,7 +161,7 @@ public class HttpRequestController extends HttpServlet {
      * 作成日:2018.03.26
      * @throws IOException
      */
-    public void sendJsonData(String responseData) throws IOException {
+    public void sendJsonData(String responseData) throws IOException{
         // JSONデータを返すようにレスポンスを設定する
         mResponse.setContentType("application/json;charset=UTF-8");
         // データ返却のためのオブジェクトを取得して保持する
