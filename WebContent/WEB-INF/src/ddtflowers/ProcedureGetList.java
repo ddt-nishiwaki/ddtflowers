@@ -23,7 +23,8 @@ public class ProcedureGetList extends ProcedureBase {
     private static final String STR_TABLE_DATA = "tableData";
     // 処理に異常が発生した場合のエラーコードです
     private static final int ERROR_CODE = 1;
-
+    // 空文字です
+    private static final String NULL_STRING = "tableData";
     ///////////////////////////////////////////////////////////////////////////
     // メンバ
     ///////////////////////////////////////////////////////////////////////////
@@ -70,7 +71,7 @@ public class ProcedureGetList extends ProcedureBase {
         //親クラスのjobを実行し、メンバにJSONオブジェクトを格納する。
         super.job(jsonString);
         // 返却するJSON配列の文字列を格納する変数を用意する
-        String retArrayString = "";
+        String retArrayString = NULL_STRING;
 
         //SQLによる例外の対処のためtryブロックで囲む
         try {
