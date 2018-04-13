@@ -50,7 +50,7 @@ public class ProcedureLogout extends ProcedureBase{
     @Override
     public void job(String jsonString) throws ParseException, SQLException, IOException {
         //ログインを実行する。
-        login(jsonString);
+        logout();
     }
 
     /*
