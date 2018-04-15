@@ -37,7 +37,9 @@ public class ProcedureBase extends Account{
 	 */
     @Override
     public void init() throws ClassNotFoundException, SQLException, IOException {
+        // Accountクラスからセッションの開始とDBへの接続を行う処理を呼び出す
         super.init();
+        // ログインチェックを行う
         loginCheck();
     }
 
@@ -51,6 +53,7 @@ public class ProcedureBase extends Account{
      * 作成日:2018.03.30
 	 */
     public void job(String jsonString) throws ParseException, SQLException, IOException{
+        // 受け取ったJSON文字列をJSONObjectに変換してメンバに保持する
         getJSONMap(jsonString);
     }
 
@@ -63,8 +66,10 @@ public class ProcedureBase extends Account{
 	 * 作成者:T.Masuda
 	 * 作成日:2015.0728
 	 */
-    public void run(String jsonString) throws Exception {
+    public void run(String jsonString) throws ClassNotFoundException, ParseException, SQLException, IOException {
+        // セッション開始、DB接続、ログインチェックを行う
         init();
+        // 受け取ったJSON文字列をJSONObjectに変換してメンバに保持する
         job(jsonString);
     }
 }
