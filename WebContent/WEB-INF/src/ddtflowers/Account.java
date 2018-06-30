@@ -29,8 +29,6 @@ public class Account extends JSONDBManager{
     private static final boolean AUTHENTICATED_VALUE = true;
     // 権限がないことを示す値です
     private static final boolean PERMITION_DENITED_VALUE = false;
-    // 処理に異常が発生した場合のエラーコードです
-    private static final int ERROR_CODE = 1;
     // userIdの初期値を示す値です
     private static final String DEFAULT_USER_ID = "0";
     // ユーザーからポストされた key を示す値を取得するためのキーです
