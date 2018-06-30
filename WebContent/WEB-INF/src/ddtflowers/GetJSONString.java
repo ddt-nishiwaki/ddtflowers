@@ -55,15 +55,16 @@ public class GetJSONString implements ApplicationService{
      */
     @Override
     public void doProcedure(){
+        // POSTされたJSON文字列を保持する変数です
         ProcedureBase jsonDBGetter;
-        // POStされたJSON文字列を保持する変数です
-        String jsonString;
         // POSTされたJSON文字列を取得する
-        jsonString = mController.getPostValue(POST_JSON_KEY);
+        String jsonString = mController.getPostValue(POST_JSON_KEY);
         // 受け取ったJSONがログイン用のJSONかチェックする
 
         // JSONのパース、DB接続、データ送信に関するエラーを監視する
         try {
+
+            // ログイン用のJSONかどうかチェック
             if(jsonString.indexOf(USER_NAME_KEY) != NOT_EXSIST_WORD
                 && jsonString.indexOf(PASSWORD_KEY) != NOT_EXSIST_WORD
                 && jsonString.indexOf(ID_KEY) != NOT_EXSIST_WORD) {

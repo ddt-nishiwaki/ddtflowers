@@ -206,7 +206,7 @@
 		
 		//AJAX通信でサーバへ保存するレコードを送信する
 		$.ajax({
-			url:'../SaveJSONRecord',	//JSONでレコードを保存するサーブレットを呼ぶ
+			url:'java?service=SaveJSONRecord',	//JSONでレコードを保存するサーブレットを呼ぶ
 			dataType:"json",			//JSONデータを返してもらう
 			async:false,				//同期通信を行う
 			method:"POST",				//POSTメソッドで通信する
@@ -240,7 +240,7 @@
 		
 		//AJAX通信でサーバへ保存するレコードを送信する
 		$.ajax({
-			url:'../SaveJSONRecord',	//JSONでレコードを保存するサーブレットを呼ぶ
+			url:'java?service=SaveJSONRecord',	//JSONでレコードを保存するサーブレットを呼ぶ
 			dataType:"json",			//JSONデータを返してもらう
 			async:false,				//同期通信を行う
 			method:"POST",				//POSTメソッドで通信する
@@ -273,7 +273,7 @@
 		
 		//AJAX通信でサーバへ保存するレコードを送信する
 		$.ajax({
-			url:'../SaveJSONRecord',	//JSONでレコードを削除するサーブレットを呼び出す
+			url:'java?service=SaveJSONRecord',	//JSONでレコードを削除するサーブレットを呼び出す
 			dataType:"json",			//結果をJSONデータを返してもらう
 			async:false,				//同期通信を行う
 			method:"POST",				//POSTメソッドで通信する
@@ -335,7 +335,7 @@
 
 	//予約中の授業テーブルのjqGridのルールを連想配列に設定する。
 	objRules['reservedData'] = { 
-		//url:'../GetJSONArray',	//サーブレットGetJSONArrayからJSONを取得する
+		//url:'java?service=GetJSONArray',	//サーブレットGetJSONArrayからJSONを取得する
 		url:'source/reservedLessonTable.json',
 		// JSONデータをデータソースとして利用する。
 		 datatype:"json",

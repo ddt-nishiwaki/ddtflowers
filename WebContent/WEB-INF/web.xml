@@ -4,17 +4,17 @@ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
 "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-<servlet>
-<servlet-name>HttpRequestController</servlet-name>
-<servlet-class>ddtflowers.HttpRequestController</servlet-class>
-</servlet>
+    <servlet>
+        <servlet-name>HttpRequestController</servlet-name>
+        <servlet-class>ddtflowers.HttpRequestController</servlet-class>
+    </servlet>
 
-<servlet-mapping>
-<servlet-name>
-HttpRequestController
-</servlet-name>
-<url-pattern>
-/java
-</url-pattern>
-</servlet-mapping>
-</web-app>
+    <servlet-mapping>
+        <servlet-name>
+        HttpRequestController
+        </servlet-name>
+        <url-pattern>
+        /java
+        </url-pattern>
+    </servlet-mapping>
+ </web-app>
