@@ -1,6 +1,7 @@
 package ddtflowers;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 import org.json.simple.parser.ParseException;
@@ -36,7 +37,18 @@ public class ProcedureBase extends Account{
      * 作成日:2018.03.30
 	 */
     @Override
-    public void init() throws ClassNotFoundException, SQLException, IOException {
+    public boolean init(HttpRequestController controller) throws ClassNotFoundException, SQLException, IOException, ParseException, NoSuchAlgorithmException {
+
+    /*
+	 * 関数名:init
+	 * 概要　:Accountクラスのinitのみコールする。
+	 * 引数　:HttpRequestController サーブレットを扱うためのオブジェクト
+	 * 戻り値:なし
+	 * 設計者:S.Nishiwaki
+     * 作成者:S.Nishiwaki
+     * 作成日:2018.06.21
+	 */
+    public boolean accountInit(HttpRequestController controller) throws ClassNotFoundException, SQLException, IOException, ParseException, NoSuchAlgorithmException {
         // Accountクラスからセッションの開始とDBへの接続を行う処理を呼び出す
         super.init();
         // ログインチェックを行う
@@ -52,7 +64,7 @@ public class ProcedureBase extends Account{
      * 作成者:S.Nishiwaki
      * 作成日:2018.03.30
 	 */
-    public void job(String jsonString) throws ParseException, SQLException, IOException{
+    public void job(String jsonString) throws ParseException, SQLException, IOException, NoSuchAlgorithmException{
         // 受け取ったJSON文字列をJSONObjectに変換してメンバに保持する
         getJSONMap(jsonString);
     }
@@ -66,7 +78,7 @@ public class ProcedureBase extends Account{
 	 * 作成者:T.Masuda
 	 * 作成日:2015.0728
 	 */
-    public void run(String jsonString) throws ClassNotFoundException, ParseException, SQLException, IOException {
+    public void run(String jsonString) throws ClassNotFoundException, ParseException, SQLException, IOException, NoSuchAlgorithmException {
         // セッション開始、DB接続、ログインチェックを行う
         init();
         // 受け取ったJSON文字列をJSONObjectに変換してメンバに保持する

@@ -1,6 +1,7 @@
 package ddtflowers;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
@@ -105,8 +106,9 @@ public class Account extends JSONDBManager{
      * @throws ClassNotFoundException
      * @throws SQLException
      * @throws IOException
+     * @throws ParseException
      */
-    public void init() throws ClassNotFoundException, SQLException, IOException {
+    public boolean init(HttpRequestController controller) throws ClassNotFoundException, SQLException, IOException, ParseException, NoSuchAlgorithmException {
         // ログイン状態を確認するためにクッキーから userId の値を取得する
         String userIdStatus = mCookieManager.getCookieValue(USER_ID_KEY);
         // COOKIE内のuserIdがnullもしくは初期値（0）であるか検証する（ゲストもしくは未ログイン状態であるか）
@@ -129,7 +131,7 @@ public class Account extends JSONDBManager{
      * 作成者:S.Nishiwaki
      * 作成日:2018.03.27
      */
-    public void login(String jsonString) throws ParseException, IOException{
+    public void login(String jsonString) throws ParseException, IOException, NoSuchAlgorithmException{
         //クライアントから送信されたJSONのキーとJSON文字列を取得する。
         String key = mHttpRequestController.getPostValue(USER_POSTED_KEY);
         // 受け取ったJSON文字列をオブジェクト化してmJsonObjectに保持する
@@ -204,7 +206,7 @@ public class Account extends JSONDBManager{
      * 作成者:S.Nishiwaki
      * 作成日:2018.03.27
      */
-    public boolean loginCheck() throws IOException, SQLException{
+    public boolean loginCheck() throws IOException, SQLException, NoSuchAlgorithmException{
         // 返却値を未ログインを示す値で初期化する
         boolean isLogin = PERMITION_DENITED_VALUE;
         // クラスにより例外でログインチェック時の失敗の処理を分岐させるため、try catch文を使う
@@ -245,7 +247,7 @@ public class Account extends JSONDBManager{
      * 作成者:S.Nishiwaki
      * 作成日:2018.03.27
      */
-    public void pageCheck() throws SQLException, LoginCheckException {
+    public void pageCheck() throws SQLException, LoginCheckException, NoSuchAlgorithmException {
         // 検証するユーザー権限をキャッシュする変数です
         int userAuthority;
         // 検証するページ閲覧権限をキャッシュする変数です
