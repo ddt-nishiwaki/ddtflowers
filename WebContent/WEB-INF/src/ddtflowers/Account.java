@@ -264,14 +264,14 @@ public class Account extends JSONDBManager{
             // ユーザ権限取得用のJSONObjectから閲覧権限のオブジェクトをキャッシュする
             JSONObject authorityObject = (JSONObject) mPageAuthorityCheck.get(USER_AUTHORITY_KEY);
             // 閲覧権限のオブジェクトの値を変数に保存する(整数化)
-            userAuthority = Integer.parseInt((String) mPageAuthorityCheck.get(USER_AUTHORITY_KEY), 10);
+            userAuthority = Integer.parseInt(authorityObject.get(AUTHORITY_TEXT_KEY).toString(), 10);
         } else {
             // ゲストユーザであるため、ゲスト用のユーザ権限を設定する
             userAuthority = 1;
         }
 
         // COOKIEにセットされている対象ページの権限を取得する(整数化)
-        pageAuthority = Integer.parseInt(mCookieManager.getCookieValue(PAGE_AUTHORITY_KEY), 10);
+        pageAuthority = Integer.decode(mCookieManager.getCookieValue(PAGE_AUTHORITY_KEY));
 
         // 当該ユーザで開けるページなのか検証する
         if(PERMISSION_DENIED_BIT_FLAG == (userAuthority & pageAuthority)) {
