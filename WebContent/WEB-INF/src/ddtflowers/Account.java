@@ -86,7 +86,7 @@ public class Account extends JSONDBManager{
     /*
      * 関数名:init
      * 概要　:初期化処理を行う。初期化としてセッションの開始とDBへの接続を行う。
-     * 引数　:なし
+     * 引数　:HttpRequestController サーブレットを扱うためのオブジェクト
      * 戻り値:なし
      * 設計者:H.Kaneko
      * 作成者:S.Nishiwaki
@@ -97,6 +97,16 @@ public class Account extends JSONDBManager{
      * @throws ParseException
      */
     public boolean init(HttpRequestController controller) throws ClassNotFoundException, SQLException, IOException, ParseException, NoSuchAlgorithmException {
+        // コントローラの参照を受け取る
+        mHttpRequestController = controller;
+        // プロシージャ経由で受け取ったコントローラからセッションマネージャを受け取る
+        mSessionManager = controller.getSessionManager();
+        // プロシージャ経由で受け取ったコントローラからクッキーマネージャを受け取る
+        mCookieManager = controller.getCookieManager();
+        // ページ権限確認用のJSON文字列をオブジェクト化するパーサーを作成する
+        JSONParser parser = new JSONParser();
+        // ページ権限確認用のJSONオブジェクトを作成してメンバに保持する
+        mPageAuthorityCheck = (JSONObject) parser.parse(mPageAuthorityCheckJson);
         // ログイン状態を確認するためにクッキーから userId の値を取得する
         String userIdStatus = mCookieManager.getCookieValue(USER_ID_KEY);
         // COOKIE内のuserIdがnullもしくは初期値（0）であるか検証する（ゲストもしくは未ログイン状態であるか）
@@ -242,7 +252,8 @@ public class Account extends JSONDBManager{
         // 検証するページ閲覧権限をキャッシュする変数です
         int pageAuthority;
         // ゲストユーザによるリクエストか検証する
-        if(mCookieManager.getCookieValue(USER_ID_KEY) != DEFAULT_USER_ID) {
+        System.out.println(mCookieManager.getCookieValue(USER_ID_KEY));
+        if(!mCookieManager.getCookieValue(USER_ID_KEY).equals(DEFAULT_USER_ID)) {
             // ユーザ権限取得用のJSONObjectからユーザーIDのオブジェクトを取得する
             JSONObject userIdObject = (JSONObject) mPageAuthorityCheck.get(USER_ID_KEY);
             // ユーザーIDのオブジェクトにセッション内のユーザIDを追加する

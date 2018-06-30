@@ -1,8 +1,14 @@
 package ddtflowers;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+
 
 
 /*
@@ -35,7 +41,8 @@ public class CookieManager {
     HttpServletRequest mRequest;
     // クッキーを返すためのレスポンスを保持するメンバです
     HttpServletResponse mResponse;
-
+    // 現在管理しているクッキーの一覧です
+    Set<Cookie> mCookies;
     ///////////////////////////////////////////////////////////////////////////
     // コンストラクタ
     ///////////////////////////////////////////////////////////////////////////
@@ -52,6 +59,8 @@ public class CookieManager {
         mRequest = request;
         // クッキー情報を追加するためにresponseオブジェクトを保持する
         mResponse = response;
+        // リクエストのクッキーを受け取る
+        mCookies = Arrays.stream(request.getCookies()).collect(Collectors.toSet());
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -74,6 +83,8 @@ public class CookieManager {
         cookie.setMaxAge(EXTEND_LIFE_VALUE);
         // 作成したクッキーをメンバに追加します
         mResponse.addCookie(cookie);
+        // 管理対象のクッキーリストに追加する
+        mCookies.add(cookie);
     }
 
     /**
@@ -89,10 +100,8 @@ public class CookieManager {
     public String getCookieValue(String targetName) {
         // 返却値を null で初期化する
         String targetCookieValue = null;
-        // 現在のクッキーを取得する
-        Cookie[] cookies = mRequest.getCookies();
         // 各クッキーの名前を確認していく
-        for(Cookie cookie : cookies) {
+        for(Cookie cookie : mCookies) {
             // 各クッキーの名前を、確認のため取り出して保持する
             String cookieName = cookie.getName();
             // targetNameとcookieNameの名前が一致しているか確認する
