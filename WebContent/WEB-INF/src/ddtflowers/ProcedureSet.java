@@ -46,7 +46,7 @@ public class ProcedureSet extends ProcedureBase{
     @Override
     public void init() throws  ClassNotFoundException, SQLException, IOException{
         //親クラスのinit関数をコールする。
-        super.init();
+        return super.init(controller);
     }
 
     /*
@@ -97,7 +97,7 @@ public class ProcedureSet extends ProcedureBase{
     @Override
     public void run(String jsonString) throws ClassNotFoundException, SQLException, IOException, ParseException {
         // 初期化処理を行う
-        init();
+        init(mController);
         // アプリのロジックを実行する
         job(jsonString);
     }

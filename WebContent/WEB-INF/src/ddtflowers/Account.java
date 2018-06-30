@@ -28,8 +28,6 @@ public class Account extends JSONDBManager{
     private static final boolean AUTHENTICATED_VALUE = true;
     // 権限がないことを示す値です
     private static final boolean PERMITION_DENITED_VALUE = false;
-    // 処理に異常が発生した場合のエラーコードです
-    private static final int ERROR_CODE = 1;
     // userIdの初期値を示す値です
     private static final String DEFAULT_USER_ID = "0";
     // ユーザーからポストされた key を示す値を取得するためのキーです
@@ -78,20 +76,8 @@ public class Account extends JSONDBManager{
      * 設計者:S.Nishiwaki
      * 作成者:S.Nishiwaki
      * 作成日:2018.03.14
-     * @throws ParseException
      */
-    public Account(HttpRequestController controller) throws ParseException {
-        // ポストデータを参照するためにコントローラーをメンバに保持する
-        mHttpRequestController = controller;
-        // セッションIDを再生成するためにSessionManagerオブジェクトを保持する
-        mSessionManager = controller.getSessionManager();
-        // requestからセッションを取得して、これを保持する
-        mCookieManager = controller.getCookieManager();
-        // ページ権限確認用の権限取得用のJSON文字列をオブジェクト化するパーサーを作成する
-        JSONParser parser = new JSONParser();
-        // ページ権限確認用のJSONオブジェクトを作成してメンバに保持する
-        mPageAuthorityCheck = (JSONObject) parser.parse(mPageAuthorityCheckJson);
-
+    public Account() {
     }
 
     /*
@@ -118,6 +104,8 @@ public class Account extends JSONDBManager{
         }
         //DBへの接続を開始する。
         super.connect();
+
+        return true;
     };
 
     /*
@@ -228,8 +216,7 @@ public class Account extends JSONDBManager{
             String errorMessage = ERROR_JSON_FRONT + error.checkLoginState(mHttpRequestController) + ERROR_JSON_BACK;
             // 作成したJSON文字列をブラウザに返す
             mHttpRequestController.sendJsonData(errorMessage);
-            // 処理を終了する
-            System.exit(ERROR_CODE);
+            isLogin = false;
         }
 
         //真理値を返す
