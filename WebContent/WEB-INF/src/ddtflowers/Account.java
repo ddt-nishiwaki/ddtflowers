@@ -250,7 +250,6 @@ public class Account extends JSONDBManager{
         // 検証するページ閲覧権限をキャッシュする変数です
         int pageAuthority;
         // ゲストユーザによるリクエストか検証する
-        System.out.println(mCookieManager.getCookieValue(USER_ID_KEY));
         if(!mCookieManager.getCookieValue(USER_ID_KEY).equals(DEFAULT_USER_ID)) {
             // ユーザ権限取得用のJSONObjectからユーザーIDのオブジェクトを取得する
             JSONObject userIdObject = (JSONObject) mPageAuthorityCheck.get(USER_ID_KEY);
