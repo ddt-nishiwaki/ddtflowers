@@ -38,6 +38,14 @@ public class ProcedureBase extends Account{
 	 */
     @Override
     public boolean init(HttpRequestController controller) throws ClassNotFoundException, SQLException, IOException, ParseException, NoSuchAlgorithmException {
+        boolean isInit = false;
+        // Accountクラスからセッションの開始とDBへの接続を行う処理を呼び出す
+        if(super.init(controller)) {
+            // ログインチェックを行う
+            isInit = loginCheck();
+        }
+        return isInit;
+    }
 
     /*
 	 * 関数名:init
@@ -50,9 +58,7 @@ public class ProcedureBase extends Account{
 	 */
     public boolean accountInit(HttpRequestController controller) throws ClassNotFoundException, SQLException, IOException, ParseException, NoSuchAlgorithmException {
         // Accountクラスからセッションの開始とDBへの接続を行う処理を呼び出す
-        super.init();
-        // ログインチェックを行う
-        loginCheck();
+        return super.init(controller);
     }
 
 	/*
@@ -80,7 +86,7 @@ public class ProcedureBase extends Account{
 	 */
     public void run(String jsonString) throws ClassNotFoundException, ParseException, SQLException, IOException, NoSuchAlgorithmException {
         // セッション開始、DB接続、ログインチェックを行う
-        init();
+        init(mController);
         // 受け取ったJSON文字列をJSONObjectに変換してメンバに保持する
         job(jsonString);
     }

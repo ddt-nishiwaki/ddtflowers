@@ -55,7 +55,7 @@ public class ProcedureGetList extends ProcedureBase {
     @Override
     public boolean init(HttpRequestController controller) throws  ClassNotFoundException, SQLException, IOException, ParseException, NoSuchAlgorithmException{
         //親クラスのinit関数をコールする。
-        super.init();
+        return super.init(controller);
     }
 
     /*
@@ -108,7 +108,7 @@ public class ProcedureGetList extends ProcedureBase {
     @Override
     public void run(String jsonString) throws ClassNotFoundException, SQLException, IOException, ParseException, NoSuchAlgorithmException {
         // 初期化処理を行う
-        init();
+        init(mController);
         // アプリのロジックを実行する
         job(jsonString);
     }
