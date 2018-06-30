@@ -1,9 +1,13 @@
 package ddtflowers;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.json.simple.JSONArray;
@@ -142,8 +146,9 @@ public class JSONDBManager extends DbConnect {
      * 設計者:S.Nishiwaki
      * 作成者:S.Nishiwaki
      * 作成日:2018.02.03
+     * @throws NoSuchAlgorithmException
      */
-    public void createJSON(JSONObject jsonObject) throws SQLException {
+    public void createJSON(JSONObject jsonObject) throws SQLException, NoSuchAlgorithmException {
         // 引数に指定のキーがなければnull文字列として引数を設定する
         String nullString = NULL_STRING;
         // 親のリザルトツリーの型だけ設定したものを引数に渡して実行する
@@ -160,8 +165,9 @@ public class JSONDBManager extends DbConnect {
      * 設計者:S.Nishiwaki
      * 作成者:S.Nishiwaki
      * 作成日:2018.02.03
+     * @throws NoSuchAlgorithmException
      */
-    public void createJSON(JSONObject jsonObject, String key) throws SQLException {
+    public void createJSON(JSONObject jsonObject, String key) throws SQLException, NoSuchAlgorithmException {
         // 引数に親のリザルトツリーがなければnullとして引数を設定する
         DbResultTree notExistTree = null;
         // 親のリザルトツリーの型だけ設定したものを引数に渡して実行する
@@ -179,8 +185,9 @@ public class JSONDBManager extends DbConnect {
      * 設計者:H.Kaneko
      * 作成者 :S.Nishiwaki
      * 作成日 :2018.02.03
+     * @throws NoSuchAlgorithmException
      */
-    public void createJSON(JSONObject jsonObject, String key, DbResultTree parentTree) throws SQLException {
+    public void createJSON(JSONObject jsonObject, String key, DbResultTree parentTree) throws SQLException, NoSuchAlgorithmException {
         // DBの結果から構築したツリーを構成するクラスのインスタンスを生成する
         DbResultTree dbResultTree = new DbResultTree();
         // ステートメントを作成する
@@ -222,14 +229,24 @@ public class JSONDBManager extends DbConnect {
      * 作成者 :S.Nishiwaki
      * 作成日 :2018.02.03
      * @throws SQLException
+     * @throws NoSuchAlgorithmException
      */
-    public ResultSet executeQuery(JSONObject jsonObject, String queryKey) throws SQLException {
+    @SuppressWarnings("unchecked")
+    public ResultSet executeQuery(JSONObject jsonObject, String queryKey) throws SQLException, NoSuchAlgorithmException {
         // 返却する結果セットの変数を作成する
         ResultSet resultSet = null;
         //ユーザ情報を保護するためパスワードがkeyにあればハッシュ化する
         if (jsonObject.containsKey(KEY_PASSWORD)) {
             // パスワードをハッシュ化したデータで上書きする
-            ((JSONObject) jsonObject.get(KEY_PASSWORD)).put(KEY_PASSWORD, jsonObject.get(KEY_PASSWORD).hashCode());
+            JSONObject passObj = ((JSONObject) jsonObject.get(KEY_PASSWORD));
+            Object pass = passObj.get(KEY_VALUE);
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            byte[] hashBytePassword = digest.digest(pass.toString().getBytes());
+            String hashedPassword = DatatypeConverter.printHexBinary(hashBytePassword).toLowerCase();
+            passObj.put(//
+                KEY_VALUE,
+                hashedPassword
+            );
         }
         // $queryKeyが$jsonに存在していれば$queryに値を入れる
         if (jsonObject.containsKey(queryKey)) {
@@ -364,7 +381,7 @@ public class JSONDBManager extends DbConnect {
      * 作成者 :S.Nishiwaki
      * 作成日 :2018.02.03
      */
-    public String getListJSON(JSONObject jsonObject) throws SQLException {
+    public String getListJSON(JSONObject jsonObject) throws SQLException, NoSuchAlgorithmException {
         // 返却値としてJSON文字列を作成するための変数を設定する
         String stringAll = NULL_STRING;
         // 各レコードのデータ設定用変数を設定する
@@ -429,7 +446,7 @@ public class JSONDBManager extends DbConnect {
      * 作成者 :S.Nishiwaki
      * 作成日 :2018.02.03
      */
-    public void outputJSON(String jsonString, String keyString) throws ParseException {
+    public void outputJSON(String jsonString, String keyString) throws ParseException, NoSuchAlgorithmException {
         // JSON文字列をJSONオブジェクトに変換する fig2-7 getJSONMap
         getJSONMap(jsonString);
         // DBとの接続を試みる
@@ -546,7 +563,7 @@ public class JSONDBManager extends DbConnect {
      * 作成者 :S.Nishiwaki
      * 作成日 :2018.02.03
      */
-    public String getListJSONPlusKey(JSONObject jsonObject, String keyString) throws ParseException, SQLException {
+    public String getListJSONPlusKey(JSONObject jsonObject, String keyString) throws ParseException, SQLException, NoSuchAlgorithmException {
         // 文字列をデコードするためのパーサーを作成する
         JSONParser parser = new JSONParser();
         // JSONに設定されたクエリーからテーブルデータを取得する fig2-5 getListJSON

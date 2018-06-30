@@ -1,6 +1,7 @@
 package ddtflowers;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
@@ -52,7 +53,7 @@ public class ProcedureGetList extends ProcedureBase {
      * 作成日:2018.03.31
      */
     @Override
-    public void init() throws  ClassNotFoundException, SQLException, IOException{
+    public boolean init(HttpRequestController controller) throws  ClassNotFoundException, SQLException, IOException, ParseException, NoSuchAlgorithmException{
         //親クラスのinit関数をコールする。
         super.init();
     }
@@ -67,7 +68,7 @@ public class ProcedureGetList extends ProcedureBase {
      * 作成日:2018.04.11
      */
     @Override
-    public void job(String jsonString) throws ParseException, SQLException, IOException {
+    public void job(String jsonString) throws ParseException, SQLException, IOException, NoSuchAlgorithmException {
         //親クラスのjobを実行し、メンバにJSONオブジェクトを格納する。
         super.job(jsonString);
         // 返却するJSON配列の文字列を格納する変数を用意する
@@ -105,7 +106,7 @@ public class ProcedureGetList extends ProcedureBase {
      * @throws SQLException
      */
     @Override
-    public void run(String jsonString) throws ClassNotFoundException, SQLException, IOException, ParseException {
+    public void run(String jsonString) throws ClassNotFoundException, SQLException, IOException, ParseException, NoSuchAlgorithmException {
         // 初期化処理を行う
         init();
         // アプリのロジックを実行する

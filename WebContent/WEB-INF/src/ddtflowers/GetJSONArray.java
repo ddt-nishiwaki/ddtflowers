@@ -1,6 +1,7 @@
 package ddtflowers;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 import org.json.simple.parser.ParseException;
@@ -55,7 +56,7 @@ public class GetJSONArray implements ApplicationService{
             // 上記機能を実行する
             procedureSet.run(jsonString);
         // JSONのパース、DB接続、データ送信に関するエラーが発生した場合の処理を行う
-        } catch (ParseException | ClassNotFoundException | SQLException | IOException e) {
+        } catch (ParseException | ClassNotFoundException | SQLException | IOException | NoSuchAlgorithmException e) {
             // エラーを出力する
             e.printStackTrace();
         }
