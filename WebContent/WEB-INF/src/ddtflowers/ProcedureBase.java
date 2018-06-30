@@ -20,16 +20,14 @@ public class ProcedureBase extends Account{
 
     // Accountクラスにサーブレットクラスを渡すためのコンストラクタです
 	public ProcedureBase(HttpRequestController controller) throws ParseException {
-	    // アカウントにリクエスト、レスポンス、セッション、クッキーを扱うオブジェクトを渡す
-        super(controller);
-        // 自身もjsonを返す処理を持っているため コントローラを保持する
+        // jsonクライアントに返す処理を持っているため コントローラを保持する
         mController = controller;
     }
 
     /*
 	 * 関数名:init
 	 * 概要　:クラスの初期化関数。accountクラスの初期化関数とログインチェック関数をコールする。
-	 * 引数　:なし
+	 * 引数　:HttpRequestController サーブレットを扱うためのオブジェクト
 	 * 戻り値:なし
 	 * 設計者:H.Kaneko
      * 作成者:S.Nishiwaki

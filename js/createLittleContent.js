@@ -1980,7 +1980,7 @@ function createLittleContents(){
 			// バナー領域のJSONを取得する。
 			this.getJsonFile('source/memberCommon.json');
 			//ユーザ情報のテキストをDBから取得する
-			this.getJsonFile('php/GetJSONString.php', this.json['accountHeader'], 'accountHeader');
+			this.getJsonFile('java?service=GetJSONString', this.json['accountHeader'], 'accountHeader');
 			// 会員ページヘッダーを作る
 			this.outputTag('accountHeader', 'memberHeader');
 			// バナー領域を作る
@@ -2144,7 +2144,7 @@ function createLittleContents(){
 			//DBから編集する対象となるブログ記事のデータを取得するため記事番号をセットする
 			this.json[getContentKey].id.value = number;
 			//DBからブログ記事を読み込む
-			this.getJsonFile('php/GetJSONString.php', this.json[getContentKey], getContentKey);
+			this.getJsonFile('java?service=GetJSONString', this.json[getContentKey], getContentKey);
 			//クエリを更新するのか新規登録をするのかを決めるために更新クエリのjsonに値を入れて更新クエリを使うようにする
 			this.json[updateQueryKey].id.value = number;
 		}
@@ -2777,7 +2777,7 @@ function createLittleContents(){
 		 */
 		this.updateUserName = function() {
 			//ユーザ情報のテキストをDBから取得する
-			this.getJsonFile('php/GetJSONString.php', create_tag.json['accountHeader'], 'accountHeader');
+			this.getJsonFile('java?service=GetJSONString', create_tag.json['accountHeader'], 'accountHeader');
 			//ユーザ名を取り出す
 			var updatedUserName = this.json.accountHeader.memberStatus.memberName.user_name.text;
 			//ヘッダー内のユーザ名を更新する

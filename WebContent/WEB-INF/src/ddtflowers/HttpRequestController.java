@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+//import ddtflowers.GetJSONArray;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,9 +27,13 @@ public class HttpRequestController extends HttpServlet {
     // 定数
     ///////////////////////////////////////////////////////////////////////////
     // URLからProcedureBase型となるクラスの名前を取得するパラメータのキーです。
-    private static final String PARAMETER_KEY = "procedure";
+    private static final String PARAMETER_KEY = "service";
     // ProcedureBase型のクラス名を完全修飾名にするための文字列です
     private static final String PATH_TO_PROCEDURE = "ddtflowers.";
+    // 取得したパラメータから余分な文字列を削除するための正規表現です
+    private static final String PARAMETER_PARSE_REGEXP = "\\?.*";
+    // 空文字を示す値です
+    private static final String NULL_STRING = "";
 
     ///////////////////////////////////////////////////////////////////////////
     // メンバ
@@ -69,6 +74,34 @@ public class HttpRequestController extends HttpServlet {
     }
 
     /**
+     * 関数名:doGet
+     * 概要　:Servletオブジェクトを取得してルーティングを行う
+     * 引数　:HttpServletRequest:サーブレットから受け取るリクエストオブジェクト
+     * 引数　:HttpServletResponse:サーブレットから受け取るレスポンスオブジェクト
+     * 戻り値:なし
+     * 設計者:S.Nishiwaki
+     * 作成者:S.Nishiwaki
+     * 作成日:2018.03.14
+     * @throws IOException
+     */
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // requestオブジェクトを保持する
+        mRequest = request;
+        // responseオブジェクトを保持する
+        mResponse = response;
+        // リクエストURLによって行う処理試みる
+        try {
+            // ルーティングを行う
+            doRouting(request);
+            // ルーティングに失敗した時の処理を行う
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
+            // エラー内容を出力する
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 関数名:doRouting
      * 概要　:リクエストURLを元にルーティングを行います
      * 　　　:想定するパラメータ => ddtflowers/java?procedure=プロシージャ名
@@ -87,12 +120,13 @@ public class HttpRequestController extends HttpServlet {
      */
     private void doRouting(HttpServletRequest request)
             throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
+        String parameter = request.getParameter(PARAMETER_KEY);
         // requestのURL情報からリクエストされた処理を示すパラメータを取得して保持する
-        String procedureName = request.getParameter(PARAMETER_KEY);
+        String serviceName = parseParameter(parameter);
         // アプリの処理クラスのロードを試みる
         try {
             // パラメータに対応した処理を行うクラスをロードする
-            Class<?> applicationServiceClass = Class.forName(PATH_TO_PROCEDURE + procedureName);
+            Class<?> applicationServiceClass = Class.forName(PATH_TO_PROCEDURE + serviceName);
             // ロードしたクラスのコンストラクタを取得する
             Constructor<?> constructor = applicationServiceClass.getConstructor(HttpRequestController.class);
             // POSTされたJSON文字列を渡してプロシージャを呼び出すインスタンスを作成する
@@ -104,6 +138,22 @@ public class HttpRequestController extends HttpServlet {
             // エラーログを出力する
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * 関数名:perseParameter
+     * 概要　:URLパラメータ文字列から不要な文字列をパースして取り除きます
+     * 引数　:String URLに付与されたパラメータ
+     * 戻り値:String
+     * 設計者:S.Nishiwaki
+     * 作成者:S.Nishiwaki
+     * 作成日:2018.04.19
+     */
+    public String parseParameter(String parameterString) {
+        // パラメータに余計な文字列が付与されることがあるのでパースします
+        String parsedParameter = parameterString.replaceAll(PARAMETER_PARSE_REGEXP, NULL_STRING);
+        // メンバに保持したHttpServletRequestを返します
+        return parsedParameter;
     }
 
     /**

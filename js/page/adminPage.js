@@ -304,7 +304,7 @@ function searchPermitListInfoTable(
 		//テーブルデータをリセットしておく
 		searchCreateTag.json[targetTable].tableData = [];
 		//DBからデータを取得する
-		searchCreateTag.getJsonFile('php/GetJSONArray.php', searchCreateTag.json[targetTable], targetTable);
+		searchCreateTag.getJsonFile('java?service=GetJSONArray', searchCreateTag.json[targetTable], targetTable);
 		//受講承認一覧テーブルを作る
 		searchCreateTag.outputNumberingTag(targetTable, startPage, displayPageMax, displayPage, pageNum, targetArea, callback, "$('" + createTagTarget + "')[0].");
 
