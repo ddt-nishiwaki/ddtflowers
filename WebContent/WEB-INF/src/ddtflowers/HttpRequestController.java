@@ -31,7 +31,7 @@ public class HttpRequestController extends HttpServlet {
     // ProcedureBase型のクラス名を完全修飾名にするための文字列です
     private static final String PATH_TO_PROCEDURE = "ddtflowers.";
     // 取得したパラメータから余分な文字列を削除するための正規表現です
-    private static final String PARAMETER_PARSE_REGEXP = "?.*";
+    private static final String PARAMETER_PARSE_REGEXP = "\\?.*";
     // 空文字を示す値です
     private static final String NULL_STRING = "";
 
@@ -151,7 +151,7 @@ public class HttpRequestController extends HttpServlet {
      */
     public String parseParameter(String parameterString) {
         // パラメータに余計な文字列が付与されることがあるのでパースします
-        String parsedParameter = parameterString.replaceAll("\\?.*", "");
+        String parsedParameter = parameterString.replaceAll(PARAMETER_PARSE_REGEXP, NULL_STRING);
         // メンバに保持したHttpServletRequestを返します
         return parsedParameter;
     }
