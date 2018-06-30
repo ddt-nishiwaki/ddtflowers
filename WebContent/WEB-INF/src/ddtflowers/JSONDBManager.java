@@ -88,8 +88,10 @@ public class JSONDBManager extends DbConnect {
     private static final String   REGEXP_OR               = "|";
     // セミコロンを示す文字列です
     private static final String   STRING_SEMICOLON        = ";";
+    // コロンを示す文字列です
+    private static final String   STRING_COLON            = ":";
     // 最初のインデックスを示す値です
-    private static final int      FIRST_INDEX             = 0;
+    private static final int      FIRST_INDEX             = 1;
     // 結果セットの初回インデックスを示す値です
     private static final int      START_RESULT_INDEX      = 1;
     // 存在しないインデックスを示す値です
@@ -193,17 +195,20 @@ public class JSONDBManager extends DbConnect {
         dbResultTree.keyData = key;
 
         // db_resultTreeから”key”に該当するデータを取得する
-        String column = getDBColumn(key, parentTree);
+        String column = getDBColumn(key, dbResultTree);
         // jsonについて最下層の要素にたどり着くまでループしてデータを取得する
         for (Object keyObject : jsonObject.keySet()) {
             // データを取り出すためのkey文字列を取得する
             String keyString = keyObject.toString();
             // key文字列に対するデータを取得する
-            JSONObject valueObject = (JSONObject) jsonObject.get(keyString);
-            // valueに子供がある時の処理(valueの型がオブジェクトの時の処理)
-            if (valueObject.isEmpty() && isHash(valueObject)) {
-                // fig0 再帰的にcreateJSONメソッドをコールする
-                createJSON(valueObject, keyString, dbResultTree);
+            if(isHash(jsonObject.get(keyString))) {
+                JSONObject valueObject;
+                valueObject = (JSONObject) jsonObject.get(keyString);
+                // valueに子供がある時の処理(valueの型がオブジェクトの時の処理)
+                if (!(valueObject.isEmpty()) && isHash(valueObject)) {
+                    // fig0 再帰的にcreateJSONメソッドをコールする
+                    createJSON(valueObject, keyString, dbResultTree);
+                }
             } else if (column != null && (keyString == KEY_TEXT || keyString == KEY_SRC)) {
                 // jsonObject.get(keyString)
                 jsonObject.put(keyString, column);
@@ -258,7 +263,7 @@ public class JSONDBManager extends DbConnect {
                 // クエリにセミコロンが含まれている場合
                 if (query.matches(REGEXP_SEARCH_SEMICOLON) != NOT_MATCH) {
                     // SQL1行に2種類以上含まれている場合動作しないため、後半のSQLを削除する
-                    query = query.substring(0, query.lastIndexOf(STRING_SEMICOLON) + SHIFT_NEXT_INDEX);
+                    query = query.substring(0, query.indexOf(STRING_SEMICOLON) + SHIFT_NEXT_INDEX);
                 }
                 // ステートメントを取得する
                 Statement statement = (Statement) mDbConnect.createStatement();
@@ -326,21 +331,19 @@ public class JSONDBManager extends DbConnect {
         // 返却値を格納する変数を初期化する
         String column = null;
         // 取得対象が列の何行目かをセットする
-        int rowNumber = FIRST_INDEX;
+        int columnNumber = FIRST_INDEX;
         // dbrTreeの親のキーが、これが配列の要素であるということを示す~の文字を含んでいれば
         if (dbResultTree.parentTree != null && dbResultTree.parentTree.keyData.indexOf(STR_TWO_UNDERBAR) != NOT_INDEX) {
             //keyを~を境に分離する
             String[] keyStringArray = dbResultTree.parentTree.keyData.split(STR_TWO_UNDERBAR);
             //デミリタを元に行数のトークンに分ける
-            rowNumber = Integer.parseInt(keyStringArray[AFTER_UNDERBER_INDEX]); //行数をセットする
+            columnNumber = Integer.parseInt(keyStringArray[AFTER_UNDERBER_INDEX]); //行数をセットする
         }
         // 親がなくなるまでDBレコードツリーを走査する
         while (dbResultTree != null) {
             // dbrTreeに結果セットが登録されていれば
             if (checkColumn(dbResultTree.dbResultSet, keyString)) {
-                //カラムデータを取得する
-                dbResultTree.dbResultSet.absolute(rowNumber);
-                //カラムの値を取得する
+                // カラムの値を取得する
                 column = dbResultTree.dbResultSet.getString(keyString);
                 //ループを抜ける
                 break;
@@ -403,7 +406,7 @@ public class JSONDBManager extends DbConnect {
                 // JSONデータが壊れないようにダブルクォートをエスケープする
                 columnValue = columnValue.replace(STRING_DOUBLE_QUOTES, STRING_BACKSLASH + STRING_DOUBLE_QUOTES);
                 // フィールドデータ設定用変数にエスケープした文字列を対応するキーで設定して追加する
-                stringLine += STRING_DOUBLE_QUOTES + columnName + STRING_DOUBLE_QUOTES + STRING_SEMICOLON
+                stringLine += STRING_DOUBLE_QUOTES + columnName + STRING_DOUBLE_QUOTES + STRING_COLON
                         + STRING_DOUBLE_QUOTES + columnValue + STRING_DOUBLE_QUOTES;
             }
             // レコードデータ設定用変数が空文字の場合はカンマで区切る
@@ -491,9 +494,9 @@ public class JSONDBManager extends DbConnect {
             // 検索のために列名の数を取得する
             int columnLength = columnData.getColumnCount();
             // 列名データから検索列名を探す
-            for (int columnCount = 1; columnCount < columnLength; columnCount++) {
+            for (int columnCount = 0; columnCount < columnLength; columnCount++) {
                 // 検索列名が結果セットにあった場合の処理を行う
-                if (columnData.getColumnName(columnCount).equals(columnName)) {
+                if (columnData.getColumnName(1).equals(columnName)) {
                     // 存在することを示す値を設定する
                     isColumn = EXISTS_MATCH;
                     // 検索を終了する
