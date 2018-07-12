@@ -6,7 +6,7 @@
  * 設計者:H.Kaneko
  * 作成者:T.Masuda
  * 作成日:2015.0728
- * パス	:/php/GetJSONArray.php
+ * パス	:/java?service=GetJSONArray
  */
 
 //リスト形式のJSONを作るクラスをファイルから取り込む

@@ -216,8 +216,7 @@ public class JSONDBManager extends DbConnect {
                     // fig0 再帰的にcreateJSONメソッドをコールする
                     createJSON(valueObject, keyString, dbResultTree);
                 }
-            } else if (column != null && (keyString == KEY_TEXT || keyString == KEY_SRC)) {
-                // jsonObject.get(keyString)
+            } else if (column != null && (keyString.equals(KEY_TEXT)) || keyString.equals(KEY_SRC)) {
                 jsonObject.put(keyString, column);
             }
         }
@@ -291,7 +290,7 @@ public class JSONDBManager extends DbConnect {
                 // 処理を行ったレコード数を結果セットより取得してメンバに保存する
                 mProcessedRecords = resultSet.getRow(); // 2016.09.20 r.shibata rowCountから取得していたものを修正(指示:金子)
                 // 結果セットを最初の行に戻す
-                resultSet.first();
+                resultSet.beforeFirst();
             }
         }
         // 結果セットを返す
@@ -360,8 +359,12 @@ public class JSONDBManager extends DbConnect {
         while (dbResultTree != null) {
             // dbrTreeに結果セットが登録されていれば
             if (checkColumn(dbResultTree.dbResultSet, keyString)) {
+                // 行のカーソルの位置を最初の行に合わせる
+                dbResultTree.dbResultSet.beforeFirst();
                 // カラムの値を取得する
-                column = dbResultTree.dbResultSet.getString(keyString);
+                while(dbResultTree.dbResultSet.next()){
+                    column = dbResultTree.dbResultSet.getString(keyString);
+                }
                 //ループを抜ける
                 break;
                 // dbrTreeに結果セットが登録されていない場合は
@@ -513,7 +516,7 @@ public class JSONDBManager extends DbConnect {
             // 列名データから検索列名を探す
             for (int columnCount = 0; columnCount < columnLength; columnCount++) {
                 // 検索列名が結果セットにあった場合の処理を行う
-                if (columnData.getColumnName(1).equals(columnName)) {
+                if (columnData.getColumnName(columnCount + 1).equals(columnName)) {
                     // 存在することを示す値を設定する
                     isColumn = EXISTS_MATCH;
                     // 検索を終了する

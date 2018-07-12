@@ -151,7 +151,8 @@ public class HttpRequestController extends HttpServlet {
      */
     public String parseParameter(String parameterString) {
         // パラメータに余計な文字列が付与されることがあるのでパースします
-        String parsedParameter = parameterString.replaceAll(PARAMETER_PARSE_REGEXP, NULL_STRING);
+        String parsedParameter = parameterString.replaceAll("\\?.*", NULL_STRING);
+
         // メンバに保持したHttpServletRequestを返します
         return parsedParameter;
     }

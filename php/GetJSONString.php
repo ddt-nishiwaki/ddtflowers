@@ -7,7 +7,7 @@
  * 設計者:H.Kaneko
  * 作成者:T.Masuda
  * 作成日:2015.0728
- * パス	:/php/GetJSONString.php
+ * パス	:/java?service=GetJSONString
  */
 
 //各定数を定義する。

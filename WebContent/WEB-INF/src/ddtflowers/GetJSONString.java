@@ -3,6 +3,7 @@ package ddtflowers;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Objects;
 
 import org.json.simple.parser.ParseException;
 
@@ -63,7 +64,11 @@ public class GetJSONString implements ApplicationService{
 
         // JSONのパース、DB接続、データ送信に関するエラーを監視する
         try {
-
+            if(Objects.isNull(jsonString)) {
+                // 不正アクセスのため終了
+                // TODO : ログ
+                return;
+            }
             // ログイン用のJSONかどうかチェック
             if(jsonString.indexOf(USER_NAME_KEY) != NOT_EXSIST_WORD
                 && jsonString.indexOf(PASSWORD_KEY) != NOT_EXSIST_WORD
